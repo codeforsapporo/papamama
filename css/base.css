@@ -1,0 +1,14 @@
+/* CSS Document */
+
+body {
+  padding-top: 60px;
+}
+
+.map {
+	width: 100%;
+	height: 600px;
+	margin: 0;
+}
+.popover-content {
+	min-width: 300px;
+}
