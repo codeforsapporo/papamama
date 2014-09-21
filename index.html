@@ -100,6 +100,7 @@ map.on('click', function(evt) {
 			return feature;
 		}
 	);
+	$(element).popover('destroy');
 	if (feature && "Point" == feature.getGeometry().getType()) {
 		var geometry = feature.getGeometry();
 		var coord = geometry.getCoordinates();
@@ -109,39 +110,36 @@ map.on('click', function(evt) {
 		if (feature.get('定員') != null) {
 			content += '<div>定員'+feature.get('定員')+'人</div>';
 		}
-		
 		$(element).popover({
 			'placement': 'top',
 			'html': true,
 			'content': content
 		});
 		$(element).popover('show');
-	} else {
-		$(element).popover('destroy');
 	}
 });
 
 $('#cbMiddleSchool').click(function(){
-	map.getLayers().forEach(function(layer) { 
+	map.getLayers().forEach(function(layer) {
 		if (layer.get('name') == 'MiddleSchool_Sapporo') {
 			if ($('#cbMiddleSchool').prop('checked')){
 				layer.setVisible(true);
 			} else {
 				layer.setVisible(false);
 			}
-		} 
-	}); 
+		}
+	});
 });
 $('#cbElementarySchool').click(function(){
-	map.getLayers().forEach(function(layer) { 
+	map.getLayers().forEach(function(layer) {
 		if (layer.get('name') == 'Elementary_Sapporo') {
 			if ($('#cbElementarySchool').prop('checked')){
 				layer.setVisible(true);
 			} else {
 				layer.setVisible(false);
 			}
-		} 
-	}); 
+		}
+	});
 });
 
     </script>
