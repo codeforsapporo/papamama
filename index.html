@@ -54,6 +54,7 @@ var map = new ol.Map({
 				projection: "EPSG:3857"
 			})
 		}),
+		// 中学校区
 		new ol.layer.Vector({
 			source: new ol.source.GeoJSON({
 				projection: 'EPSG:3857',
@@ -63,6 +64,7 @@ var map = new ol.Map({
 			style: middleSchoolStyleFunction,
 			visible: false
 		}),
+		// 小学校区
 		new ol.layer.Vector({
 			source: new ol.source.GeoJSON({
 				projection: 'EPSG:3857',
@@ -72,10 +74,35 @@ var map = new ol.Map({
 			style: elementaryStyleFunction,
 			visible: false
 		}),
+		// こども園
 		new ol.layer.Vector({
 			source: new ol.source.GeoJSON({
 				projection: 'EPSG:3857',
-				url: 'data/Nursery_Sapporo.geojson'
+				url: 'data/Kodomoen.geojson'
+			}),
+			style: nurseryStyleFunction
+		}),
+		// 認可外
+		new ol.layer.Vector({
+			source: new ol.source.GeoJSON({
+				projection: 'EPSG:3857',
+				url: 'data/Ninkagai.geojson'
+			}),
+			style: nurseryStyleFunction
+		}),
+		// 認可
+		new ol.layer.Vector({
+			source: new ol.source.GeoJSON({
+				projection: 'EPSG:3857',
+				url: 'data/Ninka.geojson'
+			}),
+			style: nurseryStyleFunction
+		}),
+		// 幼稚園
+		new ol.layer.Vector({
+			source: new ol.source.GeoJSON({
+				projection: 'EPSG:3857',
+				url: 'data/Kindergarten.geojson'
 			}),
 			style: nurseryStyleFunction
 		})
