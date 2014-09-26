@@ -7,6 +7,24 @@
     <link rel="stylesheet" href="css/bootstrap.css" type="text/css">
     <link rel="stylesheet" href="css/bootstrap.css.map" type="text/css">
     <link rel="stylesheet" href="css/base.css" type="text/css">
+    <style type="text/css">
+    #marker {
+        width: 20px;
+        height: 20px;
+        border: 1px solid #088;
+        border-radius: 10px;
+        background-color: #F00;
+        opacity: 0.7;
+    }
+    #markerTitle {
+        text-decoration: none;
+        color: black;
+        font-size: 11pt;
+        font-weight: bold;
+        text-shadow: black 0.1em 0.1em 0.2em;
+    }
+    </style>
+
     <title>さっぽろパパママMAP</title>
   </head>
   <body>
@@ -21,6 +39,7 @@
       <div class="row-fluid">
         <input type="checkbox" id="cbMiddleSchool">中学校区
         <input type="checkbox" id="cbElementarySchool">小学校区
+        地図の中心位置 : <select id="moveTo"></select>
       </div>
       <div class="row-fluid">
         <div class="span12">
@@ -37,7 +56,7 @@
 	<script src="js/ol_style.js" type="text/javascript"></script>
 	<script type="text/javascript">
 var map = new ol.Map({
-	layers: [
+       layers: [
 	/*
 		new ol.layer.Tile({
 			source: new ol.source.OSM()
@@ -109,9 +128,9 @@ var map = new ol.Map({
 	],
 	target: 'map',
 	view: new ol.View({
-		center: ol.proj.transform([141.347899, 43.063968], 'EPSG:4326', 'EPSG:3857'),
-		zoom: 14
-	})
+               center: ol.proj.transform([141.347899, 43.063968], 'EPSG:4326', 'EPSG:3857'),
+               zoom: 14
+       })
 });
 
 var popup = new ol.Overlay({
@@ -169,7 +188,78 @@ $('#cbElementarySchool').click(function(){
 	});
 });
 
-    </script>
+    // 中心座標変更セレクトボックス用データ
+    // 外出しした方がよい
+    var moveToList = [
+        {name: "---- 公共施設"},
+        {name: "道庁赤レンガ", lat: 43.063968, lon: 141.347899},
+        {name: "中央区役所", lat: 43.05482,   lon: 141.34115},
+        {name: "東区役所",   lat: 43.07605,   lon: 141.36367},
+        {name: "西区役所",   lat: 43.07439,   lon: 141.30074},
+        {name: "南区役所",   lat: 42.98992,   lon: 141.35344},
+        {name: "北区役所",   lat: 43.09079,   lon: 141.34082},
+        {name: "豊平区役所", lat: 43.03133,   lon: 141.38008},
+        {name: "白石区役所", lat: 43.04772,   lon: 141.40504},
+        {name: "厚別区役所", lat: 43.036454,  lon: 141.474597},
+        {name: "手稲区役所", lat: 43.121911,  lon: 141.245537},
+        {name: "清田区役所", lat: 42.9997229, lon: 141.44371},
+        {name: "---- 公共交通機関施設"},
+        {name: "JR札幌駅", lat: 43.068586, lon: 141.350669},
+        {name: "JR新札幌駅", lat: 43.038960, lon: 141.471431},
+        {name: "JR白石駅", lat: 43.054723, lon: 141.414163},
+        {name: "JR桑園駅", lat: 43.070714, lon: 141.331937},
+        {name: "JR琴似駅", lat: 43.081522, lon: 141.30746},
+        {name: "JR手稲駅", lat: 43.120355, lon: 141.243413},
+        {name: "東西線大通駅", lat: 43.060479, lon:141.354526},
+        {name: "東西線西11丁目駅", lat: 43.058656, lon: 141.341319}
+    ];
 
-  </body>
+    $(document).ready(function(){
+        // セレクトボックスに要素追加
+        $('#moveTo').append($('<option>').html("移動先を選択してください").val(""));
+        for(var i=0; i<moveToList.length; i++) {
+            $('#moveTo').append($('<option>').html(moveToList[i].name).val(i));
+        }
+
+        // 中心座標変更セレクトボックス操作イベント定義
+        $('#moveTo').change(function(){
+            lon = moveToList[$(this).val()].lon;
+            lat = moveToList[$(this).val()].lat;
+            if(lon !== undefined && lat !== undefined) {
+                view = map.getView();
+                view.setCenter(
+                    ol.proj.transform([lon, lat], 'EPSG:4326', 'EPSG:3857')
+                );
+            }
+            // マーカーを設置
+            setMarker(lon, lat, moveToList[$(this).val()].name);
+        });
+    });
+
+    // 指定した緯度経度座標にマーカーを設置する
+    function setMarker(lon, lat, label)
+    {
+        // マーカーを設置
+        var pos = ol.proj.transform([lon, lat], 'EPSG:4326', 'EPSG:3857');
+        // Vienna marker
+        var marker = new ol.Overlay({
+            position: pos,
+            positioning: 'center-center',
+            element: $('#marker'),
+            stopEvent: false
+        });
+        map.addOverlay(marker);
+
+        // ラベル設定
+        $('#markerTitle').html(label);
+        var markerTitle = new ol.Overlay({
+          position: pos,
+          element: $('#markerTitle')
+        });
+        map.addOverlay(markerTitle);
+    }
+    </script>
+    <div id="marker" title="Marker"></div>
+    <div id="markerTitle" title="MarkerTitle"></div>
+   </body>
 </html>
