@@ -1,12 +1,22 @@
-$('#mainPage').on('pageshow', function() {
+var map;
 
+function resizeMapDiv() {
 	var screenHeight = $.mobile.getScreenHeight();
 	var headerHeight = $(".ui-header").hasClass("ui-header-fixed") ?
 		$(".ui-header").outerHeight() - 1 : $(".ui-header").outerHeight();
 	var contentCurrentHeight = $(".ui-content").outerHeight() - $(".ui-content").height();
 	var contentHeight = screenHeight - headerHeight - contentCurrentHeight;
 	$(".ui-content").height(contentHeight);
+}
 
+$(window).on("orientationchange", function() {
+	resizeMapDiv();
+	map.setTarget('null');
+	map.setTarget('map');
+});
+
+$('#mainPage').on('pageshow', function() {
+	resizeMapDiv();
 	// 地図レイヤー定義
 	var tileLayer = new ol.layer.Tile({
 		opacity: 1.0,
@@ -22,7 +32,7 @@ $('#mainPage').on('pageshow', function() {
 	});
 
 	// 地図レイヤー定義
-	var map = new ol.Map({
+	map = new ol.Map({
 		layers: [
 			tileLayer,
 			// 中学校区
