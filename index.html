@@ -1,53 +1,54 @@
 <!doctype html>
 <html lang="ja">
-  <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="initial-scale=1.0, user-scalable=no, width=device-width">
-    <link rel="stylesheet" href="css/ol.css" type="text/css">
-    <link rel="stylesheet" href="css/bootstrap.css" type="text/css">
-    <link rel="stylesheet" href="css/bootstrap.css.map" type="text/css">
-    <link rel="stylesheet" href="css/base.css" type="text/css">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>さっぽろパパママMAP</title>
+  <link rel="stylesheet" href="css/ol.css" type="text/css">
+  <link rel="stylesheet" href="css/bootstrap.css" type="text/css">
+  <link rel="stylesheet" href="css/bootstrap.css.map" type="text/css">
+  <link rel="stylesheet" href="css/base.css" type="text/css">
+  <link rel="stylesheet" href="css/jquery.mobile-1.4.4.css">
+</head>
+<body>
+  <div data-role="page" id="mainPage">
+    <div data-role="panel" id="mypanel">
+      <fieldset data-role="controlgroup">
+        <input type="checkbox" name="cbMiddleSchool" id="cbMiddleSchool">
+        <label for="cbMiddleSchool">中学校区</label>
+        <input type="checkbox" name="cbElementarySchool" id="cbElementarySchool">
+        <label for="cbElementarySchool">小学校区</label>
+      </fieldset>
 
-    <title>さっぽろパパママMAP</title>
-  </head>
-  <body>
-    <div class="navbar navbar-inverse navbar-fixed-top">
-      <div class="navbar-inner">
-        <div class="container">
-          <a class="brand" href="/">さっぽろパパママMAP</a>
-        </div>
+      <select id="moveTo"><option>移動先</option></select>
+
+      <select id="changeOpacity">
+        <option>地図透明度</option>
+        <option value="0.75">75%</option>
+        <option value="0.50">50%</option>
+        <option value="0.25">25%</option>
+        <option value="0.10">10%</option>
+      </select>
+    </div>
+    <!-- header -->
+    <div data-role="header">
+      <h1>さっぽろパパママMAP</h1>
+      <a href="#mypanel" data-icon="bars" data-iconpos="notext">Open panel</a>
+    </div>
+    <!-- content -->
+    <div role="main" class="ui-content">
+      <div id="map" class="map">
+        <div id="popup" title="Welcome to ol3">
       </div>
     </div>
-    <div class="container-fluid">
-      <div class="row-fluid">
-        <input type="checkbox" id="cbMiddleSchool">中学校区
-        <input type="checkbox" id="cbElementarySchool">小学校区
-        地図の中心位置 : <select id="moveTo"><option>移動先を選択してください</option></select>
-
-        地図の半透明度 : <select id="changeOpacity">
-            <option>未設定</option>
-            <option value="0.75">75%</option>
-            <option value="0.50">50%</option>
-            <option value="0.25">25%</option>
-            <option value="0.10">10%</option>
-        </select>
-
-      </div>
-      <div class="row-fluid">
-        <div class="span12">
-          <div id="map" class="map">
-            <div id="popup" title="Welcome to ol3">
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <script src="js/jquery-2.1.1.js" type="text/javascript"></script>
-    <script src="js/bootstrap.min.js" type="text/javascript"></script>
-    <script src="http://openlayers.org/en/v3.0.0/build/ol.js" type="text/javascript"></script>
-    <script src="js/ol_style.js" type="text/javascript"></script>
-    <script src="js/index.js" type="text/javascript"></script>
-    <div id="marker" title="Marker"></div>
-    <div id="markerTitle" title="MarkerTitle"></div>
-   </body>
+  </div>
+  <script src="js/jquery-2.1.1.min.js" type="text/javascript"></script>
+  <script src="js/jquery.mobile-1.4.4.min.js" type="text/javascript"></script>
+  <script src="js/bootstrap.min.js" type="text/javascript"></script>
+  <script src="http://openlayers.org/en/v3.0.0/build/ol.js" type="text/javascript"></script>
+  <script src="js/ol_style.js" type="text/javascript"></script>
+  <script src="js/index.js" type="text/javascript"></script>
+  <div id="marker" title="Marker"></div>
+  <div id="markerTitle" title="MarkerTitle"></div>
+</body>
 </html>
