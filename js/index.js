@@ -31,7 +31,7 @@ $('#mainPage').on('pageshow', function() {
 					projection: 'EPSG:3857',
 					url: 'data/MiddleSchool_Sapporo.geojson'
 				}),
-				name: 'MiddleSchool_Sapporo',
+				name: 'layerMiddleSchool',
 				style: middleSchoolStyleFunction,
 				visible: false
 			}),
@@ -41,7 +41,7 @@ $('#mainPage').on('pageshow', function() {
 					projection: 'EPSG:3857',
 					url: 'data/Elementary_Sapporo.geojson'
 				}),
-				name: 'Elementary_Sapporo',
+				name: 'layerElementarySchool',
 				style: elementaryStyleFunction,
 				visible: false
 			}),
@@ -51,6 +51,7 @@ $('#mainPage').on('pageshow', function() {
 					projection: 'EPSG:3857',
 					url: 'data/Kodomoen.geojson'
 				}),
+				name: 'layerKodomoen',
 				style: nurseryStyleFunction
 			}),
 			// 認可外
@@ -59,6 +60,7 @@ $('#mainPage').on('pageshow', function() {
 					projection: 'EPSG:3857',
 					url: 'data/Ninkagai.geojson'
 				}),
+				name: 'layerNinkagai',
 				style: nurseryStyleFunction
 			}),
 			// 認可
@@ -67,6 +69,7 @@ $('#mainPage').on('pageshow', function() {
 					projection: 'EPSG:3857',
 					url: 'data/Ninka.geojson'
 				}),
+				name: 'layerNinka',
 				style: nurseryStyleFunction
 			}),
 			// 幼稚園
@@ -75,6 +78,7 @@ $('#mainPage').on('pageshow', function() {
 					projection: 'EPSG:3857',
 					url: 'data/Kindergarten.geojson'
 				}),
+				name: 'layerKindergarten',
 				style: nurseryStyleFunction
 			})
 		],
@@ -174,32 +178,35 @@ $('#mainPage').on('pageshow', function() {
 			}
 		});
 
-		// 中学校区の表示・非表示チェックボックス
-		$('#cbMiddleSchool').click(function(){
-			map.getLayers().forEach(function(layer) {
-				if (layer.get('name') == 'MiddleSchool_Sapporo') {
-					if ($('#cbMiddleSchool').prop('checked')){
-						layer.setVisible(true);
-					} else {
-						layer.setVisible(false);
-					}
-				}
-			});
+	function switchLayer(layerName, visible) {
+		map.getLayers().forEach(function(layer) {
+			if (layer.get('name') == layerName) {
+				layer.setVisible(visible);
+			}
 		});
-
-		// 小学校区の表示・非表示チェックボックス
-		$('#cbElementarySchool').click(function(){
-			map.getLayers().forEach(function(layer) {
-				if (layer.get('name') == 'Elementary_Sapporo') {
-					if ($('#cbElementarySchool').prop('checked')){
-						layer.setVisible(true);
-					} else {
-						layer.setVisible(false);
-					}
-				}
-			});
-		});
-
+	}
+	function getLayerName(cbName) {
+		return 'layer' + cbName.substr(2);
+	}
+	$('#cbKindergarten').click(function() {
+		switchLayer(getLayerName(this.id), $(this).prop('checked'));
+	});
+	$('#cbNinka').click(function() {
+		switchLayer(getLayerName(this.id), $(this).prop('checked'));
+	});
+	$('#cbKodomoen').click(function() {
+		switchLayer(getLayerName(this.id), $(this).prop('checked'));
+	});
+	$('#cbNinkagai').click(function() {
+		switchLayer(getLayerName(this.id), $(this).prop('checked'));
+	});
+	$('#cbMiddleSchool').click(function() {
+		switchLayer(getLayerName(this.id), $(this).prop('checked'));
+	});
+	$('#cbElementarySchool').click(function() {
+		switchLayer(getLayerName(this.id), $(this).prop('checked'));
+	});
+	
 		// 地図の透明度を変更するセレクトボックス
 		$('#changeOpacity').change(function(){
 			opacity = 1.0;
