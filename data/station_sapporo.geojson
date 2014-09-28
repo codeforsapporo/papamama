@@ -1,0 +1,519 @@
+{
+    "type": "FeatureCollection",
+    "crs": {
+        "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" }
+    },
+    "features": [
+        {
+            "type": "Feature",
+            "properties": { "Id": 0, "N02_001": "21", "N02_002": "3", "line": "1条線", "company": "札幌市", "station_name": "西4丁目", "shubetsu": "札幌市電", "lon": 141.351845, "lat": 43.058895 },
+            "geometry": { "type": "Point", "coordinates": [ 141.351845, 43.058895 ] }
+        },
+        {
+            "type": "Feature",
+            "properties": { "Id": 0, "N02_001": "21", "N02_002": "3", "line": "1条線", "company": "札幌市", "station_name": "西8丁目", "shubetsu": "札幌市電", "lon": 141.346720, "lat": 43.058180 },
+                "geometry": { "type": "Point", "coordinates": [ 141.34672, 43.05818 ] }
+        },
+        {
+            "type": "Feature",
+            "properties": { "Id": 0, "N02_001": "21", "N02_002": "3", "line": "1条線", "company": "札幌市", "station_name": "中央区役所前", "shubetsu": "札幌市電", "lon": 141.341975, "lat": 43.057515 },
+            "geometry": { "type": "Point", "coordinates": [ 141.341975, 43.057515 ] }
+        },
+        {
+            "type": "Feature",
+            "properties": { "Id": 0, "N02_001": "21", "N02_002": "3", "line": "1条線", "company": "札幌市", "station_name": "西15丁目", "shubetsu": "札幌市電", "lon": 141.335225, "lat": 43.056240 },
+            "geometry": { "type": "Point", "coordinates": [ 141.335225, 43.05624 ] }
+        },
+        {
+            "type": "Feature",
+            "properties": { "Id": 0, "N02_001": "21", "N02_002": "3", "line": "山鼻西線", "company": "札幌市", "station_name": "西15丁目", "shubetsu": "札幌市電", "lon": 141.335225, "lat": 43.056240 },
+            "geometry": { "type": "Point", "coordinates": [ 141.335225, 43.05624 ] }
+        },
+        {
+            "type": "Feature",
+            "properties": { "Id": 0, "N02_001": "21", "N02_002": "3", "line": "山鼻西線", "company": "札幌市", "station_name": "西線6条", "shubetsu": "札幌市電", "lon": 141.335035, "lat": 43.051570 },
+            "geometry": { "type": "Point", "coordinates": [ 141.335035, 43.05157 ] }
+        },
+        {
+            "type": "Feature",
+            "properties": { "Id": 0, "N02_001": "21", "N02_002": "3", "line": "山鼻西線", "company": "札幌市", "station_name": "西線9条旭山公園通", "shubetsu": "札幌市電", "lon": 141.335460, "lat": 43.048265 },
+            "geometry": { "type": "Point", "coordinates": [ 141.33546, 43.048265 ] }
+        },
+        {
+            "type": "Feature",
+            "properties": { "Id": 0, "N02_001": "21", "N02_002": "3", "line": "山鼻西線", "company": "札幌市", "station_name": "西線11条", "shubetsu": "札幌市電", "lon": 141.335870, "lat": 43.044955 },
+            "geometry": { "type": "Point", "coordinates": [ 141.33587, 43.044955 ] }
+        },
+        {
+            "type": "Feature",
+            "properties": { "Id": 0, "N02_001": "21", "N02_002": "3", "line": "山鼻西線", "company": "札幌市", "station_name": "西線14条", "shubetsu": "札幌市電", "lon": 141.336435, "lat": 43.040640 },
+            "geometry": { "type": "Point", "coordinates": [ 141.336435, 43.04064 ] }
+        },
+        {
+            "type": "Feature",
+            "properties": { "Id": 0, "N02_001": "21", "N02_002": "3", "line": "山鼻西線", "company": "札幌市", "station_name": "西線16条", "shubetsu": "札幌市電", "lon": 141.336845, "lat": 43.037310 },
+            "geometry": { "type": "Point", "coordinates": [ 141.336845, 43.03731 ] }
+        },
+        {
+            "type": "Feature",
+            "properties": { "Id": 0, "N02_001": "21", "N02_002": "3", "line": "山鼻西線", "company": "札幌市", "station_name": "ロープウェイ入口", "shubetsu": "札幌市電", "lon": 141.337280, "lat": 43.033965 },
+            "geometry": { "type": "Point", "coordinates": [ 141.33728, 43.033965 ] }
+        },
+        {
+            "type": "Feature",
+            "properties": { "Id": 0, "N02_001": "21", "N02_002": "3", "line": "山鼻西線", "company": "札幌市", "station_name": "電車事業所前", "shubetsu": "札幌市電", "lon": 141.337700, "lat": 43.030660 },
+            "geometry": { "type": "Point", "coordinates": [ 141.3377, 43.03066 ] }
+        },
+        {
+            "type": "Feature",
+            "properties": { "Id": 0, "N02_001": "21", "N02_002": "3", "line": "山鼻西線", "company": "札幌市", "station_name": "中央図書館前", "shubetsu": "札幌市電", "lon": 141.340080, "lat": 43.030420 },
+            "geometry": { "type": "Point", "coordinates": [ 141.34008, 43.03042 ] }
+        },
+        {
+            "type": "Feature",
+            "properties": { "Id": 0, "N02_001": "21", "N02_002": "3", "line": "山鼻線", "company": "札幌市", "station_name": "中央図書館前", "shubetsu": "札幌市電", "lon": 141.340080, "lat": 43.030420 },
+            "geometry": { "type": "Point", "coordinates": [ 141.34008, 43.03042 ] }
+        },
+        {
+            "type": "Feature",
+            "properties": { "Id": 0, "N02_001": "21", "N02_002": "3", "line": "山鼻線", "company": "札幌市", "station_name": "石山通", "shubetsu": "札幌市電", "lon": 141.344220, "lat": 43.030710 },
+            "geometry": { "type": "Point", "coordinates": [ 141.34422, 43.03071 ] }
+        },
+        {
+            "type": "Feature",
+            "properties": { "Id": 0, "N02_001": "21", "N02_002": "3", "line": "山鼻線", "company": "札幌市", "station_name": "東屯田通", "shubetsu": "札幌市電", "lon": 141.348835, "lat": 43.031045 },
+            "geometry": { "type": "Point", "coordinates": [ 141.348835, 43.031045 ] }
+        },
+        {
+            "type": "Feature",
+            "properties": { "Id": 0, "N02_001": "21", "N02_002": "3", "line": "山鼻線", "company": "札幌市", "station_name": "幌南小学校前", "shubetsu": "札幌市電", "lon": 141.351910, "lat": 43.032295 },
+            "geometry": { "type": "Point", "coordinates": [ 141.35191, 43.032295 ] }
+        },
+        {
+            "type": "Feature",
+            "properties": { "Id": 0, "N02_001": "21", "N02_002": "3", "line": "山鼻線", "company": "札幌市", "station_name": "山鼻19条", "shubetsu": "札幌市電", "lon": 141.351565, "lat": 43.035060 },
+            "geometry": { "type": "Point", "coordinates": [ 141.351565, 43.03506 ] }
+        },
+        {
+            "type": "Feature",
+            "properties": { "Id": 0, "N02_001": "21", "N02_002": "3", "line": "山鼻線", "company": "札幌市", "station_name": "静修学園前", "shubetsu": "札幌市電", "lon": 141.351115, "lat": 43.038310 },
+            "geometry": { "type": "Point", "coordinates": [ 141.351115, 43.03831 ] }
+        },
+        {
+            "type": "Feature",
+            "properties": { "Id": 0, "N02_001": "21", "N02_002": "3", "line": "山鼻線", "company": "札幌市", "station_name": "行啓通", "shubetsu": "札幌市電", "lon": 141.350670, "lat": 43.041670 },
+            "geometry": { "type": "Point", "coordinates": [ 141.35067, 43.04167 ] }
+        },
+        {
+            "type": "Feature",
+            "properties": { "Id": 0, "N02_001": "21", "N02_002": "3", "line": "山鼻線", "company": "札幌市", "station_name": "中島公園通", "shubetsu": "札幌市電", "lon": 141.350145, "lat": 43.045905 },
+            "geometry": { "type": "Point", "coordinates": [ 141.350145, 43.045905 ] }
+        },
+        {
+            "type": "Feature",
+            "properties": { "Id": 0, "N02_001": "21", "N02_002": "3", "line": "山鼻線", "company": "札幌市", "station_name": "山鼻9条", "shubetsu": "札幌市電", "lon": 141.349765, "lat": 43.049015 },
+            "geometry": { "type": "Point", "coordinates": [ 141.349765, 43.049015 ] }
+        },
+        {
+            "type": "Feature",
+            "properties": { "Id": 0, "N02_001": "21", "N02_002": "3", "line": "山鼻線", "company": "札幌市", "station_name": "東本願寺前", "shubetsu": "札幌市電", "lon": 141.349355, "lat": 43.051710 },
+            "geometry": { "type": "Point", "coordinates": [ 141.349355, 43.05171 ] }
+        },
+        {
+            "type": "Feature",
+            "properties": { "Id": 0, "N02_001": "21", "N02_002": "3", "line": "山鼻線", "company": "札幌市", "station_name": "資生館小学校前", "shubetsu": "札幌市電", "lon": 141.349260, "lat": 43.055115 },
+            "geometry": { "type": "Point", "coordinates": [ 141.34926, 43.055115 ] }
+        },
+        {
+            "type": "Feature",
+            "properties": { "Id": 0, "N02_001": "21", "N02_002": "3", "line": "山鼻線", "company": "札幌市", "station_name": "すすきの", "shubetsu": "札幌市電", "lon": 141.352730, "lat": 43.055560 },
+            "geometry": { "type": "Point", "coordinates": [ 141.35273, 43.05556 ] }
+        },
+
+        {
+            "type": "Feature",
+            "properties": { "Id": 0, "N02_001": "16", "N02_002": "3", "line": "東西線", "company": "札幌市", "station_name": "宮の沢", "shubetsu": "札幌市営地下鉄", "lon": 141.277760, "lat": 43.089525 },
+            "geometry": { "type": "Point", "coordinates": [ 141.27776, 43.089525 ] }
+        },
+        {
+            "type": "Feature",
+            "properties": { "Id": 0, "N02_001": "16", "N02_002": "3", "line": "東西線", "company": "札幌市", "station_name": "発寒南", "shubetsu": "札幌市営地下鉄", "lon": 141.290220, "lat": 43.081530 },
+            "geometry": { "type": "Point", "coordinates": [ 141.29022, 43.08153 ] }
+        },
+        {
+            "type": "Feature",
+            "properties": { "Id": 0, "N02_001": "16", "N02_002": "3", "line": "東西線", "company": "札幌市", "station_name": "琴似", "shubetsu": "札幌市営地下鉄", "lon": 141.304445, "lat": 43.075445 },
+            "geometry": { "type": "Point", "coordinates": [ 141.304445, 43.075445 ] }
+        },
+        {
+            "type": "Feature",
+            "properties": { "Id": 0, "N02_001": "16", "N02_002": "3", "line": "東西線", "company": "札幌市", "station_name": "二十四軒", "shubetsu": "札幌市営地下鉄", "lon": 141.313605, "lat": 43.070450 },
+            "geometry": { "type": "Point", "coordinates": [ 141.313605, 43.07045 ] }
+        },
+        {
+            "type": "Feature",
+            "properties": { "Id": 0, "N02_001": "16", "N02_002": "3", "line": "東西線", "company": "札幌市", "station_name": "西28丁目", "shubetsu": "札幌市営地下鉄", "lon": 141.314565, "lat": 43.060965 },
+            "geometry": { "type": "Point", "coordinates": [ 141.314565, 43.060965 ] }
+        },
+        {
+            "type": "Feature",
+            "properties": { "Id": 0, "N02_001": "16", "N02_002": "3", "line": "東西線", "company": "札幌市", "station_name": "円山公園", "shubetsu": "札幌市営地下鉄", "lon": 141.319515, "lat": 43.055735 },
+            "geometry": { "type": "Point", "coordinates": [ 141.319515, 43.055735 ] }
+        },
+        {
+            "type": "Feature",
+            "properties": { "Id": 0, "N02_001": "16", "N02_002": "3", "line": "東西線", "company": "札幌市", "station_name": "西18丁目", "shubetsu": "札幌市営地下鉄", "lon": 141.330405, "lat": 43.057240 },
+            "geometry": { "type": "Point", "coordinates": [ 141.330405, 43.05724 ] }
+        },
+        {
+            "type": "Feature",
+            "properties": { "Id": 0, "N02_001": "16", "N02_002": "3", "line": "東西線", "company": "札幌市", "station_name": "西11丁目", "shubetsu": "札幌市営地下鉄", "lon": 141.341395, "lat": 43.058685 },
+            "geometry": { "type": "Point", "coordinates": [ 141.341395, 43.058685 ] }
+        },
+        {
+            "type": "Feature",
+            "properties": { "Id": 0, "N02_001": "16", "N02_002": "3", "line": "東西線", "company": "札幌市", "station_name": "大通", "shubetsu": "札幌市営地下鉄", "lon": 141.352314, "lat": 43.060094 },
+            "geometry": { "type": "Point", "coordinates": [ 141.35231444274581, 43.060094119435995 ] }
+        },
+        {
+            "type": "Feature",
+            "properties": { "Id": 0, "N02_001": "16", "N02_002": "3", "line": "東西線", "company": "札幌市", "station_name": "バスセンター前", "shubetsu": "札幌市営地下鉄", "lon": 141.361925, "lat": 43.061525 },
+            "geometry": { "type": "Point", "coordinates": [ 141.361925, 43.061525 ] }
+        },
+        {
+            "type": "Feature",
+            "properties": { "Id": 0, "N02_001": "16", "N02_002": "3", "line": "東西線", "company": "札幌市", "station_name": "菊水", "shubetsu": "札幌市営地下鉄", "lon": 141.372755, "lat": 43.057260 },
+            "geometry": { "type": "Point", "coordinates": [ 141.372755, 43.05726 ] }
+        },
+        {
+            "type": "Feature",
+            "properties": { "Id": 0, "N02_001": "16", "N02_002": "3", "line": "東西線", "company": "札幌市", "station_name": "東札幌", "shubetsu": "札幌市営地下鉄", "lon": 141.384737, "lat": 43.051772 },
+            "geometry": { "type": "Point", "coordinates": [ 141.38473746866578, 43.051772151724087 ] }
+        },
+        {
+            "type": "Feature",
+            "properties": { "Id": 0, "N02_001": "16", "N02_002": "3", "line": "東西線", "company": "札幌市", "station_name": "白石", "shubetsu": "札幌市営地下鉄", "lon": 141.395705, "lat": 43.046350 },
+            "geometry": { "type": "Point", "coordinates": [ 141.395705, 43.04635 ] }
+        },
+        {
+            "type": "Feature",
+            "properties": { "Id": 0, "N02_001": "16", "N02_002": "3", "line": "東西線", "company": "札幌市", "station_name": "南郷7丁目", "shubetsu": "札幌市営地下鉄", "lon": 141.410970, "lat": 43.040265 },
+            "geometry": { "type": "Point", "coordinates": [ 141.41097, 43.040265 ] }
+        },
+        {
+            "type": "Feature",
+            "properties": { "Id": 0, "N02_001": "16", "N02_002": "3", "line": "東西線", "company": "札幌市", "station_name": "南郷13丁目", "shubetsu": "札幌市営地下鉄", "lon": 141.422965, "lat": 43.035725 },
+            "geometry": { "type": "Point", "coordinates": [ 141.422965, 43.035725 ] }
+        },
+        {
+            "type": "Feature",
+            "properties": { "Id": 0, "N02_001": "16", "N02_002": "3", "line": "東西線", "company": "札幌市", "station_name": "南郷18丁目", "shubetsu": "札幌市営地下鉄", "lon": 141.435165, "lat": 43.030330 },
+            "geometry": { "type": "Point", "coordinates": [ 141.435165, 43.03033 ] }
+        },
+        {
+            "type": "Feature",
+            "properties": { "Id": 0, "N02_001": "16", "N02_002": "3", "line": "東西線", "company": "札幌市", "station_name": "大谷地", "shubetsu": "札幌市営地下鉄", "lon": 141.453145, "lat": 43.027930 },
+            "geometry": { "type": "Point", "coordinates": [ 141.453145, 43.02793 ] }
+        },
+        {
+            "type": "Feature",
+            "properties": { "Id": 0, "N02_001": "16", "N02_002": "3", "line": "東西線", "company": "札幌市", "station_name": "ひばりが丘", "shubetsu": "札幌市営地下鉄", "lon": 141.464470, "lat": 43.032105 },
+            "geometry": { "type": "Point", "coordinates": [ 141.46447, 43.032105 ] }
+        },
+        {
+            "type": "Feature",
+            "properties": { "Id": 0, "N02_001": "16", "N02_002": "3", "line": "東西線", "company": "札幌市", "station_name": "新さっぽろ", "shubetsu": "札幌市営地下鉄", "lon": 141.474015, "lat": 43.038930 },
+            "geometry": { "type": "Point", "coordinates": [ 141.474015, 43.03893 ] }
+        },
+        {
+            "type": "Feature",
+            "properties": { "Id": 0, "N02_001": "16", "N02_002": "3", "line": "東豊線", "company": "札幌市", "station_name": "栄町", "shubetsu": "札幌市営地下鉄", "lon": 141.367145, "lat": 43.113020 },
+            "geometry": { "type": "Point", "coordinates": [ 141.367145, 43.11302 ] }
+        },
+        {
+            "type": "Feature",
+            "properties": { "Id": 0, "N02_001": "16", "N02_002": "3", "line": "東豊線", "company": "札幌市", "station_name": "新道東", "shubetsu": "札幌市営地下鉄", "lon": 141.369151, "lat": 43.104825 },
+            "geometry": { "type": "Point", "coordinates": [ 141.36915051910023, 43.104825118505701 ] }
+        },
+        {
+            "type": "Feature",
+            "properties": { "Id": 0, "N02_001": "16", "N02_002": "3", "line": "東豊線", "company": "札幌市", "station_name": "元町", "shubetsu": "札幌市営地下鉄", "lon": 141.371785, "lat": 43.094040 },
+            "geometry": { "type": "Point", "coordinates": [ 141.371785, 43.09404 ] }
+        },
+        {
+            "type": "Feature",
+            "properties": { "Id": 0, "N02_001": "16", "N02_002": "3", "line": "東豊線", "company": "札幌市", "station_name": "環状通東", "shubetsu": "札幌市営地下鉄", "lon": 141.374425, "lat": 43.082380 },
+            "geometry": { "type": "Point", "coordinates": [ 141.374425, 43.08238 ] }
+        },
+        {
+            "type": "Feature",
+            "properties": { "Id": 0, "N02_001": "16", "N02_002": "3", "line": "東豊線", "company": "札幌市", "station_name": "東区役所前", "shubetsu": "札幌市営地下鉄", "lon": 141.365270, "lat": 43.078215 },
+            "geometry": { "type": "Point", "coordinates": [ 141.36527, 43.078215 ] }
+        },
+        {
+            "type": "Feature",
+            "properties": { "Id": 0, "N02_001": "16", "N02_002": "3", "line": "東豊線", "company": "札幌市", "station_name": "北13条東", "shubetsu": "札幌市営地下鉄", "lon": 141.354935, "lat": 43.076825 },
+            "geometry": { "type": "Point", "coordinates": [ 141.354935, 43.076825 ] }
+        },
+        {
+            "type": "Feature",
+            "properties": { "Id": 0, "N02_001": "16", "N02_002": "3", "line": "東豊線", "company": "札幌市", "station_name": "さっぽろ", "shubetsu": "札幌市営地下鉄", "lon": 141.353885, "lat": 43.066240 },
+            "geometry": { "type": "Point", "coordinates": [ 141.353885, 43.06624 ] }
+        },
+        {
+            "type": "Feature",
+            "properties": { "Id": 0, "N02_001": "16", "N02_002": "3", "line": "東豊線", "company": "札幌市", "station_name": "大通", "shubetsu": "札幌市営地下鉄", "lon": 141.355302, "lat": 43.060750 },
+            "geometry": { "type": "Point", "coordinates": [ 141.35530181358186, 43.06075045108124 ] }
+        },
+        {
+            "type": "Feature",
+            "properties": { "Id": 0, "N02_001": "16", "N02_002": "3", "line": "東豊線", "company": "札幌市", "station_name": "豊水すすきの", "shubetsu": "札幌市営地下鉄", "lon": 141.356990, "lat": 43.054095 },
+            "geometry": { "type": "Point", "coordinates": [ 141.35699, 43.054095 ] }
+        },
+        {
+            "type": "Feature",
+            "properties": { "Id": 0, "N02_001": "16", "N02_002": "3", "line": "東豊線", "company": "札幌市", "station_name": "学園前", "shubetsu": "札幌市営地下鉄", "lon": 141.368955, "lat": 43.047710 },
+            "geometry": { "type": "Point", "coordinates": [ 141.368955, 43.04771 ] }
+        },
+        {
+            "type": "Feature",
+            "properties": { "Id": 0, "N02_001": "16", "N02_002": "3", "line": "東豊線", "company": "札幌市", "station_name": "豊平公園", "shubetsu": "札幌市営地下鉄", "lon": 141.376165, "lat": 43.042110 },
+            "geometry": { "type": "Point", "coordinates": [ 141.376165, 43.04211 ] }
+        },
+        {
+            "type": "Feature",
+            "properties": { "Id": 0, "N02_001": "16", "N02_002": "3", "line": "東豊線", "company": "札幌市", "station_name": "美園", "shubetsu": "札幌市営地下鉄", "lon": 141.385788, "lat": 43.036150 },
+            "geometry": { "type": "Point", "coordinates": [ 141.38578813253523, 43.036150426378256 ] }
+        },
+        {
+            "type": "Feature",
+            "properties": { "Id": 0, "N02_001": "16", "N02_002": "3", "line": "東豊線", "company": "札幌市", "station_name": "月寒中央", "shubetsu": "札幌市営地下鉄", "lon": 141.396707, "lat": 43.029971 },
+            "geometry": { "type": "Point", "coordinates": [ 141.39670707810473, 43.029971293000862 ] }
+        },
+        {
+            "type": "Feature",
+            "properties": { "Id": 0, "N02_001": "16", "N02_002": "3", "line": "東豊線", "company": "札幌市", "station_name": "福住", "shubetsu": "札幌市営地下鉄", "lon": 141.402885, "lat": 43.021825 },
+            "geometry": { "type": "Point", "coordinates": [ 141.402885, 43.021825 ] }
+        },
+        {
+            "type": "Feature",
+            "properties": { "Id": 0, "N02_001": "16", "N02_002": "3", "line": "南北線", "company": "札幌市", "station_name": "麻生", "shubetsu": "札幌市営地下鉄", "lon": 141.338480, "lat": 43.108340 },
+            "geometry": { "type": "Point", "coordinates": [ 141.33848, 43.10834 ] }
+        },
+        {
+            "type": "Feature",
+            "properties": { "Id": 0, "N02_001": "16", "N02_002": "3", "line": "南北線", "company": "札幌市", "station_name": "北34条", "shubetsu": "札幌市営地下鉄", "lon": 141.342130, "lat": 43.100105 },
+            "geometry": { "type": "Point", "coordinates": [ 141.34213, 43.100105 ] }
+        },
+        {
+            "type": "Feature",
+            "properties": { "Id": 0, "N02_001": "16", "N02_002": "3", "line": "南北線", "company": "札幌市", "station_name": "北24条", "shubetsu": "札幌市営地下鉄", "lon": 141.344825, "lat": 43.089610 },
+            "geometry": { "type": "Point", "coordinates": [ 141.344825, 43.08961 ] }
+        },
+        {
+            "type": "Feature",
+            "properties": { "Id": 0, "N02_001": "16", "N02_002": "3", "line": "南北線", "company": "札幌市", "station_name": "北18条", "shubetsu": "札幌市営地下鉄", "lon": 141.346755, "lat": 43.081645 },
+            "geometry": { "type": "Point", "coordinates": [ 141.346755, 43.081645 ] }
+        },
+        {
+            "type": "Feature",
+            "properties": { "Id": 0, "N02_001": "16", "N02_002": "3", "line": "南北線", "company": "札幌市", "station_name": "北12条", "shubetsu": "札幌市営地下鉄", "lon": 141.348495, "lat": 43.074700 },
+            "geometry": { "type": "Point", "coordinates": [ 141.348495, 43.0747 ] }
+        },
+        {
+            "type": "Feature",
+            "properties": { "Id": 0, "N02_001": "16", "N02_002": "3", "line": "南北線", "company": "札幌市", "station_name": "さっぽろ", "shubetsu": "札幌市営地下鉄", "lon": 141.350665, "lat": 43.065860 },
+            "geometry": { "type": "Point", "coordinates": [ 141.350665, 43.06586 ] }
+        },
+        {
+            "type": "Feature",
+            "properties": { "Id": 0, "N02_001": "16", "N02_002": "3", "line": "南北線", "company": "札幌市", "station_name": "大通", "shubetsu": "札幌市営地下鉄", "lon": 141.352146, "lat": 43.060006 },
+            "geometry": { "type": "Point", "coordinates": [ 141.352145656223, 43.060006454153623 ] }
+        },
+        {
+            "type": "Feature",
+            "properties": { "Id": 0, "N02_001": "16", "N02_002": "3", "line": "南北線", "company": "札幌市", "station_name": "すすきの", "shubetsu": "札幌市営地下鉄", "lon": 141.353365, "lat": 43.055300 },
+            "geometry": { "type": "Point", "coordinates": [ 141.353365, 43.0553 ] }
+        },
+        {
+            "type": "Feature",
+            "properties": { "Id": 0, "N02_001": "16", "N02_002": "3", "line": "南北線", "company": "札幌市", "station_name": "中島公園", "shubetsu": "札幌市営地下鉄", "lon": 141.355055, "lat": 43.048475 },
+            "geometry": { "type": "Point", "coordinates": [ 141.355055, 43.048475 ] }
+        },
+        {
+            "type": "Feature",
+            "properties": { "Id": 0, "N02_001": "16", "N02_002": "3", "line": "南北線", "company": "札幌市", "station_name": "幌平橋", "shubetsu": "札幌市営地下鉄", "lon": 141.355835, "lat": 43.040220 },
+            "geometry": { "type": "Point", "coordinates": [ 141.355835, 43.04022 ] }
+        },
+        {
+            "type": "Feature",
+            "properties": { "Id": 0, "N02_001": "16", "N02_002": "3", "line": "南北線", "company": "札幌市", "station_name": "中の島", "shubetsu": "札幌市営地下鉄", "lon": 141.361195, "lat": 43.037450 },
+            "geometry": { "type": "Point", "coordinates": [ 141.361195, 43.03745 ] }
+        },
+        {
+            "type": "Feature",
+            "properties": { "Id": 0, "N02_001": "16", "N02_002": "3", "line": "南北線", "company": "札幌市", "station_name": "平岸", "shubetsu": "札幌市営地下鉄", "lon": 141.368370, "lat": 43.034620 },
+            "geometry": { "type": "Point", "coordinates": [ 141.36837, 43.03462 ] }
+        },
+        {
+            "type": "Feature",
+            "properties": { "Id": 0, "N02_001": "16", "N02_002": "3", "line": "南北線", "company": "札幌市", "station_name": "南平岸", "shubetsu": "札幌市営地下鉄", "lon": 141.371357, "lat": 43.026731 },
+            "geometry": { "type": "Point", "coordinates": [ 141.37135737844133, 43.026730570850354 ] }
+        },
+        {
+            "type": "Feature",
+            "properties": { "Id": 0, "N02_001": "16", "N02_002": "3", "line": "南北線", "company": "札幌市", "station_name": "澄川", "shubetsu": "札幌市営地下鉄", "lon": 141.367360, "lat": 43.016825 },
+            "geometry": { "type": "Point", "coordinates": [ 141.36736, 43.016825 ] }
+        },
+        {
+            "type": "Feature",
+            "properties": { "Id": 0, "N02_001": "16", "N02_002": "3", "line": "南北線", "company": "札幌市", "station_name": "自衛隊前", "shubetsu": "札幌市営地下鉄", "lon": 141.364915, "lat": 43.006005 },
+            "geometry": { "type": "Point", "coordinates": [ 141.364915, 43.006005 ] }
+        },
+        {
+            "type": "Feature",
+            "properties": { "Id": 0, "N02_001": "16", "N02_002": "3", "line": "南北線", "company": "札幌市", "station_name": "真駒内", "shubetsu": "札幌市営地下鉄", "lon": 141.358545, "lat": 42.991180 },
+            "geometry": { "type": "Point", "coordinates": [ 141.358545, 42.99118 ] }
+        },
+        {
+            "type": "Feature",
+            "properties": { "Id": 0, "N02_001": "11", "N02_002": "2", "line": "函館線", "company": "北海道旅客鉄道", "station_name": "ほしみ", "shubetsu": "JR北海道", "lon": 141.191500, "lat": 43.133460 },
+            "geometry": { "type": "Point", "coordinates": [ 141.1915, 43.13346 ] }
+        },
+        {
+            "type": "Feature",
+            "properties": { "Id": 0, "N02_001": "11", "N02_002": "2", "line": "函館線", "company": "北海道旅客鉄道", "station_name": "星置", "shubetsu": "JR北海道", "lon": 141.210645, "lat": 43.132275 },
+            "geometry": { "type": "Point", "coordinates": [ 141.210645, 43.132275 ] }
+        },
+        {
+            "type": "Feature",
+            "properties": { "Id": 0, "N02_001": "11", "N02_002": "2", "line": "函館線", "company": "北海道旅客鉄道", "station_name": "稲穂", "shubetsu": "JR北海道", "lon": 141.222440, "lat": 43.128400 },
+            "geometry": { "type": "Point", "coordinates": [ 141.22244, 43.1284 ] }
+        },
+        {
+            "type": "Feature",
+            "properties": { "Id": 0, "N02_001": "11", "N02_002": "2", "line": "函館線", "company": "北海道旅客鉄道", "station_name": "手稲", "shubetsu": "JR北海道", "lon": 141.243850, "lat": 43.120125 },
+            "geometry": { "type": "Point", "coordinates": [ 141.24385, 43.120125 ] }
+        },
+        {
+            "type": "Feature",
+            "properties": { "Id": 0, "N02_001": "11", "N02_002": "2", "line": "函館線", "company": "北海道旅客鉄道", "station_name": "稲積公園", "shubetsu": "JR北海道", "lon": 141.256760, "lat": 43.112310 },
+            "geometry": { "type": "Point", "coordinates": [ 141.25676, 43.11231 ] }
+        },
+        {
+            "type": "Feature",
+            "properties": { "Id": 0, "N02_001": "11", "N02_002": "2", "line": "函館線", "company": "北海道旅客鉄道", "station_name": "発寒", "shubetsu": "JR北海道", "lon": 141.276630, "lat": 43.100185 },
+            "geometry": { "type": "Point", "coordinates": [ 141.27663, 43.100185 ] }
+        },
+        {
+            "type": "Feature",
+            "properties": { "Id": 0, "N02_001": "11", "N02_002": "2", "line": "函館線", "company": "北海道旅客鉄道", "station_name": "発寒中央", "shubetsu": "JR北海道", "lon": 141.294575, "lat": 43.089265 },
+            "geometry": { "type": "Point", "coordinates": [ 141.294575, 43.089265 ] }
+        },
+        {
+            "type": "Feature",
+            "properties": { "Id": 0, "N02_001": "11", "N02_002": "2", "line": "函館線", "company": "北海道旅客鉄道", "station_name": "琴似", "shubetsu": "JR北海道", "lon": 141.307397, "lat": 43.081506 },
+            "geometry": { "type": "Point", "coordinates": [ 141.30739737647892, 43.081505819995279 ] }
+        },
+        {
+            "type": "Feature",
+            "properties": { "Id": 0, "N02_001": "11", "N02_002": "2", "line": "函館線", "company": "北海道旅客鉄道", "station_name": "桑園", "shubetsu": "JR北海道", "lon": 141.331919, "lat": 43.070748 },
+            "geometry": { "type": "Point", "coordinates": [ 141.33191909768894, 43.070747906039976 ] }
+        },
+        {
+            "type": "Feature",
+            "properties": { "Id": 0, "N02_001": "11", "N02_002": "2", "line": "函館線", "company": "北海道旅客鉄道", "station_name": "札幌", "shubetsu": "JR北海道", "lon": 141.350775, "lat": 43.068750 },
+            "geometry": { "type": "Point", "coordinates": [ 141.350775, 43.06875 ] }
+        },
+        {
+            "type": "Feature",
+            "properties": { "Id": 0, "N02_001": "11", "N02_002": "2", "line": "函館線", "company": "北海道旅客鉄道", "station_name": "苗穂", "shubetsu": "JR北海道", "lon": 141.376405, "lat": 43.068770 },
+            "geometry": { "type": "Point", "coordinates": [ 141.376405, 43.06877 ] }
+        },
+        {
+            "type": "Feature",
+            "properties": { "Id": 0, "N02_001": "11", "N02_002": "2", "line": "函館線", "company": "北海道旅客鉄道", "station_name": "白石", "shubetsu": "JR北海道", "lon": 141.414070, "lat": 43.054760 },
+            "geometry": { "type": "Point", "coordinates": [ 141.41407, 43.05476 ] }
+        },
+        {
+            "type": "Feature",
+            "properties": { "Id": 0, "N02_001": "11", "N02_002": "2", "line": "函館線", "company": "北海道旅客鉄道", "station_name": "厚別", "shubetsu": "JR北海道", "lon": 141.463235, "lat": 43.044975 },
+            "geometry": { "type": "Point", "coordinates": [ 141.463235, 43.044975 ] }
+        },
+        {
+            "type": "Feature",
+            "properties": { "Id": 0, "N02_001": "11", "N02_002": "2", "line": "函館線", "company": "北海道旅客鉄道", "station_name": "森林公園", "shubetsu": "JR北海道", "lon": 141.481525, "lat": 43.056445 },
+            "geometry": { "type": "Point", "coordinates": [ 141.481525, 43.056445 ] }
+        },
+        {
+            "type": "Feature",
+            "properties": { "Id": 0, "N02_001": "11", "N02_002": "2", "line": "札沼線", "company": "北海道旅客鉄道", "station_name": "桑園", "shubetsu": "JR北海道", "lon": 141.331919, "lat": 43.070748 },
+            "geometry": { "type": "Point", "coordinates": [ 141.33191909768894, 43.070747906039976 ] }
+        },
+        {
+            "type": "Feature",
+            "properties": { "Id": 0, "N02_001": "11", "N02_002": "2", "line": "札沼線", "company": "北海道旅客鉄道", "station_name": "八軒", "shubetsu": "JR北海道", "lon": 141.319168, "lat": 43.086219 },
+            "geometry": { "type": "Point", "coordinates": [ 141.31916823523338, 43.086218823970775 ] }
+        },
+        {
+            "type": "Feature",
+            "properties": { "Id": 0, "N02_001": "11", "N02_002": "2", "line": "札沼線", "company": "北海道旅客鉄道", "station_name": "新川", "shubetsu": "JR北海道", "lon": 141.323735, "lat": 43.098575 },
+            "geometry": { "type": "Point", "coordinates": [ 141.323735, 43.098575 ] }
+        },
+        {
+            "type": "Feature",
+            "properties": { "Id": 0, "N02_001": "11", "N02_002": "2", "line": "札沼線", "company": "北海道旅客鉄道", "station_name": "新琴似", "shubetsu": "JR北海道", "lon": 141.335140, "lat": 43.113045 },
+            "geometry": { "type": "Point", "coordinates": [ 141.33514, 43.113045 ] }
+        },
+        {
+            "type": "Feature",
+            "properties": { "Id": 0, "N02_001": "11", "N02_002": "2", "line": "札沼線", "company": "北海道旅客鉄道", "station_name": "太平", "shubetsu": "JR北海道", "lon": 141.349260, "lat": 43.123925 },
+            "geometry": { "type": "Point", "coordinates": [ 141.34926, 43.123925 ] }
+        },
+        {
+            "type": "Feature",
+            "properties": { "Id": 0, "N02_001": "11", "N02_002": "2", "line": "札沼線", "company": "北海道旅客鉄道", "station_name": "百合が原", "shubetsu": "JR北海道", "lon": 141.360685, "lat": 43.131400 },
+            "geometry": { "type": "Point", "coordinates": [ 141.360685, 43.1314 ] }
+        },
+        {
+            "type": "Feature",
+            "properties": { "Id": 0, "N02_001": "11", "N02_002": "2", "line": "札沼線", "company": "北海道旅客鉄道", "station_name": "篠路", "shubetsu": "JR北海道", "lon": 141.364240, "lat": 43.145080 },
+            "geometry": { "type": "Point", "coordinates": [ 141.36424, 43.14508 ] }
+        },
+        {
+            "type": "Feature",
+            "properties": { "Id": 0, "N02_001": "11", "N02_002": "2", "line": "札沼線", "company": "北海道旅客鉄道", "station_name": "拓北", "shubetsu": "JR北海道", "lon": 141.381085, "lat": 43.155505 },
+            "geometry": { "type": "Point", "coordinates": [ 141.381085, 43.155505 ] }
+        },
+        {
+            "type": "Feature",
+            "properties": { "Id": 0, "N02_001": "11", "N02_002": "2", "line": "札沼線", "company": "北海道旅客鉄道", "station_name": "あいの里教育大", "shubetsu": "JR北海道", "lon": 141.398765, "lat": 43.155115 },
+            "geometry": { "type": "Point", "coordinates": [ 141.398765, 43.155115 ] }
+        },
+        {
+            "type": "Feature",
+            "properties": { "Id": 0, "N02_001": "11", "N02_002": "2", "line": "札沼線", "company": "北海道旅客鉄道", "station_name": "あいの里公園", "shubetsu": "JR北海道", "lon": 141.413030, "lat": 43.160900 },
+            "geometry": { "type": "Point", "coordinates": [ 141.41303, 43.1609 ] }
+        },
+        {
+            "type": "Feature",
+            "properties": { "Id": 0, "N02_001": "11", "N02_002": "2", "line": "千歳線", "company": "北海道旅客鉄道", "station_name": "白石", "shubetsu": "JR北海道", "lon": 141.414070, "lat": 43.054760 },
+            "geometry": { "type": "Point", "coordinates": [ 141.41407, 43.05476 ] }
+        },
+        {
+            "type": "Feature",
+            "properties": { "Id": 0, "N02_001": "11", "N02_002": "2", "line": "千歳線", "company": "北海道旅客鉄道", "station_name": "平和", "shubetsu": "JR北海道", "lon": 141.438000, "lat": 43.046995 },
+            "geometry": { "type": "Point", "coordinates": [ 141.438, 43.046995 ] }
+        },
+        {
+            "type": "Feature",
+            "properties": { "Id": 0, "N02_001": "11", "N02_002": "2", "line": "千歳線", "company": "北海道旅客鉄道", "station_name": "新札幌", "shubetsu": "JR北海道", "lon": 141.472515, "lat": 43.038685 },
+            "geometry": { "type": "Point", "coordinates": [ 141.472515, 43.038685 ] }
+        },
+        {
+            "type": "Feature",
+            "properties": { "Id": 0, "N02_001": "11", "N02_002": "2", "line": "千歳線", "company": "北海道旅客鉄道", "station_name": "上野幌", "shubetsu": "JR北海道", "lon": 141.487136, "lat": 43.016241 },
+            "geometry": { "type": "Point", "coordinates": [ 141.48713607588749, 43.016240599813379 ] }
+        }
+    ]
+}
