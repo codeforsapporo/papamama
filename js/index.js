@@ -112,7 +112,7 @@ $('#mainPage').on('pageshow', function() {
 	// 中心座標変更セレクトボックス用データ
 	// 外出しした方がよい
 	var moveToList = [
-		{name: "---- 公共施設"},
+		{name: "公共施設", header:true},
 		{name: "道庁赤レンガ",  lat: 43.063968, lon: 141.347899},
 		{name: "中央区役所",   lat: 43.05482,   lon: 141.34115},
 		{name: "東区役所",	 lat: 43.07605,   lon: 141.36367},
@@ -126,67 +126,79 @@ $('#mainPage').on('pageshow', function() {
 		{name: "清田区役所",   lat: 42.9997229, lon: 141.44371}
 	];
 
-	//$(document).ready(function(){
-		// 駅位置JSONデータ読み込み〜セレクトボックス追加
-		$.getJSON(
-			"data/station_sapporo.geojson",
-			function(data){
-				moveToList.push( {name: "---- 公共交通機関施設"} );
-				for(var i=0; i<data.features.length; i++) {
-					_name  = data.features[i].properties["shubetsu"];
-					_name += " (" + data.features[i].properties["line"] + ")";
-					_name += " " + data.features[i].properties["station_name"];
-					_lat = data.features[i].properties["lat"];
-					_lon = data.features[i].properties["lon"];
-					moveToList.push(
-						{name: _name, lat: _lat, lon: _lon}
-						);
+	// 駅位置JSONデータ読み込み〜セレクトボックス追加
+	$.getJSON(
+		"data/station_sapporo.geojson",
+		function(data){
+			moveToList.push( {name: "公共交通機関施設", header:true} );
+			var lineName = "";
+			for(var i=0; i<data.features.length; i++) {
+				_s = data.features[i].properties["shubetsu"] + " (" + data.features[i].properties["line"] + ")";
+				if(lineName !== _s) {
+					moveToList.push({name: _s, header: true});
+					lineName = _s;
 				}
-				// セレクトボックスに要素追加
-				for(var i=0; i<moveToList.length; i++) {
-					$('#moveTo').append($('<option>').html(moveToList[i].name).val(i));
+				_name = data.features[i].properties["station_name"];
+				_lat  = data.features[i].properties["lat"];
+				_lon  = data.features[i].properties["lon"];
+				moveToList.push(
+					{name: _name, lat: _lat, lon: _lon, header:false}
+					);
+			}
+
+			// セレクトボックスに要素追加
+			nesting = "";
+			for(i=0; i<moveToList.length; i++) {
+				if(moveToList[i].header) {
+					if(nesting !== "") {
+						$('#moveTo').append(nesting);
+					}
+					nesting = $('<optgroup>').attr('label', moveToList[i].name);
+				} else {
+					nesting.append($('<option>').html(moveToList[i].name).val(i));
 				}
+			}
+		});
+
+	// 中心座標変更セレクトボックス操作イベント定義
+	$('#moveTo').change(function(){
+		lon = moveToList[$(this).val()].lon;
+		lat = moveToList[$(this).val()].lat;
+		if(lon !== undefined && lat !== undefined) {
+			animatedMove(lon, lat, true);
+		}
+		// マーカーを設置
+		setMarker(lon, lat, moveToList[$(this).val()].name);
+	});
+
+	// 保育施設クリック時の挙動を定義
+	map.on('click', function(evt) {
+		var element = popup.getElement();
+		var feature = map.forEachFeatureAtPixel(evt.pixel,
+			function(feature, layer) {
+				return feature;
+			}
+		);
+		$(element).popover('destroy');
+		if (feature && "Point" == feature.getGeometry().getType()) {
+			var geometry = feature.getGeometry();
+			var coord = geometry.getCoordinates();
+			popup.setPosition(coord);
+			$(element).attr('title', '[' + feature.get('種別') + '] ' + feature.get('名称') );
+			var content = '';
+			if (feature.get('定員') != null) {
+				content += '<div>定員'+feature.get('定員')+'人</div>';
+			}
+			$(element).popover({
+				'animation': false,
+				'placement': 'top',
+				'html': true,
+				'content': content
 			});
-
-		// 中心座標変更セレクトボックス操作イベント定義
-		$('#moveTo').change(function(){
-			lon = moveToList[$(this).val()].lon;
-			lat = moveToList[$(this).val()].lat;
-			if(lon !== undefined && lat !== undefined) {
-				animatedMove(lon, lat, true);
-			}
-			// マーカーを設置
-			setMarker(lon, lat, moveToList[$(this).val()].name);
-		});
-
-		// 保育施設クリック時の挙動を定義
-		map.on('click', function(evt) {
-			var element = popup.getElement();
-			var feature = map.forEachFeatureAtPixel(evt.pixel,
-				function(feature, layer) {
-					return feature;
-				}
-			);
-			$(element).popover('destroy');
-			if (feature && "Point" == feature.getGeometry().getType()) {
-				var geometry = feature.getGeometry();
-				var coord = geometry.getCoordinates();
-				popup.setPosition(coord);
-				$(element).attr('title', '[' + feature.get('種別') + '] ' + feature.get('名称') );
-				var content = '';
-				if (feature.get('定員') != null) {
-					content += '<div>定員'+feature.get('定員')+'人</div>';
-				}
-				$(element).popover({
-					'animation': false,
-					'placement': 'top',
-					'html': true,
-					'content': content
-				});
-				$(element).popover('show');
-				animatedMove(coord[0], coord[1], false);
-			}
-		});
+			$(element).popover('show');
+			animatedMove(coord[0], coord[1], false);
+		}
+	});
 
 	function switchLayer(layerName, visible) {
 		map.getLayers().forEach(function(layer) {
@@ -216,16 +228,15 @@ $('#mainPage').on('pageshow', function() {
 	$('#cbElementarySchool').click(function() {
 		switchLayer(getLayerName(this.id), $(this).prop('checked'));
 	});
-	
-		// 地図の透明度を変更するセレクトボックス
-		$('#changeOpacity').change(function(){
-			opacity = 1.0;
-			if($(this).val() !== "" && $(this).val() > 0) {
-				opacity = $(this).val();
-			}
-			tileLayer.setOpacity(opacity);
-		});
-   // });
+
+	// 地図の透明度を変更するセレクトボックス
+	$('#changeOpacity').change(function(){
+		opacity = 1.0;
+		if($(this).val() !== "" && $(this).val() > 0) {
+			opacity = $(this).val();
+		}
+		tileLayer.setOpacity(opacity);
+	});
 
 	/**
 	 * 指定した緯度経度座標にマーカーを設置する

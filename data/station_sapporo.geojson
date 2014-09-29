@@ -26,11 +26,6 @@
         },
         {
             "type": "Feature",
-            "properties": { "Id": 0, "N02_001": "21", "N02_002": "3", "line": "山鼻西線", "company": "札幌市", "station_name": "西15丁目", "shubetsu": "札幌市電", "lon": 141.335225, "lat": 43.056240 },
-            "geometry": { "type": "Point", "coordinates": [ 141.335225, 43.05624 ] }
-        },
-        {
-            "type": "Feature",
             "properties": { "Id": 0, "N02_001": "21", "N02_002": "3", "line": "山鼻西線", "company": "札幌市", "station_name": "西線6条", "shubetsu": "札幌市電", "lon": 141.335035, "lat": 43.051570 },
             "geometry": { "type": "Point", "coordinates": [ 141.335035, 43.05157 ] }
         },
@@ -67,11 +62,6 @@
         {
             "type": "Feature",
             "properties": { "Id": 0, "N02_001": "21", "N02_002": "3", "line": "山鼻西線", "company": "札幌市", "station_name": "中央図書館前", "shubetsu": "札幌市電", "lon": 141.340080, "lat": 43.030420 },
-            "geometry": { "type": "Point", "coordinates": [ 141.34008, 43.03042 ] }
-        },
-        {
-            "type": "Feature",
-            "properties": { "Id": 0, "N02_001": "21", "N02_002": "3", "line": "山鼻線", "company": "札幌市", "station_name": "中央図書館前", "shubetsu": "札幌市電", "lon": 141.340080, "lat": 43.030420 },
             "geometry": { "type": "Point", "coordinates": [ 141.34008, 43.03042 ] }
         },
         {
