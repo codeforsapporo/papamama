@@ -238,7 +238,13 @@ $('#mainPage').on('pageshow', function() {
 			$(element).attr('title', '[' + feature.get('種別') + '] ' + feature.get('名称') );
 			var content = '';
 			if (feature.get('定員') !== null) {
-				content += '<div>定員'+feature.get('定員')+'人</div>';
+				content += '<div>定員 '+feature.get('定員')+'人</div>';
+			}
+			if (feature.get('年齢区分') !== undefined) {
+				content += '<div>年齢区分 '+feature.get('年齢区分')+'</div>';
+			}
+			if (feature.get('年齢') !== undefined) {
+				content += '<div>年齢 '+feature.get('年齢')+'</div>';
 			}
 			animatedMove(coord[0], coord[1], false);
 			$(element).popover({
