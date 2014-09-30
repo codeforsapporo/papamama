@@ -1,5 +1,8 @@
 var map;
 
+// 中心座標変更セレクトボックス用データ
+var moveToList = [];
+
 function resizeMapDiv() {
 	var screenHeight = $.mobile.getScreenHeight();
 	var headerHeight = $(".ui-header").hasClass("ui-header-fixed") ?
@@ -94,13 +97,13 @@ $('#mainPage').on('pageshow', function() {
 		],
 		target: 'map',
 		view: new ol.View({
-			   center: ol.proj.transform([141.347899, 43.063968], 'EPSG:4326', 'EPSG:3857'),
-			   zoom: 14
+			center: ol.proj.transform([141.347899, 43.063968], 'EPSG:4326', 'EPSG:3857'),
+			zoom: 14
 		})
 	});
 
 	// 距離ライン定義
-	scale = new ol.control.ScaleLine({})
+	scale = new ol.control.ScaleLine({});
 	map.addControl(scale);
 
 	// ポップアップ定義
@@ -109,22 +112,35 @@ $('#mainPage').on('pageshow', function() {
 	});
 	map.addOverlay(popup);
 
-	// 中心座標変更セレクトボックス用データ
-	// 外出しした方がよい
-	var moveToList = [
-		{name: "公共施設", header:true},
-		{name: "道庁赤レンガ",  lat: 43.063968, lon: 141.347899},
-		{name: "中央区役所",   lat: 43.05482,   lon: 141.34115},
-		{name: "東区役所",	 lat: 43.07605,   lon: 141.36367},
-		{name: "西区役所",	 lat: 43.07439,   lon: 141.30074},
-		{name: "南区役所",	 lat: 42.98992,   lon: 141.35344},
-		{name: "北区役所",	 lat: 43.09079,   lon: 141.34082},
-		{name: "豊平区役所",   lat: 43.03133,   lon: 141.38008},
-		{name: "白石区役所",   lat: 43.04772,   lon: 141.40504},
-		{name: "厚別区役所",   lat: 43.036454,  lon: 141.474597},
-		{name: "手稲区役所",   lat: 43.121911,  lon: 141.245537},
-		{name: "清田区役所",   lat: 42.9997229, lon: 141.44371}
-	];
+
+	// 区一覧と区の境界データ、その他公共施設データ読み込み
+	$.getJSON(
+		"data/wards_sapporo.geojson",
+		function(data){
+			console.log(data);
+			moveToList.push( {name: "区・公共施設", header:true} );
+			var lineName = "";
+			for(var i=0; i<data.features.length; i++) {
+				switch(data.features[i].geometry.type) {
+					case "Point":
+						_name = data.features[i].properties.name;
+						_lat  = data.features[i].geometry.coordinates[1];
+						_lon  = data.features[i].geometry.coordinates[0];
+						moveToList.push(
+							{name: _name, lat: _lat, lon: _lon, header:false}
+							);
+						break;
+					case "LineString":
+						_name        = data.features[i].properties.CITY1 + data.features[i].properties.name;
+						_coordinates = data.features[i].geometry.coordinates;
+						moveToList.push(
+							{name: _name, coordinates: _coordinates, header:false}
+							);
+				}
+			}
+			appendToMoveToListBox(moveToList);
+		});
+
 
 	// 駅位置JSONデータ読み込み〜セレクトボックス追加
 	$.getJSON(
@@ -138,37 +154,72 @@ $('#mainPage').on('pageshow', function() {
 					moveToList.push({name: _s, header: true});
 					lineName = _s;
 				}
-				_name = data.features[i].properties["station_name"];
-				_lat  = data.features[i].properties["lat"];
-				_lon  = data.features[i].properties["lon"];
+				_name = data.features[i].properties.station_name;
+				_lat  = data.features[i].properties.lat;
+				_lon  = data.features[i].properties.lon;
 				moveToList.push(
 					{name: _name, lat: _lat, lon: _lon, header:false}
 					);
 			}
-
-			// セレクトボックスに要素追加
-			nesting = "";
-			for(i=0; i<moveToList.length; i++) {
-				if(moveToList[i].header) {
-					if(nesting !== "") {
-						$('#moveTo').append(nesting);
-					}
-					nesting = $('<optgroup>').attr('label', moveToList[i].name);
-				} else {
-					nesting.append($('<option>').html(moveToList[i].name).val(i));
-				}
-			}
+			appendToMoveToListBox(moveToList);
 		});
+	/**
+	 * 移動先セレクトボックスに要素を追加する
+	 * @param  array moveToList [description]
+	 * @return {[type]}            [description]
+	 */
+	function appendToMoveToListBox(moveToList)
+	{
+		nesting = "";
+		for(i=0; i<moveToList.length; i++) {
+			if(moveToList[i].header) {
+				if(nesting !== "") {
+					$('#moveTo').append(nesting);
+				}
+				nesting = $('<optgroup>').attr('label', moveToList[i].name);
+			} else {
+				nesting.append($('<option>').html(moveToList[i].name).val(i));
+			}
+		}
+	}
 
 	// 中心座標変更セレクトボックス操作イベント定義
 	$('#moveTo').change(function(){
-		lon = moveToList[$(this).val()].lon;
-		lat = moveToList[$(this).val()].lat;
-		if(lon !== undefined && lat !== undefined) {
-			animatedMove(lon, lat, true);
+		if(moveToList[$(this).val()].coordinates !== undefined) {
+			// 区の境界線に合わせて画面表示
+			components = [];
+			for(var i=0; i<moveToList[$(this).val()].coordinates.length; i++) {
+				coord = moveToList[$(this).val()].coordinates[i];
+				pt2coo = ol.proj.transform(coord, 'EPSG:4326', 'EPSG:3857');
+				components.push(pt2coo);
+			}
+			components = [components];
+
+			view = map.getView();
+			polygon = new ol.geom.Polygon(components);
+			size =  map.getSize();
+			var pan = ol.animation.pan({
+				duration: 850,
+				source: view.getCenter()
+			});
+			map.beforeRender(pan);
+			view.fitGeometry(
+				polygon,
+				size,
+				{
+					constrainResolution: false
+				}
+			);
+		} else {
+			// 選択座標に移動
+			lon = moveToList[$(this).val()].lon;
+			lat = moveToList[$(this).val()].lat;
+			if(lon !== undefined && lat !== undefined) {
+				animatedMove(lon, lat, true);
+			}
+			// マーカーを設置
+			setMarker(lon, lat, moveToList[$(this).val()].name);
 		}
-		// マーカーを設置
-		setMarker(lon, lat, moveToList[$(this).val()].name);
 	});
 
 	// 保育施設クリック時の挙動を定義
@@ -186,9 +237,10 @@ $('#mainPage').on('pageshow', function() {
 			popup.setPosition(coord);
 			$(element).attr('title', '[' + feature.get('種別') + '] ' + feature.get('名称') );
 			var content = '';
-			if (feature.get('定員') != null) {
+			if (feature.get('定員') !== null) {
 				content += '<div>定員'+feature.get('定員')+'人</div>';
 			}
+			animatedMove(coord[0], coord[1], false);
 			$(element).popover({
 				'animation': false,
 				'placement': 'top',
@@ -196,7 +248,6 @@ $('#mainPage').on('pageshow', function() {
 				'content': content
 			});
 			$(element).popover('show');
-			animatedMove(coord[0], coord[1], false);
 		}
 	});
 
@@ -258,8 +309,8 @@ $('#mainPage').on('pageshow', function() {
 		// ラベル設定
 		$('#markerTitle').html(label);
 		var markerTitle = new ol.Overlay({
-		  position: pos,
-		  element: $('#markerTitle')
+			position: pos,
+			element: $('#markerTitle')
 		});
 		map.addOverlay(markerTitle);
 	}
