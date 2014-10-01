@@ -279,11 +279,14 @@ $('#mainPage').on('pageshow', function() {
 			popup.setPosition(coord);
 			$(element).attr('title', '[' + feature.get('種別') + '] ' + feature.get('名称') );
 			var content = '';
+			if (feature.get('住所１') !== undefined && feature.get('住所２') !== undefined) {
+				content += '<div>住所 '+feature.get('住所１')+feature.get('住所２')+'</div>';
+			}
+			if (feature.get('電話番号') !== undefined) {
+				content += '<div>TEL '+feature.get('電話番号')+'</div>';
+			}
 			if (feature.get('定員') !== null) {
 				content += '<div>定員 '+feature.get('定員')+'人</div>';
-			}
-			if (feature.get('年齢区分') !== undefined) {
-				content += '<div>年齢区分 '+feature.get('年齢区分')+'</div>';
 			}
 			if (feature.get('年齢') !== undefined) {
 				content += '<div>年齢 '+feature.get('年齢')+'</div>';
