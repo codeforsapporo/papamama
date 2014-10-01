@@ -209,6 +209,15 @@ $('#mainPage').on('pageshow', function() {
 				source: view.getCenter()
 			});
 			map.beforeRender(pan);
+
+			feature = new ol.Feature({
+				geometry: polygon
+			});
+			layer = getLayer(getLayerName("Circle"));
+			source = layer.getSource();
+			source.clear();
+			source.addFeature(feature);
+
 			view.fitGeometry(
 				polygon,
 				size,
