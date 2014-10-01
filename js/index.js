@@ -58,6 +58,13 @@ $('#mainPage').on('pageshow', function() {
 				style: elementaryStyleFunction,
 				visible: false
 			}),
+			// 距離同心円描画用レイヤー
+			new ol.layer.Vector({
+				source: new ol.source.Vector(),
+				name: 'layerCircle',
+				style: circleStyleFunction,
+				visible: true
+			}),
 			// こども園
 			new ol.layer.Vector({
 				source: new ol.source.GeoJSON({
@@ -117,7 +124,6 @@ $('#mainPage').on('pageshow', function() {
 	$.getJSON(
 		"data/wards_sapporo.geojson",
 		function(data){
-			console.log(data);
 			moveToList.push( {name: "区・公共施設", header:true} );
 			var lineName = "";
 			for(var i=0; i<data.features.length; i++) {
@@ -231,6 +237,33 @@ $('#mainPage').on('pageshow', function() {
 			}
 		);
 		$(element).popover('destroy');
+
+		// クリックした場所に要素がなんにもない場合
+		if (feature === undefined) {
+			coord = map.getCoordinateFromPixel(evt.pixel);
+			view = map.getView();
+			animatedMove(coord[0], coord[1], false);
+			view.setCenter(coord);
+
+			// 同心円を描く
+			radius = $('#changeCircleRadius').val();
+			if(radius === "") {
+				radius = 500;
+			}
+			circleFeatures = drawConcentricCircle(coord, radius);
+			layer = getLayer(getLayerName("Circle"));
+			source = layer.getSource();
+			source.clear();
+			source.addFeatures(circleFeatures);
+		}
+		// クリックした場所に既に描いた同心円がある場合
+		if (feature && feature.getGeometry().getType() === "Circle") {
+			layer = getLayer(getLayerName("Circle"));
+			source = layer.getSource();
+			source.clear();
+		}
+
+		// クリックした場所に保育施設がある場合
 		if (feature && "Point" == feature.getGeometry().getType()) {
 			var geometry = feature.getGeometry();
 			var coord = geometry.getCoordinates();
@@ -257,6 +290,41 @@ $('#mainPage').on('pageshow', function() {
 		}
 	});
 
+	/**
+	 * 同心円を描く
+	 *
+	 * @param  {[type]} coordinate [description]
+	 * @param  {[type]} maxradius     [description]
+	 * @return {[type]}            [description]
+	 */
+	function drawConcentricCircle(coordinate, maxradius)
+	{
+		features = [];
+		step = Math.floor(maxradius / 5);
+		for(var i=0; i<=maxradius; i+=step) {
+			circleFeature = new ol.Feature({
+				geometry: new ol.geom.Circle(coordinate, i)
+			});
+			features.push(circleFeature);
+		}
+		return features;
+	}
+
+	/**
+	 * 指定した名前のレイヤー情報を取得する
+	 * @param  {[type]} layerName [description]
+	 * @return {[type]}           [description]
+	 */
+	function getLayer(layerName) {
+		result = null;
+		map.getLayers().forEach(function(layer) {
+			if (layer.get('name') == layerName) {
+				result = layer;
+			}
+		});
+		return result;
+	}
+
 	function switchLayer(layerName, visible) {
 		map.getLayers().forEach(function(layer) {
 			if (layer.get('name') == layerName) {
@@ -264,26 +332,39 @@ $('#mainPage').on('pageshow', function() {
 			}
 		});
 	}
-	function getLayerName(cbName) {
-		return 'layer' + cbName.substr(2);
+
+	/**
+	 * レイヤー名を取得する
+	 * @param  {[type]} cbName [description]
+	 * @return {[type]}        [description]
+	 */
+	function getLayerName(cbName)
+	{
+		return 'layer' + cbName;
 	}
+
+	function getLayerNameBySubStred(cbName, count)
+	{
+		return getLayerName(cbName.substr(count));
+	}
+
 	$('#cbKindergarten').click(function() {
-		switchLayer(getLayerName(this.id), $(this).prop('checked'));
+		switchLayer(getLayerNameBySubStred(this.id, 2), $(this).prop('checked'));
 	});
 	$('#cbNinka').click(function() {
-		switchLayer(getLayerName(this.id), $(this).prop('checked'));
+		switchLayer(getLayerNameBySubStred(this.id, 2), $(this).prop('checked'));
 	});
 	$('#cbKodomoen').click(function() {
-		switchLayer(getLayerName(this.id), $(this).prop('checked'));
+		switchLayer(getLayerNameBySubStred(this.id, 2), $(this).prop('checked'));
 	});
 	$('#cbNinkagai').click(function() {
-		switchLayer(getLayerName(this.id), $(this).prop('checked'));
+		switchLayer(getLayerNameBySubStred(this.id, 2), $(this).prop('checked'));
 	});
 	$('#cbMiddleSchool').click(function() {
-		switchLayer(getLayerName(this.id), $(this).prop('checked'));
+		switchLayer(getLayerNameBySubStred(this.id, 2), $(this).prop('checked'));
 	});
 	$('#cbElementarySchool').click(function() {
-		switchLayer(getLayerName(this.id), $(this).prop('checked'));
+		switchLayer(getLayerNameBySubStred(this.id, 2), $(this).prop('checked'));
 	});
 
 	// 地図の透明度を変更するセレクトボックス

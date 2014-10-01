@@ -54,3 +54,17 @@ var elementaryStyleFunction = function(feature, resolution) {
 	})];
 	return style;
 };
+
+// 距離計測用同心円の色設定
+var circleStyleFunction = function(feature, resolution) {
+	var style = [new ol.style.Style({
+		stroke: new ol.style.Stroke({
+			color: 'rgba(255, 0, 0, 0.4)',
+			width: 1
+		}),
+		fill: new ol.style.Fill({
+			color: 'rgba(255, 0, 0, 0.2)'
+		})
+	})];
+	return style;
+};
