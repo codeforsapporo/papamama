@@ -18,6 +18,7 @@ $(window).on("orientationchange", function() {
 	map.setTarget('map');
 });
 
+
 $('#mainPage').on('pageshow', function() {
 	resizeMapDiv();
 	// 地図レイヤー定義
@@ -245,6 +246,7 @@ $('#mainPage').on('pageshow', function() {
 				return feature;
 			}
 		);
+		// ポップアップを消す
 		$(element).popover('destroy');
 
 		// クリックした場所に要素がなんにもない場合
@@ -253,20 +255,10 @@ $('#mainPage').on('pageshow', function() {
 			view = map.getView();
 			animatedMove(coord[0], coord[1], false);
 			view.setCenter(coord);
-
-			// 同心円を描く
-			radius = $('#changeCircleRadius').val();
-			if(radius === "") {
-				radius = 500;
-			}
-			circleFeatures = drawConcentricCircle(coord, radius);
-			layer = getLayer(getLayerName("Circle"));
-			source = layer.getSource();
-			source.clear();
-			source.addFeatures(circleFeatures);
 		}
 		// クリックした場所に既に描いた同心円がある場合
 		if (feature && feature.getGeometry().getType() === "Circle") {
+			$('#cbDisplayCircle').attr('checked', false).checkboxradio('refresh');
 			layer = getLayer(getLayerName("Circle"));
 			source = layer.getSource();
 			source.clear();
@@ -298,29 +290,10 @@ $('#mainPage').on('pageshow', function() {
 				'html': true,
 				'content': content
 			});
+			$("#popup-content").html(content);
 			$(element).popover('show');
 		}
 	});
-
-	/**
-	 * 同心円を描く
-	 *
-	 * @param  {[type]} coordinate [description]
-	 * @param  {[type]} maxradius     [description]
-	 * @return {[type]}            [description]
-	 */
-	function drawConcentricCircle(coordinate, maxradius)
-	{
-		features = [];
-		step = Math.floor(maxradius / 5);
-		for(var i=0; i<=maxradius; i+=step) {
-			circleFeature = new ol.Feature({
-				geometry: new ol.geom.Circle(coordinate, i)
-			});
-			features.push(circleFeature);
-		}
-		return features;
-	}
 
 	/**
 	 * 指定した名前のレイヤー情報を取得する
@@ -387,6 +360,57 @@ $('#mainPage').on('pageshow', function() {
 		}
 		tileLayer.setOpacity(opacity);
 	});
+
+	$('#changeCircleRadius').change(function(evt){
+		radius = $(this).val();
+		if(radius === "") {
+			radius = 500;
+		}
+		drawCenterCircle(radius);
+	});
+
+	$('#cbDisplayCircle').click(function(evt) {
+		radius = $('#changeCircleRadius').val();
+		if(radius === "") {
+			radius = 500;
+		}
+		drawCenterCircle(radius);
+	});
+
+	function drawCenterCircle(radius)
+	{
+		layer = getLayer(getLayerName("Circle"));
+		source = layer.getSource();
+		source.clear();
+		if($('#cbDisplayCircle').prop('checked')) {
+			view           = map.getView();
+			coord          = view.getCenter();
+			circleFeatures = drawConcentricCircle(coord, radius);
+			source.addFeatures(circleFeatures);
+		}
+		return;
+	}
+
+	/**
+	 * 同心円を描く
+	 *
+	 * @param  {[type]} coordinate [description]
+	 * @param  {[type]} maxradius     [description]
+	 * @return {[type]}            [description]
+	 */
+	function drawConcentricCircle(coordinate, maxradius)
+	{
+		features = [];
+		step = Math.floor(maxradius / 5);
+		for(var i=0; i<=maxradius; i+=step) {
+			circleFeature = new ol.Feature({
+				geometry: new ol.geom.Circle(coordinate, i)
+			});
+			features.push(circleFeature);
+		}
+		return features;
+	}
+
 
 	/**
 	 * 指定した緯度経度座標にマーカーを設置する
