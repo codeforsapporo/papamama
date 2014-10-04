@@ -21,9 +21,30 @@ var nurseryStyleFunction = function(feature, resolution) {
 		}),
 		stroke: new ol.style.Stroke({color: 'black', width: 1})
 	});
-	var style = [new ol.style.Style(
-		{image: image}
-	)];
+
+	resolution = Math.floor(resolution * 1000);
+	var text = resolution < 2500 ? "[" + feature.get('種別') + "]" + feature.get('名称') : '';
+	var style = [];
+	if (text !== "") {
+		style = [new ol.style.Style({
+			text: new ol.style.Text({
+				text: text,
+				font: '14px sans-serif',
+				fill: new ol.style.Fill({
+					color: '#000'
+				}),
+				stroke: new ol.style.Stroke({
+					color: '#FFF',
+					width: 3
+				})
+			}),
+			image: image
+		})];
+	} else {
+		style = [new ol.style.Style(
+			{image: image}
+		)];
+	}
 	return style;
 };
 // 中学校区スタイル
