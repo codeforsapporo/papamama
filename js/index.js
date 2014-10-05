@@ -5,11 +5,11 @@ var moveToList = [];
 
 function resizeMapDiv() {
 	var screenHeight = $.mobile.getScreenHeight();
-	var headerHeight = $(".ui-header").hasClass("ui-header-fixed") ?
-		$(".ui-header").outerHeight() - 1 : $(".ui-header").outerHeight();
 	var contentCurrentHeight = $(".ui-content").outerHeight() - $(".ui-content").height();
-	var contentHeight = screenHeight - headerHeight - contentCurrentHeight;
+	var contentHeight = screenHeight - contentCurrentHeight;
+	var navHeight = $("#nav1").outerHeight();
 	$(".ui-content").height(contentHeight);
+	$("#map").height(contentHeight - navHeight - 12);
 }
 
 $(window).on("orientationchange", function() {

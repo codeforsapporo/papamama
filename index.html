@@ -12,28 +12,16 @@
 </head>
 <body>
   <div data-role="page" id="mainPage">
-    <div data-role="panel" id="mypanel">
-      <fieldset data-role="controlgroup">
-        <input type="checkbox" name="cbNinka" id="cbNinka" checked="checked">
-        <label for="cbNinka">認可</label>
-        <input type="checkbox" name="cbKodomoen" id="cbKodomoen" checked="checked">
-        <label for="cbKodomoen">こども園</label>
-        <input type="checkbox" name="cbNinkagai" id="cbNinkagai" checked="checked">
-        <label for="cbNinkagai">認可外</label>
-        <input type="checkbox" name="cbKindergarten" id="cbKindergarten" checked="checked">
-        <label for="cbKindergarten">幼稚園</label>
-      </fieldset>
+    <div data-role="panel" id="mypanel" data-position="right">
 
-      <fieldset data-role="controlgroup">
+      <fieldset data-role="controlgroup" data-type="horizontal" data-mini="true">
         <input type="checkbox" name="cbMiddleSchool" id="cbMiddleSchool">
         <label for="cbMiddleSchool">中学校区</label>
         <input type="checkbox" name="cbElementarySchool" id="cbElementarySchool">
         <label for="cbElementarySchool">小学校区</label>
       </fieldset>
 
-      <select id="moveTo"><option>移動先</option></select>
-
-      <select id="changeOpacity">
+      <select id="changeOpacity" data-mini="true">
         <option>地図透明度</option>
         <option value="0.75">75%</option>
         <option value="0.50">50%</option>
@@ -41,9 +29,9 @@
         <option value="0.10">10%</option>
       </select>
 
-      <input type="checkbox" id="cbDisplayCircle" name="cbDisplayCircle">
+      <input type="checkbox" id="cbDisplayCircle" name="cbDisplayCircle" data-mini="true">
       <label for="cbDisplayCircle">距離円を表示</label>
-      <select id="changeCircleRadius">
+      <select id="changeCircleRadius" data-mini="true">
         <option value="">距離円の半径</option>
         <option value="100">100m</option>
         <option value="250">250m</option>
@@ -57,14 +45,22 @@
         <option value="5000">5km</option>
       </select>
 
+      <a href="#" data-rel="close" class="ui-btn ui-shadow ui-corner-all ui-btn-a ui-icon-delete ui-btn-icon-left ui-btn-inline ui-mini">閉じる</a>
     </div>
-    <!-- header -->
-    <div data-role="header">
-      <h1>さっぽろパパママMAP</h1>
-      <a href="#mypanel" data-icon="bars" data-iconpos="notext">Open panel</a>
-    </div>
-    <!-- content -->
+
     <div role="main" class="ui-content">
+      <fieldset id="nav1" data-role="controlgroup" data-type="horizontal" data-mini="true">
+        <input type="checkbox" name="cbNinka" id="cbNinka" checked="checked">
+        <label for="cbNinka">認可</label>
+        <input type="checkbox" name="cbKodomoen" id="cbKodomoen" checked="checked">
+        <label for="cbKodomoen">こども園</label>
+        <input type="checkbox" name="cbNinkagai" id="cbNinkagai" checked="checked">
+        <label for="cbNinkagai">認可外</label>
+        <input type="checkbox" name="cbKindergarten" id="cbKindergarten" checked="checked">
+        <label for="cbKindergarten">幼稚園</label>
+        <select id="moveTo" data-mini="true"><option>移動先</option></select>
+        <a href="#mypanel" class="ui-btn ui-icon-bars ui-btn-icon-notext">Open panel</a>
+      </fieldset>
       <div id="map" class="map">
         <div id="popup" title="Welcome to ol3"></div>
       </div>
