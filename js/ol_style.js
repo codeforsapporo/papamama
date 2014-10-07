@@ -1,7 +1,7 @@
 function getColor(type) {
 	if ('認可保育所' == type){
 		return 'rgba(0, 255, 0, 1)';
-	} else if ('認可外保育所' == type){
+	} else if ('認可外' == type){
 		return 'rgba(0, 0, 255, 1)';
 	} else if ('幼稚園' == type){
 		return 'rgba(255, 0, 255, 1)';
@@ -23,7 +23,17 @@ var nurseryStyleFunction = function(feature, resolution) {
 	});
 
 	resolution = Math.floor(resolution * 1000);
-	var text = resolution < 2500 ? "[" + feature.get('種別') + "]" + feature.get('名称') : '';
+	var _type = "";
+	switch(feature.get('種別')) {
+		case '認可外':
+			_type = feature.get('種別')[2];
+			break;
+		default:
+			_type = feature.get('種別')[0];
+			break;
+	}
+
+	var text = resolution < 10000 ? "[" + _type + "]" + feature.get('ラベル') : '';
 	var style = [];
 	if (text !== "") {
 		style = [new ol.style.Style({

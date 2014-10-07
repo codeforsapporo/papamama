@@ -1,4 +1,5 @@
 var map;
+var init_center_coords = [141.347899, 43.063968];
 
 // 中心座標変更セレクトボックス用データ
 var moveToList = [];
@@ -105,14 +106,24 @@ $('#mainPage').on('pageshow', function() {
 		],
 		target: 'map',
 		view: new ol.View({
-			center: ol.proj.transform([141.347899, 43.063968], 'EPSG:4326', 'EPSG:3857'),
-			zoom: 14
-		})
+			center: ol.proj.transform(init_center_coords, 'EPSG:4326', 'EPSG:3857'),
+			zoom: 14,
+			maxZoom: 18,
+			minZoom: 10
+		}),
+		controls: [
+			new ol.control.ScaleLine({}), // 距離ライン定義
+			new ol.control.Zoom({}),
+			new ol.control.ZoomSlider({
+			}),
+		]
 	});
 
 	// 距離ライン定義
-	scale = new ol.control.ScaleLine({});
-	map.addControl(scale);
+	// scale = ;
+	// map.addControl(scale);
+
+
 
 	// ポップアップ定義
 	var popup = new ol.Overlay({
