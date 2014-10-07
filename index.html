@@ -29,13 +29,11 @@
         <option value="0.10">10%</option>
       </select>
 
-      <input type="checkbox" id="cbDisplayCircle" name="cbDisplayCircle" data-mini="true">
-      <label for="cbDisplayCircle">距離円を表示</label>
       <select id="changeCircleRadius" data-mini="true">
         <option value="">距離円の半径</option>
         <option value="100">100m</option>
         <option value="250">250m</option>
-        <option value="500">500m</option>
+        <option value="500" selected="selected">500m</option>
         <option value="750">750m</option>
         <option value="1000">1km</option>
         <option value="1250">1.25km</option>
@@ -58,6 +56,8 @@
         <label for="cbNinkagai">認可外</label>
         <input type="checkbox" name="cbKindergarten" id="cbKindergarten" checked="checked">
         <label for="cbKindergarten">幼稚園</label>
+        <input type="checkbox" id="cbDisplayCircle" name="cbDisplayCircle" data-mini="true">
+        <label for="cbDisplayCircle">円表示</label>
         <select id="moveTo" data-mini="true"><option>移動先</option></select>
         <a href="#mypanel" class="ui-btn ui-icon-bars ui-btn-icon-notext">Open panel</a>
       </fieldset>

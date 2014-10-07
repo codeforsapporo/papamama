@@ -255,6 +255,15 @@ $('#mainPage').on('pageshow', function() {
 			view = map.getView();
 			animatedMove(coord[0], coord[1], false);
 			view.setCenter(coord);
+
+			if($('#cbDisplayCircle').prop('checked')) {
+				console.log('aaaa');
+				radius = $('#changeCircleRadius').val();
+				if(radius !== "") {
+					drawCenterCircle(radius);
+				}
+			}
+
 		}
 		// クリックした場所に既に描いた同心円がある場合
 		if (feature && feature.getGeometry().getType() === "Circle") {
