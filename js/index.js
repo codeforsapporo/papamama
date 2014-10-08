@@ -67,15 +67,6 @@ $('#mainPage').on('pageshow', function() {
 				style: circleStyleFunction,
 				visible: true
 			}),
-			// こども園
-			new ol.layer.Vector({
-				source: new ol.source.GeoJSON({
-					projection: 'EPSG:3857',
-					url: 'data/Kodomoen.geojson'
-				}),
-				name: 'layerKodomoen',
-				style: nurseryStyleFunction
-			}),
 			// 認可外
 			new ol.layer.Vector({
 				source: new ol.source.GeoJSON({
