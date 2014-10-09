@@ -21,3 +21,15 @@
 	font-weight: bold;
 	text-shadow: black 0.1em 0.1em 0.2em;
 }
+
+#lblNinka.ui-checkbox-on {
+	background-color: #6EE100;
+}
+
+#lblNinkagai.ui-checkbox-on {
+	background-color: #0362A0;
+}
+
+#lblKindergarten.ui-checkbox-on {
+	background-color: #FF5C24;
+}
