@@ -1,9 +1,15 @@
 var map;
+
+// 地図表示時の中心座標
 var init_center_coords = [141.347899, 43.063968];
 
 // 中心座標変更セレクトボックス用データ
 var moveToList = [];
 
+/**
+ * デバイス回転時、地図の大きさを画面全体に広げる
+ * @return {[type]} [description]
+ */
 function resizeMapDiv() {
 	var screenHeight = $.mobile.getScreenHeight();
 	var contentCurrentHeight = $(".ui-content").outerHeight() - $(".ui-content").height();
@@ -13,12 +19,174 @@ function resizeMapDiv() {
 	$("#map").height(contentHeight - navHeight - 12);
 }
 
+/**
+ * 画面の中心に同心円を描く
+ * @param  {[type]} radius [description]
+ * @return {[type]}        [description]
+ */
+function drawCenterCircle(radius)
+{
+	layer = getLayer(getLayerName("Circle"));
+	source = layer.getSource();
+	source.clear();
+	if($('#cbDisplayCircle').prop('checked')) {
+		view           = map.getView();
+		coord          = view.getCenter();
+		circleFeatures = drawConcentricCircle(coord, radius);
+		source.addFeatures(circleFeatures);
+	}
+	return;
+}
+
+/**
+ * 同心円を描く
+ *
+ * @param  {[type]} coordinate [description]
+ * @param  {[type]} maxradius     [description]
+ * @return {[type]}            [description]
+ */
+function drawConcentricCircle(coordinate, maxradius)
+{
+	features = [];
+	step = Math.floor(maxradius / 5);
+	for(var i=0; i<=maxradius; i+=step) {
+		circleFeature = new ol.Feature({
+			geometry: new ol.geom.Circle(coordinate, i)
+		});
+		features.push(circleFeature);
+	}
+	return features;
+}
+
+
+/**
+ * 指定した緯度経度座標にマーカーを設置する
+ *
+ */
+function setMarker(lon, lat, label)
+{
+	// マーカーを設置
+	var pos = ol.proj.transform([lon, lat], 'EPSG:4326', 'EPSG:3857');
+	// Vienna marker
+	var marker = new ol.Overlay({
+		position: pos,
+		positioning: 'center-center',
+		element: $('#marker'),
+		stopEvent: false
+	});
+	map.addOverlay(marker);
+
+	// ラベル設定
+	$('#markerTitle').html(label);
+	var markerTitle = new ol.Overlay({
+		position: pos,
+		element: $('#markerTitle')
+	});
+	map.addOverlay(markerTitle);
+}
+
+/**
+ * 指定した座標にアニメーションしながら移動する
+ * isTransform:
+ * 座標参照系が変換済みの値を使うには false,
+ * 変換前の値を使うには true を指定
+ */
+function animatedMove(lon, lat, isTransform)
+{
+	// グローバル変数 map から view を取得する
+	view = map.getView();
+	var pan = ol.animation.pan({
+		duration: 850,
+		source: view.getCenter()
+	});
+	map.beforeRender(pan);
+	if(isTransform) {
+		// 座標参照系を変換する
+		view.setCenter(
+			ol.proj.transform([lon, lat], 'EPSG:4326', 'EPSG:3857')
+		);
+	} else {
+		// 座標系を変換しない
+		view.setCenter([lon, lat]);
+	}
+}
+
+/**
+ * 指定した名前のレイヤー情報を取得する
+ * @param  {[type]} layerName [description]
+ * @return {[type]}           [description]
+ */
+function getLayer(layerName) {
+	result = null;
+	map.getLayers().forEach(function(layer) {
+		if (layer.get('name') == layerName) {
+			result = layer;
+		}
+	});
+	return result;
+}
+
+/**
+ * 指定した名称のレイヤーの表示・非表示を切り替える
+ * @param  {[type]} layerName [description]
+ * @param  {[type]} visible   [description]
+ * @return {[type]}           [description]
+ */
+function switchLayer(layerName, visible) {
+	map.getLayers().forEach(function(layer) {
+		if (layer.get('name') == layerName) {
+			layer.setVisible(visible);
+		}
+	});
+}
+
+/**
+ * レイヤー名を取得する
+ * @param  {[type]} cbName [description]
+ * @return {[type]}        [description]
+ */
+function getLayerName(cbName)
+{
+	return 'layer' + cbName;
+}
+
+/**
+ * countで指定した文字でsubstrした文字列で getLayerName を呼び出す
+ *
+ * @param  {[type]} cbName [description]
+ * @param  {[type]} count  [description]
+ * @return {[type]}        [description]
+ */
+function getLayerNameBySubStred(cbName, count)
+{
+	return getLayerName(cbName.substr(count));
+}
+
+/**
+ * 移動先セレクトボックスに要素を追加する
+ * @param  array moveToList [description]
+ * @return {[type]}            [description]
+ */
+function appendToMoveToListBox(moveToList)
+{
+	nesting = "";
+	for(i=0; i<moveToList.length; i++) {
+		if(moveToList[i].header) {
+			if(nesting !== "") {
+				$('#moveTo').append(nesting);
+			}
+			nesting = $('<optgroup>').attr('label', moveToList[i].name);
+		} else {
+			nesting.append($('<option>').html(moveToList[i].name).val(i));
+		}
+	}
+}
+
 $(window).on("orientationchange", function() {
 	resizeMapDiv();
 	map.setTarget('null');
 	map.setTarget('map');
 });
-
 
 $('#mainPage').on('pageshow', function() {
 	resizeMapDiv();
@@ -172,25 +340,6 @@ $('#mainPage').on('pageshow', function() {
 			}
 			appendToMoveToListBox(moveToList);
 		});
-	/**
-	 * 移動先セレクトボックスに要素を追加する
-	 * @param  array moveToList [description]
-	 * @return {[type]}            [description]
-	 */
-	function appendToMoveToListBox(moveToList)
-	{
-		nesting = "";
-		for(i=0; i<moveToList.length; i++) {
-			if(moveToList[i].header) {
-				if(nesting !== "") {
-					$('#moveTo').append(nesting);
-				}
-				nesting = $('<optgroup>').attr('label', moveToList[i].name);
-			} else {
-				nesting.append($('<option>').html(moveToList[i].name).val(i));
-			}
-		}
-	}
 
 	// 中心座標変更セレクトボックス操作イベント定義
 	$('#moveTo').change(function(){
@@ -306,43 +455,6 @@ $('#mainPage').on('pageshow', function() {
 		}
 	});
 
-	/**
-	 * 指定した名前のレイヤー情報を取得する
-	 * @param  {[type]} layerName [description]
-	 * @return {[type]}           [description]
-	 */
-	function getLayer(layerName) {
-		result = null;
-		map.getLayers().forEach(function(layer) {
-			if (layer.get('name') == layerName) {
-				result = layer;
-			}
-		});
-		return result;
-	}
-
-	function switchLayer(layerName, visible) {
-		map.getLayers().forEach(function(layer) {
-			if (layer.get('name') == layerName) {
-				layer.setVisible(visible);
-			}
-		});
-	}
-
-	/**
-	 * レイヤー名を取得する
-	 * @param  {[type]} cbName [description]
-	 * @return {[type]}        [description]
-	 */
-	function getLayerName(cbName)
-	{
-		return 'layer' + cbName;
-	}
-
-	function getLayerNameBySubStred(cbName, count)
-	{
-		return getLayerName(cbName.substr(count));
-	}
 
 	$('#cbKindergarten').click(function() {
 		switchLayer(getLayerNameBySubStred(this.id, 2), $(this).prop('checked'));
@@ -387,91 +499,4 @@ $('#mainPage').on('pageshow', function() {
 		}
 		drawCenterCircle(radius);
 	});
-
-	function drawCenterCircle(radius)
-	{
-		layer = getLayer(getLayerName("Circle"));
-		source = layer.getSource();
-		source.clear();
-		if($('#cbDisplayCircle').prop('checked')) {
-			view           = map.getView();
-			coord          = view.getCenter();
-			circleFeatures = drawConcentricCircle(coord, radius);
-			source.addFeatures(circleFeatures);
-		}
-		return;
-	}
-
-	/**
-	 * 同心円を描く
-	 *
-	 * @param  {[type]} coordinate [description]
-	 * @param  {[type]} maxradius     [description]
-	 * @return {[type]}            [description]
-	 */
-	function drawConcentricCircle(coordinate, maxradius)
-	{
-		features = [];
-		step = Math.floor(maxradius / 5);
-		for(var i=0; i<=maxradius; i+=step) {
-			circleFeature = new ol.Feature({
-				geometry: new ol.geom.Circle(coordinate, i)
-			});
-			features.push(circleFeature);
-		}
-		return features;
-	}
-
-
-	/**
-	 * 指定した緯度経度座標にマーカーを設置する
-	 *
-	 */
-	function setMarker(lon, lat, label)
-	{
-		// マーカーを設置
-		var pos = ol.proj.transform([lon, lat], 'EPSG:4326', 'EPSG:3857');
-		// Vienna marker
-		var marker = new ol.Overlay({
-			position: pos,
-			positioning: 'center-center',
-			element: $('#marker'),
-			stopEvent: false
-		});
-		map.addOverlay(marker);
-
-		// ラベル設定
-		$('#markerTitle').html(label);
-		var markerTitle = new ol.Overlay({
-			position: pos,
-			element: $('#markerTitle')
-		});
-		map.addOverlay(markerTitle);
-	}
-
-	/**
-	 * 指定した座標にアニメーションしながら移動する
-	 * isTransform:
-	 * 座標参照系が変換済みの値を使うには false,
-	 * 変換前の値を使うには true を指定
-	 */
-	function animatedMove(lon, lat, isTransform)
-	{
-		// グローバル変数 map から view を取得する
-		view = map.getView();
-		var pan = ol.animation.pan({
-			duration: 850,
-			source: view.getCenter()
-		});
-		map.beforeRender(pan);
-		if(isTransform) {
-			// 座標参照系を変換する
-			view.setCenter(
-				ol.proj.transform([lon, lat], 'EPSG:4326', 'EPSG:3857')
-			);
-		} else {
-			// 座標系を変換しない
-			view.setCenter([lon, lat]);
-		}
-	}
 });
