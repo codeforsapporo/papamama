@@ -212,7 +212,7 @@ $('#mainPage').on('pageshow', function() {
 			new ol.layer.Vector({
 				source: new ol.source.GeoJSON({
 					projection: 'EPSG:3857',
-					url: 'data/MiddleSchool_Sapporo.geojson'
+					url: 'data/MiddleSchool.geojson'
 				}),
 				name: 'layerMiddleSchool',
 				style: middleSchoolStyleFunction,
@@ -222,7 +222,7 @@ $('#mainPage').on('pageshow', function() {
 			new ol.layer.Vector({
 				source: new ol.source.GeoJSON({
 					projection: 'EPSG:3857',
-					url: 'data/Elementary_Sapporo.geojson'
+					url: 'data/Elementary.geojson'
 				}),
 				name: 'layerElementarySchool',
 				style: elementaryStyleFunction,
@@ -293,7 +293,7 @@ $('#mainPage').on('pageshow', function() {
 
 	// 区一覧と区の境界データ、その他公共施設データ読み込み
 	$.getJSON(
-		"data/wards_sapporo.geojson",
+		"data/wards.geojson",
 		function(data){
 			moveToList.push( {name: "区", header:true} );
 			var lineName = "";
@@ -321,7 +321,7 @@ $('#mainPage').on('pageshow', function() {
 
 	// 駅位置JSONデータ読み込み〜セレクトボックス追加
 	$.getJSON(
-		"data/station_sapporo.geojson",
+		"data/station.geojson",
 		function(data){
 			moveToList.push( {name: "公共交通機関施設", header:true} );
 			var lineName = "";
