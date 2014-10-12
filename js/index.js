@@ -6,6 +6,51 @@ var init_center_coords = [141.347899, 43.063968];
 // 中心座標変更セレクトボックス用データ
 var moveToList = [];
 
+// マップサーバ一覧
+var mapServerList = {
+	"cyberjapn-std": {
+		label: "地理院地図 標準地図",
+		source: new ol.source.XYZ({
+			attributions: [
+				new ol.Attribution({
+					html: "<a href='http://portal.cyberjapan.jp/help/termsofuse.html' target='_blank'>国土地理院</a>"
+				})
+			],
+			url: "http://cyberjapandata.gsi.go.jp/xyz/std/{z}/{x}/{y}.png",
+			projection: "EPSG:3857"
+		})
+	},
+	"cyberjapn-pale": {
+		label: "地理院地図 淡色地図",
+		source: new ol.source.XYZ({
+			attributions: [
+				new ol.Attribution({
+					html: "<a href='http://portal.cyberjapan.jp/help/termsofuse.html' target='_blank'>国土地理院</a>"
+				})
+			],
+			url: "http://cyberjapandata.gsi.go.jp/xyz/pale/{z}/{x}/{y}.png",
+			projection: "EPSG:3857"
+		})
+	},
+	'osm': {
+		label: "OpenStreetMap",
+		source: new ol.source.OSM({
+		})
+	},
+	'stamen_toner': {
+		label: "Stamen toner",
+		source: new ol.source.Stamen({
+			layer: 'toner',
+		})
+	},
+	'stamen_wc': {
+		label: "Stamen watercolor",
+		source: new ol.source.Stamen({
+			layer: 'watercolor',
+		})
+	},
+};
+
 /**
  * デバイス回転時、地図の大きさを画面全体に広げる
  * @return {[type]} [description]
@@ -190,24 +235,15 @@ $(window).on("orientationchange", function() {
 
 $('#mainPage').on('pageshow', function() {
 	resizeMapDiv();
-	// 地図レイヤー定義
-	var tileLayer = new ol.layer.Tile({
-		opacity: 1.0,
-		source: new ol.source.XYZ({
-			attributions: [
-				new ol.Attribution({
-					html: "<a href='http://portal.cyberjapan.jp/help/termsofuse.html' target='_blank'>国土地理院</a>"
-				})
-			],
-			url: "http://cyberjapandata.gsi.go.jp/xyz/std/{z}/{x}/{y}.png",
-			projection: "EPSG:3857"
-		})
-	});
 
 	// 地図レイヤー定義
 	map = new ol.Map({
 		layers: [
-			tileLayer,
+			new ol.layer.Tile({
+				opacity: 1.0,
+				name: 'layerTile',
+				source: mapServerList['cyberjapn-std'].source
+			}),
 			// 中学校区
 			new ol.layer.Vector({
 				source: new ol.source.GeoJSON({
@@ -271,6 +307,7 @@ $('#mainPage').on('pageshow', function() {
 			minZoom: 10
 		}),
 		controls: [
+			new ol.control.Attribution({collapsible: true}),
 			new ol.control.ScaleLine({}), // 距離ライン定義
 			new ol.control.Zoom({}),
 			new ol.control.ZoomSlider({
@@ -278,18 +315,16 @@ $('#mainPage').on('pageshow', function() {
 		]
 	});
 
-	// 距離ライン定義
-	// scale = ;
-	// map.addControl(scale);
-
-
-
 	// ポップアップ定義
 	var popup = new ol.Overlay({
 		element: document.getElementById('popup')
 	});
 	map.addOverlay(popup);
 
+	for(var item in mapServerList) {
+		option = $('<option>').html(mapServerList[item].label).val(item);
+		$('#changeBaseMap').append(option);
+	}
 
 	// 区一覧と区の境界データ、その他公共施設データ読み込み
 	$.getJSON(
@@ -317,7 +352,6 @@ $('#mainPage').on('pageshow', function() {
 			}
 			appendToMoveToListBox(moveToList);
 		});
-
 
 	// 駅位置JSONデータ読み込み〜セレクトボックス追加
 	$.getJSON(
@@ -408,7 +442,6 @@ $('#mainPage').on('pageshow', function() {
 			view.setCenter(coord);
 
 			if($('#cbDisplayCircle').prop('checked')) {
-				console.log('aaaa');
 				radius = $('#changeCircleRadius').val();
 				if(radius !== "") {
 					drawCenterCircle(radius);
@@ -481,6 +514,7 @@ $('#mainPage').on('pageshow', function() {
 		if($(this).val() !== "" && $(this).val() > 0) {
 			opacity = $(this).val();
 		}
+		var tileLayer = map.getLayers().item(0);
 		tileLayer.setOpacity(opacity);
 	});
 
@@ -498,5 +532,16 @@ $('#mainPage').on('pageshow', function() {
 			radius = 500;
 		}
 		drawCenterCircle(radius);
+	});
+
+	// 地図変更選択ボックス操作時のイベント
+	$('#changeBaseMap').change(function(evt) {
+		url = mapServerList[$(this).val()].url;
+		map.removeLayer(map.getLayers().item(0));
+		var tileLayer = new ol.layer.Tile({
+			opacity: $('#changeOpacity option:selected').val(),
+			source: mapServerList[$(this).val()].source
+		});
+		map.getLayers().insertAt(0, tileLayer);
 	});
 });
