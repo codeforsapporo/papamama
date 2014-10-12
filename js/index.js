@@ -462,19 +462,50 @@ $('#mainPage').on('pageshow', function() {
 			var geometry = feature.getGeometry();
 			var coord = geometry.getCoordinates();
 			popup.setPosition(coord);
-			$(element).attr('title', '[' + feature.get('種別') + '] ' + feature.get('名称') );
+
+			// タイトル部
+			var title = '';
+			title  = '[' + feature.get('種別') + '] ';
+			if(feature.get('設置') !== null) {
+				title += ' [' +feature.get('設置')+']';
+			}
+			title += feature.get('名称');
+			$(element).attr('title', title );
+
+			// 内容部
 			var content = '';
+			if (feature.get('開園時間') !== null && feature.get('終園時間') !== null) {
+				content += '<div>' + feature.get('開園時間') + '〜' + feature.get('終園時間');
+				if( feature.get('延長') === 1) {
+					content += ' [' + feature.get('備考') + ']';
+				}
+				content += '</div>';
+			}
+			if (feature.get('開始年齢') !== null && feature.get('終了年齢') !== null) {
+				content += '<div>' + feature.get('開始年齢') + '〜' + feature.get('終了年齢') + '</div>';
+			}
+			content += '<div>';
+			if (feature.get('一時') !== null) {
+				content += '一時保育 ';
+			}
+			if (feature.get('休日') !== null) {
+				content += '休日保育 ';
+			}
+			if (feature.get('夜間') !== null) {
+				content += '夜間保育 ';
+			}
+			content += '</div>';
+			if (feature.get('定員') !== null) {
+				content += '<div>定員 '+feature.get('定員')+'人</div>';
+			}
 			if (feature.get('住所１') !== undefined && feature.get('住所２') !== undefined) {
 				content += '<div>住所 '+feature.get('住所１')+feature.get('住所２')+'</div>';
 			}
 			if (feature.get('電話番号') !== undefined) {
 				content += '<div>TEL '+feature.get('電話番号')+'</div>';
 			}
-			if (feature.get('定員') !== null) {
-				content += '<div>定員 '+feature.get('定員')+'人</div>';
-			}
-			if (feature.get('年齢') !== undefined) {
-				content += '<div>年齢 '+feature.get('年齢')+'</div>';
+			if (feature.get('設置者') !== null) {
+				content += '<div>設置者 '+feature.get('設置者')+'</div>';
 			}
 			animatedMove(coord[0], coord[1], false);
 			$(element).popover({
