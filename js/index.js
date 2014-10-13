@@ -10,6 +10,7 @@ var moveToList = [];
 var mapServerList = {
 	"cyberjapn-std": {
 		label: "地理院地図 標準地図",
+		source_type: "xyz",
 		source: new ol.source.XYZ({
 			attributions: [
 				new ol.Attribution({
@@ -22,6 +23,7 @@ var mapServerList = {
 	},
 	"cyberjapn-pale": {
 		label: "地理院地図 淡色地図",
+		source_type: "xyz",
 		source: new ol.source.XYZ({
 			attributions: [
 				new ol.Attribution({
@@ -34,17 +36,28 @@ var mapServerList = {
 	},
 	'osm': {
 		label: "OpenStreetMap",
+		source_type: "osm",
 		source: new ol.source.OSM({
 		})
 	},
+	'osm-wms': {
+		label: "OSM wms",
+		source_type: "image",
+		source: new ol.source.ImageWMS({
+				url: 'http://ows.terrestris.de/osm/service?',
+				params: {'LAYERS': 'OSM-WMS'},
+			})
+	},
 	'stamen_toner': {
 		label: "Stamen toner",
+		source_type: "stamen",
 		source: new ol.source.Stamen({
 			layer: 'toner',
 		})
 	},
 	'stamen_wc': {
 		label: "Stamen watercolor",
+		source_type: "stamen",
 		source: new ol.source.Stamen({
 			layer: 'watercolor',
 		})
@@ -317,7 +330,7 @@ $('#mainPage').on('pageshow', function() {
 
 	// ポップアップ定義
 	var popup = new ol.Overlay({
-		element: document.getElementById('popup')
+		element: $('#popup')
 	});
 	map.addOverlay(popup);
 
@@ -425,14 +438,13 @@ $('#mainPage').on('pageshow', function() {
 
 	// 保育施設クリック時の挙動を定義
 	map.on('click', function(evt) {
-		var element = popup.getElement();
 		var feature = map.forEachFeatureAtPixel(evt.pixel,
 			function(feature, layer) {
 				return feature;
 			}
 		);
 		// ポップアップを消す
-		$(element).popover('destroy');
+		$('#popup').hide();
 
 		// クリックした場所に要素がなんにもない場合
 		if (feature === undefined) {
@@ -470,10 +482,10 @@ $('#mainPage').on('pageshow', function() {
 				title += ' [' +feature.get('設置')+']';
 			}
 			title += feature.get('名称');
-			$(element).attr('title', title );
 
 			// 内容部
 			var content = '';
+			content += title;
 			if (feature.get('開園時間') !== null && feature.get('終園時間') !== null) {
 				content += '<div>' + feature.get('開園時間') + '〜' + feature.get('終園時間');
 				if( feature.get('延長') === 1) {
@@ -501,21 +513,15 @@ $('#mainPage').on('pageshow', function() {
 			if (feature.get('住所１') !== undefined && feature.get('住所２') !== undefined) {
 				content += '<div>住所 '+feature.get('住所１')+feature.get('住所２')+'</div>';
 			}
-			if (feature.get('電話番号') !== undefined) {
-				content += '<div>TEL '+feature.get('電話番号')+'</div>';
+			if (feature.get('TEL') !== null) {
+				content += '<div>TEL '+feature.get('TEL')+'</div>';
 			}
 			if (feature.get('設置者') !== null) {
 				content += '<div>設置者 '+feature.get('設置者')+'</div>';
 			}
 			animatedMove(coord[0], coord[1], false);
-			$(element).popover({
-				'animation': false,
-				'placement': 'top',
-				'html': true,
-				'content': content
-			});
 			$("#popup-content").html(content);
-			$(element).popover('show');
+			$('#popup').show();
 		}
 	});
 
@@ -567,12 +573,30 @@ $('#mainPage').on('pageshow', function() {
 
 	// 地図変更選択ボックス操作時のイベント
 	$('#changeBaseMap').change(function(evt) {
-		url = mapServerList[$(this).val()].url;
 		map.removeLayer(map.getLayers().item(0));
-		var tileLayer = new ol.layer.Tile({
-			opacity: $('#changeOpacity option:selected').val(),
-			source: mapServerList[$(this).val()].source
-		});
-		map.getLayers().insertAt(0, tileLayer);
+
+		source_type = mapServerList[$(this).val()].source_type;
+		var layer = null;
+		switch(source_type) {
+			case 'image':
+				layer = new ol.layer.Image({
+					opacity: $('#changeOpacity option:selected').val(),
+					source: mapServerList[$(this).val()].source
+				});
+				break;
+			default:
+				layer = new ol.layer.Tile({
+					opacity: $('#changeOpacity option:selected').val(),
+					source: mapServerList[$(this).val()].source
+				});
+				break;
+		}
+
+		map.getLayers().insertAt(0, layer);
+	});
+
+	$('#popup-closer').click(function(evt){
+		$('#popup').hide();
+		return;
 	});
 });
