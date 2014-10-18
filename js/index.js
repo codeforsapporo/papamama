@@ -48,20 +48,6 @@ var mapServerList = {
 				params: {'LAYERS': 'OSM-WMS'},
 			})
 	},
-	'stamen_toner': {
-		label: "Stamen toner",
-		source_type: "stamen",
-		source: new ol.source.Stamen({
-			layer: 'toner',
-		})
-	},
-	'stamen_wc': {
-		label: "Stamen watercolor",
-		source_type: "stamen",
-		source: new ol.source.Stamen({
-			layer: 'watercolor',
-		})
-	},
 };
 
 /**
@@ -255,9 +241,9 @@ $('#mainPage').on('pageshow', function() {
 			new ol.layer.Tile({
 				opacity: 1.0,
 				name: 'layerTile',
-				source: mapServerList['cyberjapn-std'].source
+				source: mapServerList['cyberjapn-pale'].source
 			}),
-			// 中学校区
+			// 中学校区ポリゴン
 			new ol.layer.Vector({
 				source: new ol.source.GeoJSON({
 					projection: 'EPSG:3857',
@@ -267,13 +253,33 @@ $('#mainPage').on('pageshow', function() {
 				style: middleSchoolStyleFunction,
 				visible: false
 			}),
-			// 小学校区
+			// 中学校区位置
+			new ol.layer.Vector({
+				source: new ol.source.GeoJSON({
+					projection: 'EPSG:3857',
+					url: 'data/MiddleSchool_loc.geojson'
+				}),
+				name: 'layerMiddleSchoolLoc',
+				style: middleSchoolStyleFunction,
+				visible: false
+			}),
+			// 小学校区ポリゴン
 			new ol.layer.Vector({
 				source: new ol.source.GeoJSON({
 					projection: 'EPSG:3857',
 					url: 'data/Elementary.geojson'
 				}),
 				name: 'layerElementarySchool',
+				style: elementaryStyleFunction,
+				visible: false
+			}),
+			// 小学校区位置
+			new ol.layer.Vector({
+				source: new ol.source.GeoJSON({
+					projection: 'EPSG:3857',
+					url: 'data/Elementary_loc.geojson'
+				}),
+				name: 'layerElementarySchoolLoc',
 				style: elementaryStyleFunction,
 				visible: false
 			}),
@@ -410,6 +416,7 @@ $('#mainPage').on('pageshow', function() {
 			map.beforeRender(pan);
 
 			feature = new ol.Feature({
+				name: moveToList[$(this).val()].name,
 				geometry: polygon
 			});
 			layer = getLayer(getLayerName("Circle"));
@@ -471,6 +478,9 @@ $('#mainPage').on('pageshow', function() {
 
 		// クリックした場所に保育施設がある場合
 		if (feature && "Point" == feature.getGeometry().getType()) {
+			if(feature.get('種別') === undefined) {
+				return;
+			}
 			var geometry = feature.getGeometry();
 			var coord = geometry.getCoordinates();
 			popup.setPosition(coord);
@@ -482,6 +492,10 @@ $('#mainPage').on('pageshow', function() {
 				title += ' [' +feature.get('設置')+']';
 			}
 			title += feature.get('名称');
+			url = feature.get('url');
+			if(url !== null) {
+				title = '<a href="' +url+ '" target="_blank">' + title + '</a>';
+			}
 
 			// 内容部
 			var content = '';
@@ -539,10 +553,14 @@ $('#mainPage').on('pageshow', function() {
 		switchLayer(getLayerNameBySubStred(this.id, 2), $(this).prop('checked'));
 	});
 	$('#cbMiddleSchool').click(function() {
-		switchLayer(getLayerNameBySubStred(this.id, 2), $(this).prop('checked'));
+		layerName = getLayerNameBySubStred(this.id, 2);
+		switchLayer(layerName, $(this).prop('checked'));
+		switchLayer(layerName + 'Loc', $(this).prop('checked'));
 	});
 	$('#cbElementarySchool').click(function() {
-		switchLayer(getLayerNameBySubStred(this.id, 2), $(this).prop('checked'));
+		layerName = getLayerNameBySubStred(this.id, 2);
+		switchLayer(layerName, $(this).prop('checked'));
+		switchLayer(layerName + 'Loc', $(this).prop('checked'));
 	});
 
 	// 地図の透明度を変更するセレクトボックス
@@ -573,6 +591,9 @@ $('#mainPage').on('pageshow', function() {
 
 	// 地図変更選択ボックス操作時のイベント
 	$('#changeBaseMap').change(function(evt) {
+		if($(this).val() === "地図種類") {
+			return;
+		}
 		map.removeLayer(map.getLayers().item(0));
 
 		source_type = mapServerList[$(this).val()].source_type;

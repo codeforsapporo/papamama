@@ -34,6 +34,14 @@
 	background-color: #FF5C24;
 }
 
+#lblMiddleSchool.ui-checkbox-on {
+	background-color: #7379AE;
+}
+
+#lblElementarySchool.ui-checkbox-on {
+	background-color: #1BA466;
+}
+
 .ol-popup {
 	display: none;
 	position: absolute;
