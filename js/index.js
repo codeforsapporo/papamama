@@ -243,44 +243,52 @@ $('#mainPage').on('pageshow', function() {
 				name: 'layerTile',
 				source: mapServerList['cyberjapn-pale'].source
 			}),
-			// 中学校区ポリゴン
-			new ol.layer.Vector({
-				source: new ol.source.GeoJSON({
-					projection: 'EPSG:3857',
-					url: 'data/MiddleSchool.geojson'
-				}),
-				name: 'layerMiddleSchool',
-				style: middleSchoolStyleFunction,
+			// 中学校区レイヤーグループ
+			new ol.layer.Group({
+				layers:[
+					// 中学校区ポリゴン
+					new ol.layer.Vector({
+						source: new ol.source.GeoJSON({
+							projection: 'EPSG:3857',
+							url: 'data/MiddleSchool.geojson'
+						}),
+						name: 'layerMiddleSchool',
+						style: middleSchoolStyleFunction,
+					}),
+					// 中学校区位置
+					new ol.layer.Vector({
+						source: new ol.source.GeoJSON({
+							projection: 'EPSG:3857',
+							url: 'data/MiddleSchool_loc.geojson'
+						}),
+						name: 'layerMiddleSchoolLoc',
+						style: middleSchoolStyleFunction,
+					}),
+				],
 				visible: false
 			}),
-			// 中学校区位置
-			new ol.layer.Vector({
-				source: new ol.source.GeoJSON({
-					projection: 'EPSG:3857',
-					url: 'data/MiddleSchool_loc.geojson'
-				}),
-				name: 'layerMiddleSchoolLoc',
-				style: middleSchoolStyleFunction,
-				visible: false
-			}),
-			// 小学校区ポリゴン
-			new ol.layer.Vector({
-				source: new ol.source.GeoJSON({
-					projection: 'EPSG:3857',
-					url: 'data/Elementary.geojson'
-				}),
-				name: 'layerElementarySchool',
-				style: elementaryStyleFunction,
-				visible: false
-			}),
-			// 小学校区位置
-			new ol.layer.Vector({
-				source: new ol.source.GeoJSON({
-					projection: 'EPSG:3857',
-					url: 'data/Elementary_loc.geojson'
-				}),
-				name: 'layerElementarySchoolLoc',
-				style: elementaryStyleFunction,
+			// 小学校区レイヤーグループ
+			new ol.layer.Group({
+				layers:[
+					// 小学校区ポリゴン
+					new ol.layer.Vector({
+						source: new ol.source.GeoJSON({
+							projection: 'EPSG:3857',
+							url: 'data/Elementary.geojson'
+						}),
+						name: 'layerElementarySchool',
+						style: elementaryStyleFunction,
+					}),
+					// 小学校区位置
+					new ol.layer.Vector({
+						source: new ol.source.GeoJSON({
+							projection: 'EPSG:3857',
+							url: 'data/Elementary_loc.geojson'
+						}),
+						name: 'layerElementarySchoolLoc',
+						style: elementaryStyleFunction,
+					})
+				],
 				visible: false
 			}),
 			// 距離同心円描画用レイヤー
@@ -553,14 +561,12 @@ $('#mainPage').on('pageshow', function() {
 		switchLayer(getLayerNameBySubStred(this.id, 2), $(this).prop('checked'));
 	});
 	$('#cbMiddleSchool').click(function() {
-		layerName = getLayerNameBySubStred(this.id, 2);
-		switchLayer(layerName, $(this).prop('checked'));
-		switchLayer(layerName + 'Loc', $(this).prop('checked'));
+		layer = map.getLayers().item(1);
+		layer.setVisible($(this).prop('checked'));
 	});
 	$('#cbElementarySchool').click(function() {
-		layerName = getLayerNameBySubStred(this.id, 2);
-		switchLayer(layerName, $(this).prop('checked'));
-		switchLayer(layerName + 'Loc', $(this).prop('checked'));
+		layer = map.getLayers().item(2);
+		layer.setVisible($(this).prop('checked'));
 	});
 
 	// 地図の透明度を変更するセレクトボックス
