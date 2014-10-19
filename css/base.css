@@ -47,8 +47,8 @@
 	position: absolute;
 	background-color: white;
 	width: 300px;
-	padding: 15px;
 	bottom: 12px;
+	top: -205px;
 	left: -150px;
 	border-radius: 10px;
 	border: 1px solid #cccccc;
@@ -82,9 +82,21 @@
 	text-decoration: none;
 	position: absolute;
 	top: 2px;
-	right: 8px;
+	right: -8px;
 }
 .ol-popup-closer:after {
 	content: "x";
 }
+#popup-closer {
+	top: -5px;
+	right: -5px;
+}
 
+#popup-content th {
+	width: 4em;
+	vertical-align: top;
+}
+
+#popup-content td {
+	vertical-align: top;
+}

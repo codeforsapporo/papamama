@@ -453,13 +453,14 @@ $('#mainPage').on('pageshow', function() {
 
 	// 保育施設クリック時の挙動を定義
 	map.on('click', function(evt) {
+		// ポップアップを消す
+		$('#popup').hide();
+
 		var feature = map.forEachFeatureAtPixel(evt.pixel,
 			function(feature, layer) {
 				return feature;
 			}
 		);
-		// ポップアップを消す
-		$('#popup').hide();
 
 		// クリックした場所に要素がなんにもない場合
 		if (feature === undefined) {
@@ -504,43 +505,72 @@ $('#mainPage').on('pageshow', function() {
 			if(url !== null) {
 				title = '<a href="' +url+ '" target="_blank">' + title + '</a>';
 			}
+			$("#popup-title").html(title);
 
 			// 内容部
 			var content = '';
-			content += title;
+			content = '<table><tbody>';
 			if (feature.get('開園時間') !== null && feature.get('終園時間') !== null) {
-				content += '<div>' + feature.get('開園時間') + '〜' + feature.get('終園時間');
+				content += '<tr>';
+				content += '<th>時間</th>';
+				content += '<td>' + feature.get('開園時間') + '〜' + feature.get('終園時間')+'</td>';
+				content += '</tr>';
 				if( feature.get('延長') === 1) {
-					content += ' [' + feature.get('備考') + ']';
+					content += '<tr>';
+					content += '<th></th>';
+					content += '<td>' + feature.get('備考') + '</td>';
+					content += '</tr>';
 				}
-				content += '</div>';
+
+				if( feature.get('一時') !== null || feature.get('休日') !== null || feature.get('夜間') !== null) {
+					content += '<tr>';
+					content += '<th></th>';
+					content += '<td>';
+					if (feature.get('一時') !== null) {
+						content += '一時保育 ';
+					}
+					if (feature.get('休日') !== null) {
+						content += '休日保育 ';
+					}
+					if (feature.get('夜間') !== null) {
+						content += '夜間保育 ';
+					}
+					content += '</td>';
+					content += '</tr>';
+				}
 			}
 			if (feature.get('開始年齢') !== null && feature.get('終了年齢') !== null) {
-				content += '<div>' + feature.get('開始年齢') + '〜' + feature.get('終了年齢') + '</div>';
+				content += '<tr>';
+				content += '<th>年齢</th>';
+				content += '<td>' + feature.get('開始年齢') + '〜' + feature.get('終了年齢') + '</td>';
+				content += '</tr>';
 			}
-			content += '<div>';
-			if (feature.get('一時') !== null) {
-				content += '一時保育 ';
-			}
-			if (feature.get('休日') !== null) {
-				content += '休日保育 ';
-			}
-			if (feature.get('夜間') !== null) {
-				content += '夜間保育 ';
-			}
-			content += '</div>';
 			if (feature.get('定員') !== null) {
-				content += '<div>定員 '+feature.get('定員')+'人</div>';
-			}
-			if (feature.get('住所１') !== undefined && feature.get('住所２') !== undefined) {
-				content += '<div>住所 '+feature.get('住所１')+feature.get('住所２')+'</div>';
+				content += '<tr>';
+				content += '<th>定員</th>';
+				content += '<td>'+feature.get('定員')+'人</td>';
+				content += '</tr>';
 			}
 			if (feature.get('TEL') !== null) {
-				content += '<div>TEL '+feature.get('TEL')+'</div>';
+				content += '<tr>';
+				content += '<th>TEL</th>';
+				content += '<td>TEL '+feature.get('TEL')+'</td>';
+				content += '</tr>';
+			}
+			if (feature.get('住所１') !== undefined && feature.get('住所２') !== undefined) {
+				content += '<tr>';
+				content += '<th>住所</th>';
+				content += '<td>'+feature.get('住所１')+feature.get('住所２')+'</td>';
+				content += '</tr>';
 			}
 			if (feature.get('設置者') !== null) {
-				content += '<div>設置者 '+feature.get('設置者')+'</div>';
+				content += '<tr>';
+				content += '<th>設置者</th>';
+				content += '<td>'+feature.get('設置者')+'</td>';
+				content += '</tr>';
 			}
+			content += '</tbody></table>';
+
 			animatedMove(coord[0], coord[1], false);
 			$("#popup-content").html(content);
 			$('#popup').show();

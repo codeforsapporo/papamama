@@ -29,56 +29,31 @@
 
       <a href="#about" data-rel="popup" data-position-to="window" data-transition="pop" class="ui-btn ui-corner-all ui-btn-inline ui-mini ui-btn-a">このマップについて</a>
       <p>
-      <div data-role="popup" id="about" data-overlay-theme="a" data-theme="a" data-dismissible="false" style="max-width:640px;">
+      <div data-role="popup" id="about" data-overlay-theme="a" data-theme="a" style="max-height: 400px; max-width:770px;">
         <div data-role="header" data-theme="a" >
           <h1>このマップについて</h1>
         </div>
         <a href="#" data-rel="back" class="ui-btn ui-corner-all ui-shadow ui-btn-a ui-icon-delete ui-btn-icon-notext ui-btn-right">Close</a>
         <div role="main" class="ui-content">
-        <p>
-        こどもを「どこに」預ければいいんだろう？…これはちいさなお子さんがいるお父さんやお母さんを長年悩ませてきた問題です。
-        </p>
-        <p>
-        おうちの近く？勤め先の近く？退勤時間に間に合う？じじばばも行ける？それぞれの家庭のたくさんの事情を考えて、こどもの預け先を選ぶことはとても大変です。
-        </p>
-        <p>
-        こうなったら市役所ホームページの住所一覧から検索をかけて夜にじっくり検討…などとおもいきや、後ろで突然こどもが号泣して中断…なんてこともあるでしょう。ましてや、土地勘のない方や引っ越してきたばかりの方などでしたら、なおさら苦労して預け先を探さなくてはいけません。
-        </p>
-        <p>
-        そこで、「ぱぱまままっぷ札幌」では、札幌市さん所有の保育所（認可・認可外）・幼稚園データをもとにCode for Sapporoが、その場所と情報をみやすく整理しました。
-        </p>
-        <p>
-        このマップによって、お父さんとお母さんの負担が少しでも軽くなりますように。<br/>
-        そして、一人でも多くのこどもたちに、よりよい保育・育児環境が届きますように。
-        </p>
-        <p>
-        ※今回データをご提供くださった札幌市子ども未来局さんにのサポートにあつく御礼申し上げます。<br/>
-        ※このコンテンツは Creative Commons の【表示】（CC BY 4.0）ライセンスに従う限り、自由に二次利用可能です。
-        </p>
-        <a href="https://creativecommons.org/licenses/by/4.0/deed.ja" target="_blank">https://creativecommons.org/licenses/by/4.0/deed.ja</a>
-        <p>
-        <a href="http://www.codeforsapporo.org">Code for Sappro</a> ぱぱまままっぷチーム
-        </p>
-        <a href="#" class="ui-btn ui-corner-all ui-shadow ui-btn-inline ui-btn-a" data-rel="back">閉じる</a>
+          <iframe src="https://docs.google.com/forms/d/1DqZUvd3PVj8HvIjagFJpXeR0CjLfK8G6osiW65zAnio/viewform?embedded=true" height="350" frameborder="0" marginheight="0" marginwidth="0">読み込み中...</iframe>
         </div>
       </div>
       </p>
-      <a href="#" data-rel="close" class="ui-btn ui-shadow ui-corner-all ui-btn-a ui-icon-delete ui-btn-icon-left ui-btn-inline ui-mini">閉じる</a>
     </div>
 
     <div role="main" class="ui-content">
       <div id="nav">
         <fieldset id="nav1" data-role="controlgroup" data-type="horizontal" data-mini="true">
           <input type="checkbox" name="cbNinka" id="cbNinka" checked="checked">
-          <label for="cbNinka" id="lblNinka">認</label>
+          <label for="cbNinka" id="lblNinka">認可</label>
           <input type="checkbox" name="cbNinkagai" id="cbNinkagai" checked="checked">
-          <label for="cbNinkagai" id="lblNinkagai">外</label>
+          <label for="cbNinkagai" id="lblNinkagai">認可外</label>
           <input type="checkbox" name="cbKindergarten" id="cbKindergarten" checked="checked">
           <label for="cbKindergarten" id="lblKindergarten">幼</label>
           <input type="checkbox" name="cbElementarySchool" id="cbElementarySchool">
-          <label for="cbElementarySchool" id="lblElementarySchool">小学校区</label>
+          <label for="cbElementarySchool" id="lblElementarySchool">小</label>
           <input type="checkbox" name="cbMiddleSchool" id="cbMiddleSchool">
-          <label for="cbMiddleSchool" id="lblMiddleSchool">中学校区</label>
+          <label for="cbMiddleSchool" id="lblMiddleSchool">中</label>
         </fieldset>
         <fieldset id="nav2" data-role="controlgroup" data-type="horizontal" data-mini="true">
           <select id="changeBaseMap" data-mini="true">
@@ -91,10 +66,11 @@
         </fieldset>
       </div>
       <div id="map" class="map">
-        <div id="popup" title="Welcome to ol3" class="ol-popup">
-            <a href="#" id="popup-closer" class="ol-popup-closer"></a>
-            <div id="popup-content"></div>
-        </div>
+      </div>
+      <div id="popup" data-role="popup" data-theme="a" class="ui-content ol-popup" style="max-height: 200px;">
+          <a href="#" id="popup-closer" data-rel="back" class="ui-btn ui-corner-all ui-shadow ui-btn-a ui-icon-delete ui-btn-icon-notext ui-btn-right">Close</a>
+          <div id="popup-title" data-role="header" data-theme="a"></div>
+          <div id="popup-content" role="main"></div>
       </div>
     </div>
   <script src="js/jquery-2.1.1.min.js" type="text/javascript"></script>

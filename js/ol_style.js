@@ -48,16 +48,7 @@ var nurseryStyleFunction = function(feature, resolution) {
 
 	resolution = Math.floor(resolution * 1000);
 	var _type = "";
-	switch(feature.get('種別')) {
-		case '認可外':
-			_type = feature.get('種別')[2];
-			break;
-		default:
-			_type = feature.get('種別')[0];
-			break;
-	}
-
-	var text = resolution < 10000 ? "[" + _type + "]" + feature.get('ラベル') : '';
+	var text = resolution < 10000 ? feature.get('ラベル') : '';
 	var style = [];
 	style = [
 		new ol.style.Style({image: background}),
