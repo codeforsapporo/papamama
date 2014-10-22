@@ -9,24 +9,11 @@
   <link rel="stylesheet" href="css/bootstrap.css.map" type="text/css">
   <link rel="stylesheet" href="css/base.css" type="text/css">
   <link rel="stylesheet" href="css/jquery.mobile-1.4.4.css">
+  <link rel="stylesheet" href="css/icon-pack-custom.css">
 </head>
 <body>
   <div data-role="page" id="mainPage">
     <div data-role="panel" id="mypanel" data-position="right">
-      <select id="changeCircleRadius" data-mini="true">
-        <option value="">距離円の半径</option>
-        <option value="100">100m</option>
-        <option value="250">250m</option>
-        <option value="500" selected="selected">500m</option>
-        <option value="750">750m</option>
-        <option value="1000">1km</option>
-        <option value="1250">1.25km</option>
-        <option value="1500">1.5km</option>
-        <option value="2000">2km</option>
-        <option value="3000">3km</option>
-        <option value="5000">5km</option>
-      </select>
-
       <a href="#about" data-rel="popup" data-position-to="window" data-transition="pop" class="ui-btn ui-corner-all ui-btn-inline ui-mini ui-btn-a">このマップについて</a>
       <p>
       <div data-role="popup" id="about" data-overlay-theme="a" data-theme="a" style="max-height: 400px; max-width:770px;">
@@ -54,15 +41,27 @@
           <label for="cbElementarySchool" id="lblElementarySchool">小</label>
           <input type="checkbox" name="cbMiddleSchool" id="cbMiddleSchool">
           <label for="cbMiddleSchool" id="lblMiddleSchool">中</label>
+          <a href="https://docs.google.com/forms/d/1DqZUvd3PVj8HvIjagFJpXeR0CjLfK8G6osiW65zAnio/viewform" target="_blank" class="ui-btn ui-icon-question ui-btn-icon-notext">help</a>
         </fieldset>
-        <fieldset id="nav2" data-role="controlgroup" data-type="horizontal" data-mini="true">
+        <fieldset id="nav2" class="ui-hide-label" data-role="controlgroup" data-type="horizontal" data-mini="true">
+          <label for="changeBaseMap">背景</label>
           <select id="changeBaseMap" data-mini="true">
-            <option>地図種類</option>
+            <option>背景</option>
           </select>
-          <select id="moveTo" data-mini="true"><option>移動先</option></select>
-          <input type="checkbox" id="cbDisplayCircle" name="cbDisplayCircle" data-mini="true">
-          <label for="cbDisplayCircle">距離円</label>
-          <a href="#mypanel" class="ui-btn ui-icon-bars ui-btn-icon-notext">Open panel</a>
+          <label for="moveTo">移動先</label>
+          <select id="moveTo" data-mini="true">
+            <option>移動先</option>
+          </select>
+          <label for="cbDisplayCircle" class="ui-btn-icon-notext">距離円<span class="ui-icon-bullseye ui-btn-icon-notext"></span></label>
+          <input type="checkbox" id="cbDisplayCircle" name="cbDisplayCircle" data-mini="true"/>
+          <label for="changeCircleRadius" class="ui-hidden-accessible">半径</label>
+          <select id="changeCircleRadius" data-mini="true">
+            <option value="">半径</option>
+            <option value="500" selected="selected">500m</option>
+            <option value="1000">1km</option>
+            <option value="3000">3km</option>
+            <option value="5000">5km</option>
+          </select>
         </fieldset>
       </div>
       <div id="map" class="map">

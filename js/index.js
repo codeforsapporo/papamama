@@ -8,21 +8,8 @@ var moveToList = [];
 
 // マップサーバ一覧
 var mapServerList = {
-	"cyberjapn-std": {
-		label: "地理院地図 標準地図",
-		source_type: "xyz",
-		source: new ol.source.XYZ({
-			attributions: [
-				new ol.Attribution({
-					html: "<a href='http://portal.cyberjapan.jp/help/termsofuse.html' target='_blank'>国土地理院</a>"
-				})
-			],
-			url: "http://cyberjapandata.gsi.go.jp/xyz/std/{z}/{x}/{y}.png",
-			projection: "EPSG:3857"
-		})
-	},
 	"cyberjapn-pale": {
-		label: "地理院地図 淡色地図",
+		label: "標準",
 		source_type: "xyz",
 		source: new ol.source.XYZ({
 			attributions: [
@@ -35,19 +22,34 @@ var mapServerList = {
 		})
 	},
 	'osm': {
-		label: "OpenStreetMap",
+		label: "交通",
 		source_type: "osm",
 		source: new ol.source.OSM({
+			url: "http://{a-c}.tile.thunderforest.com/transport/{z}/{x}/{y}.png",
+			attributions: [
+				ol.source.OSM.DATA_ATTRIBUTION,
+				new ol.Attribution({html: "Tiles courtesy of <a href='http://www.thunderforest.com/' target='_blank'>Andy Allan</a>"})
+			]
 		})
 	},
-	'osm-wms': {
-		label: "OSM wms",
-		source_type: "image",
-		source: new ol.source.ImageWMS({
-				url: 'http://ows.terrestris.de/osm/service?',
-				params: {'LAYERS': 'OSM-WMS'},
-			})
+	'bing-aerial': {
+		label: "写真",
+		source_type: "bing",
+		source: new ol.source.BingMaps({
+			culture: 'ja-jp',
+			key: 'AhGQykUKW2-u1PwVjLwQkSA_1rCTFESEC7bCZ0MBrnzVbVy7KBHsmLgwW_iRJg17',
+			imagerySet: 'Aerial',
+		})
 	},
+	'bing-road': {
+		label: "Bing",
+		source_type: "bing",
+		source: new ol.source.BingMaps({
+			culture: 'ja-jp',
+			key: 'AhGQykUKW2-u1PwVjLwQkSA_1rCTFESEC7bCZ0MBrnzVbVy7KBHsmLgwW_iRJg17',
+			imagerySet: 'Road',
+		})
+	}
 };
 
 /**
@@ -60,7 +62,7 @@ function resizeMapDiv() {
 	var contentHeight = screenHeight - contentCurrentHeight;
 	var navHeight = $("#nav1").outerHeight();
 	$(".ui-content").height(contentHeight);
-	$("#map").height(contentHeight - navHeight - 12);
+	$("#map").height(contentHeight - navHeight - 48);
 }
 
 /**
