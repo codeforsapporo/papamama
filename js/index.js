@@ -6,6 +6,8 @@ var init_center_coords = [141.347899, 43.063968];
 // 中心座標変更セレクトボックス用データ
 var moveToList = [];
 
+var centerLatOffset = 600;
+
 // マップサーバ一覧
 var mapServerList = {
 	"cyberjapn-pale": {
@@ -78,7 +80,13 @@ function drawCenterCircle(radius)
 	if($('#cbDisplayCircle').prop('checked')) {
 		view           = map.getView();
 		coord          = view.getCenter();
+		if ( $('#popup').is(':visible') ) {
+			coord[1] = coord[1] - centerLatOffset;
+		}
 		circleFeatures = drawConcentricCircle(coord, radius);
+		if ( $('#popup').is(':visible') ) {
+			coord[1] = coord[1] + centerLatOffset;
+		}
 		source.addFeatures(circleFeatures);
 	}
 	return;
@@ -153,7 +161,7 @@ function animatedMove(lon, lat, isTransform)
 	} else {
 		// 座標系を変換しない
 		// モバイルでポップアップ上部が隠れないように中心をずらす
-		coordinate[1] = coordinate[1] + 800;
+		coordinate[1] = coordinate[1] + centerLatOffset;
 	}
 	view.setCenter(coordinate);
 }
