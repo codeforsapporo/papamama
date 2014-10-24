@@ -146,15 +146,16 @@ function animatedMove(lon, lat, isTransform)
 		source: view.getCenter()
 	});
 	map.beforeRender(pan);
+	var coordinate = [lon, lat];
 	if(isTransform) {
 		// 座標参照系を変換する
-		view.setCenter(
-			ol.proj.transform([lon, lat], 'EPSG:4326', 'EPSG:3857')
-		);
+		coordinate = ol.proj.transform([lon, lat], 'EPSG:4326', 'EPSG:3857');
 	} else {
 		// 座標系を変換しない
-		view.setCenter([lon, lat]);
+		// モバイルでポップアップ上部が隠れないように中心をずらす
+		coordinate[1] = coordinate[1] + 800;
 	}
+	view.setCenter(coordinate);
 }
 
 /**
