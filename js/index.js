@@ -565,7 +565,7 @@ $('#mainPage').on('pageshow', function() {
 			if (feature.get('TEL') !== null) {
 				content += '<tr>';
 				content += '<th>TEL</th>';
-				content += '<td>TEL '+feature.get('TEL')+'</td>';
+				content += '<td>'+feature.get('TEL')+'</td>';
 				content += '</tr>';
 			}
 			if (feature.get('住所１') !== undefined && feature.get('住所２') !== undefined) {
