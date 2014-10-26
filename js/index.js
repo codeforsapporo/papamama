@@ -6,7 +6,7 @@ var init_center_coords = [141.347899, 43.063968];
 // 中心座標変更セレクトボックス用データ
 var moveToList = [];
 
-var centerLatOffset = 600;
+var centerLatOffset = 0;
 
 // マップサーバ一覧
 var mapServerList = {
