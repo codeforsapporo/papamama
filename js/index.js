@@ -6,7 +6,7 @@ var init_center_coords = [141.347899, 43.063968];
 // 中心座標変更セレクトボックス用データ
 var moveToList = [];
 
-var centerLatOffset = 0;
+var centerLatOffsetPixel = 75;
 
 // マップサーバ一覧
 var mapServerList = {
@@ -80,13 +80,12 @@ function drawCenterCircle(radius)
 	if($('#cbDisplayCircle').prop('checked')) {
 		view           = map.getView();
 		coord          = view.getCenter();
+		var pixel = map.getPixelFromCoordinate(coord);
 		if ( $('#popup').is(':visible') ) {
-			coord[1] = coord[1] - centerLatOffset;
+			pixel[1] = pixel[1] + centerLatOffsetPixel;
+			coord = map.getCoordinateFromPixel(pixel);
 		}
 		circleFeatures = drawConcentricCircle(coord, radius);
-		if ( $('#popup').is(':visible') ) {
-			coord[1] = coord[1] + centerLatOffset;
-		}
 		source.addFeatures(circleFeatures);
 	}
 	return;
@@ -161,7 +160,9 @@ function animatedMove(lon, lat, isTransform)
 	} else {
 		// 座標系を変換しない
 		// モバイルでポップアップ上部が隠れないように中心をずらす
-		coordinate[1] = coordinate[1] + centerLatOffset;
+		var pixel = map.getPixelFromCoordinate(coordinate);
+		pixel[1] = pixel[1] - centerLatOffsetPixel;
+		coordinate = map.getCoordinateFromPixel(pixel);
 	}
 	view.setCenter(coordinate);
 }
