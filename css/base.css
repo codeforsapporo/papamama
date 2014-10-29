@@ -95,8 +95,10 @@
 #popup-content th {
 	width: 4em;
 	vertical-align: top;
+	background-color: white;
 }
 
 #popup-content td {
 	vertical-align: top;
+	background-color: white;
 }

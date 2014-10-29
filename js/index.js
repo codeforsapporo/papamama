@@ -525,32 +525,36 @@ $('#mainPage').on('pageshow', function() {
 			if (feature.get('開園時間') !== null && feature.get('終園時間') !== null) {
 				content += '<tr>';
 				content += '<th>時間</th>';
-				content += '<td>' + feature.get('開園時間') + '〜' + feature.get('終園時間')+'</td>';
+				content += '<td>';
+				content += feature.get('開園時間') + '〜' + feature.get('終園時間');
+				if( feature.get('延長') !== null) {
+					content += '(延長あり)';
+				}
+				content += '</td>';
 				content += '</tr>';
-				if( feature.get('延長') === 1) {
-					content += '<tr>';
-					content += '<th></th>';
-					content += '<td>' + feature.get('備考') + '</td>';
-					content += '</tr>';
-				}
-
-				if( feature.get('一時') !== null || feature.get('休日') !== null || feature.get('夜間') !== null) {
-					content += '<tr>';
-					content += '<th></th>';
-					content += '<td>';
-					if (feature.get('一時') !== null) {
-						content += '一時保育 ';
-					}
-					if (feature.get('休日') !== null) {
-						content += '休日保育 ';
-					}
-					if (feature.get('夜間') !== null) {
-						content += '夜間保育 ';
-					}
-					content += '</td>';
-					content += '</tr>';
-				}
 			}
+
+			if( feature.get('一時') !== null || feature.get('休日') !== null ||
+				feature.get('夜間') !== null || feature.get('H24') !== null) {
+				content += '<tr>';
+				content += '<th></th>';
+				content += '<td>';
+				if (feature.get('一時') !== null) {
+					content += '一時保育 ';
+				}
+				if (feature.get('休日') !== null) {
+					content += '休日保育 ';
+				}
+				if (feature.get('夜間') !== null) {
+					content += '夜間保育 ';
+				}
+				if (feature.get('H24') !== null) {
+					content += '24時間 ';
+				}
+				content += '</td>';
+				content += '</tr>';
+			}
+
 			if (feature.get('開始年齢') !== null && feature.get('終了年齢') !== null) {
 				content += '<tr>';
 				content += '<th>年齢</th>';
@@ -579,6 +583,12 @@ $('#mainPage').on('pageshow', function() {
 				content += '<tr>';
 				content += '<th>設置者</th>';
 				content += '<td>'+feature.get('設置者')+'</td>';
+				content += '</tr>';
+			}
+			if (feature.get('備考') !== null) {
+				content += '<tr>';
+				content += '<th>備考</th>';
+				content += '<td>'+feature.get('備考')+'</td>';
 				content += '</tr>';
 			}
 			content += '</tbody></table>';
