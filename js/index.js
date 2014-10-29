@@ -314,28 +314,28 @@ $('#mainPage').on('pageshow', function() {
 			new ol.layer.Vector({
 				source: new ol.source.GeoJSON({
 					projection: 'EPSG:3857',
-					url: 'data/Ninkagai.geojson'
+					url: 'data/nurseryFacilities.geojson'
 				}),
 				name: 'layerNinkagai',
-				style: nurseryStyleFunction
+				style: ninkagaiStyleFunction
 			}),
 			// 認可
 			new ol.layer.Vector({
 				source: new ol.source.GeoJSON({
 					projection: 'EPSG:3857',
-					url: 'data/Ninka.geojson'
+					url: 'data/nurseryFacilities.geojson'
 				}),
 				name: 'layerNinka',
-				style: nurseryStyleFunction
+				style: ninkaStyleFunction
 			}),
 			// 幼稚園
 			new ol.layer.Vector({
 				source: new ol.source.GeoJSON({
 					projection: 'EPSG:3857',
-					url: 'data/Kindergarten.geojson'
+					url: 'data/nurseryFacilities.geojson'
 				}),
 				name: 'layerKindergarten',
-				style: nurseryStyleFunction
+				style: kindergartenStyleFunction
 			})
 		],
 		target: 'map',

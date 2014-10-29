@@ -1,36 +1,74 @@
-function getFeatureStyle(type) {
-	if ('認可保育所' == type){
-		return {
-			color: '#6EE100',
-			img: 'image/018.png'
-		};
-	} else if ('認可外' == type){
-		return {
-			color: '#0362A0',
-			img: 'image/019.png'
-		};
-	} else if ('幼稚園' == type){
-		return {
-			color: '#FF5C24',
-			img: 'image/029.png'
-		};
-	} else if ('認定こども園' == type){
-		return {
-			color: '#FFEE24',
-			img: 'image/018.png'
-		};
-	}
-	return {
-		color: 'rgba(153, 153, 153, 1)',
-		img: 'image/018.png'
-	};
-}
+/**
+ * 保育所背景リスト
+ * @type {Object}
+ */
+var featureStyleList = {
+	'default': { color: 'rgba(153, 153, 153, 1)', img: 'image/018.png'},
+	'認可外': { color: '#0362A0', img: 'image/019.png'},
+	'幼稚園': { color: '#FF5C24', img: 'image/029.png'},
+	'認可保育所': { color: '#6EE100', img: 'image/018.png'}
+};
 
-// 保育所スタイル
-var nurseryStyleFunction = function(feature, resolution) {
+/**
+ * 認可保育所向けスタイル
+ * @param  {[type]} feature    [description]
+ * @param  {[type]} resolution [description]
+ * @return {[type]}            [description]
+ */
+var ninkaStyleFunction = function(feature, resolution)
+{
+	var facilityTypeName = feature.get('種別');
+	var style = [];
+	if(facilityTypeName === "認可保育所") {
+		featureStyle = featureStyleList[facilityTypeName];
+		style        = nurseryStyleFunction(feature, resolution, featureStyle);
+	}
+	return style;
+};
+
+/**
+ * 認可外保育所向けスタイル
+ * @param  {[type]} feature    [description]
+ * @param  {[type]} resolution [description]
+ * @return {[type]}            [description]
+ */
+var ninkagaiStyleFunction = function(feature, resolution)
+{
+	var facilityTypeName = feature.get('種別');
+	var style = [];
+	if(facilityTypeName === "認可外") {
+		featureStyle = featureStyleList[facilityTypeName];
+		style        = nurseryStyleFunction(feature, resolution, featureStyle);
+	}
+	return style;
+};
+
+/**
+ * 幼稚園向けスタイル
+ * @param  {[type]} feature    [description]
+ * @param  {[type]} resolution [description]
+ * @return {[type]}            [description]
+ */
+var kindergartenStyleFunction = function(feature, resolution)
+{
+	var facilityTypeName = feature.get('種別');
+	var style = [];
+	if(facilityTypeName === "幼稚園") {
+		featureStyle = featureStyleList[facilityTypeName];
+		style        = nurseryStyleFunction(feature, resolution, featureStyle);
+	}
+	return style;
+};
+
+/**
+ * 保育施設共通のスタイル定義
+ * @param  {[type]} feature      [description]
+ * @param  {[type]} resolution   [description]
+ * @param  {[type]} featureStyle [description]
+ * @return {[type]}              [description]
+ */
+var nurseryStyleFunction = function(feature, resolution, featureStyle) {
 	var radius = 15;
-	var type   = feature.get('種別');
-	var featureStyle = getFeatureStyle(type);
 	var background = new ol.style.Circle({
 		radius: radius,
 		fill: new ol.style.Fill({
@@ -143,11 +181,13 @@ function baseSchoolStyle(mojicolor, fillcolor) {
 
 // 中学校区スタイル
 var middleSchoolStyleFunction = baseSchoolStyle(
-	'#7379AE', 'rgba(115, 121, 174, 0.1)');
+	'#7379AE', 'rgba(115, 121, 174, 0.1)'
+	);
 
 // 小学校区スタイル
 var elementaryStyleFunction = baseSchoolStyle(
-	'#1BA466', 'rgba(27, 164, 102, 0.1)');
+	'#1BA466', 'rgba(27, 164, 102, 0.1)'
+	);
 
 // 距離計測用同心円の色設定
 var circleStyleFunction = function(feature, resolution) {
