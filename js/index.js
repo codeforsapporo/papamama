@@ -1,7 +1,10 @@
-var map;
-
 // 地図表示時の中心座標
 var init_center_coords = [141.347899, 43.063968];
+
+// Bing APIのキー
+var bing_api_key = 'AhGQykUKW2-u1PwVjLwQkSA_1rCTFESEC7bCZ0MBrnzVbVy7KBHsmLgwW_iRJg17';
+
+var map;
 
 // 中心座標変更セレクトボックス用データ
 var moveToList = [];
@@ -39,7 +42,7 @@ var mapServerList = {
 		source_type: "bing",
 		source: new ol.source.BingMaps({
 			culture: 'ja-jp',
-			key: 'AhGQykUKW2-u1PwVjLwQkSA_1rCTFESEC7bCZ0MBrnzVbVy7KBHsmLgwW_iRJg17',
+			key: bing_api_key,
 			imagerySet: 'Aerial',
 		})
 	},
@@ -48,7 +51,7 @@ var mapServerList = {
 		source_type: "bing",
 		source: new ol.source.BingMaps({
 			culture: 'ja-jp',
-			key: 'AhGQykUKW2-u1PwVjLwQkSA_1rCTFESEC7bCZ0MBrnzVbVy7KBHsmLgwW_iRJg17',
+			key: bing_api_key,
 			imagerySet: 'Road',
 		})
 	}
@@ -527,13 +530,15 @@ $('#mainPage').on('pageshow', function() {
 				content += '<th>時間</th>';
 				content += '<td>';
 				content += feature.get('開園時間') + '〜' + feature.get('終園時間');
-				if( feature.get('延長') !== null) {
-					content += '(延長あり)';
-				}
 				content += '</td>';
 				content += '</tr>';
 			}
-
+			if (feature.get('備考') !== null) {
+				content += '<tr>';
+				content += '<th></th>';
+				content += '<td>'+feature.get('備考')+'</td>';
+				content += '</tr>';
+			}
 			if( feature.get('一時') !== null || feature.get('休日') !== null ||
 				feature.get('夜間') !== null || feature.get('H24') !== null) {
 				content += '<tr>';
@@ -583,12 +588,6 @@ $('#mainPage').on('pageshow', function() {
 				content += '<tr>';
 				content += '<th>設置者</th>';
 				content += '<td>'+feature.get('設置者')+'</td>';
-				content += '</tr>';
-			}
-			if (feature.get('備考') !== null) {
-				content += '<tr>';
-				content += '<th>備考</th>';
-				content += '<td>'+feature.get('備考')+'</td>';
 				content += '</tr>';
 			}
 			content += '</tbody></table>';
@@ -674,8 +673,21 @@ $('#mainPage').on('pageshow', function() {
 		map.getLayers().insertAt(0, layer);
 	});
 
+	// ポップアップを閉じる
 	$('#popup-closer').click(function(evt){
 		$('#popup').hide();
 		return;
 	});
+
+	// ポップアップを閉じる
+	$('.ol-popup').parent('div').click(function(evt){
+		$('#popup').hide();
+		return;
+	});
+
+	// 親要素へのイベント伝播を停止する
+	$('.ol-popup').click(function(evt){
+		evt.stopPropagation();
+	});
+
 });
