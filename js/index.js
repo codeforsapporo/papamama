@@ -468,8 +468,11 @@ $('#mainPage').on('pageshow', function() {
 
 	// 保育施設クリック時の挙動を定義
 	map.on('click', function(evt) {
-		// ポップアップを消す
-		$('#popup').hide();
+		if ( $('#popup').is(':visible') ) {
+			// ポップアップを消す
+			$('#popup').hide();
+			return;
+		}
 
 		var feature = map.forEachFeatureAtPixel(evt.pixel,
 			function(feature, layer) {
