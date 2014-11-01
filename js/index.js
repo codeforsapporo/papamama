@@ -226,7 +226,7 @@ function getLayerNameBySubStred(cbName, count)
  * @param  array moveToList [description]
  * @return {[type]}            [description]
  */
-function appendToMoveToListBox(moveToList)
+function appendToMoveToListBox()
 {
 	nesting = "";
 	for(i=0; i<moveToList.length; i++) {
@@ -239,13 +239,90 @@ function appendToMoveToListBox(moveToList)
 			nesting.append($('<option>').html(moveToList[i].name).val(i));
 		}
 	}
+	if(nesting !== "") {
+		$('#moveTo').append(nesting);
+	}
 }
+
+/**
+ * 区geojsonファイルを読み込み、移動先セレクトボックスに格納する
+ * @return {[type]} [description]
+ */
+function loadWardsJson()
+{
+	var d = new $.Deferred();
+	$.getJSON(
+		"data/wards.geojson",
+		function(data){
+			moveToList.push( {name: "区", header:true} );
+			var lineName = "";
+			for(var i=0; i<data.features.length; i++) {
+				switch(data.features[i].geometry.type) {
+					case "Point":
+						_name = data.features[i].properties.name;
+						_lat  = data.features[i].geometry.coordinates[1];
+						_lon  = data.features[i].geometry.coordinates[0];
+						moveToList.push(
+							{name: _name, lat: _lat, lon: _lon, header:false}
+							);
+						break;
+					case "LineString":
+						_name        = data.features[i].properties.CITY1 + data.features[i].properties.name;
+						_coordinates = data.features[i].geometry.coordinates;
+						moveToList.push(
+							{name: _name, coordinates: _coordinates, header:false}
+							);
+				}
+			}
+			d.resolve();
+		}).fail(function(){
+			console.log('wards data load failed.');
+			d.reject('load error.');
+		});
+	return d.promise();
+}
+
+/**
+ * 駅geojsonファイルを読み込み、moveToList配列に格納する
+ * @return {[type]} [description]
+ */
+function loadStationJson()
+{
+	var d = new $.Deferred();
+	// 駅位置JSONデータ読み込み〜セレクトボックス追加
+	$.getJSON(
+		"data/station.geojson",
+		function(data){
+			moveToList.push( {name: "公共交通機関施設", header:true} );
+			var lineName = "";
+			for(var i=0; i<data.features.length; i++) {
+				_s = data.features[i].properties["shubetsu"] + " (" + data.features[i].properties["line"] + ")";
+				if(lineName !== _s) {
+					moveToList.push({name: _s, header: true});
+					lineName = _s;
+				}
+				_name = data.features[i].properties.station_name;
+				_lat  = data.features[i].properties.lat;
+				_lon  = data.features[i].properties.lon;
+				moveToList.push(
+					{name: _name, lat: _lat, lon: _lon, header:false}
+					);
+			}
+			d.resolve();
+		}).fail(function(){
+			console.log('station data load failed.');
+			d.reject('load error.');
+		});
+	return d.promise();
+}
+
 
 $(window).on("orientationchange", function() {
 	resizeMapDiv();
 	map.setTarget('null');
 	map.setTarget('map');
 });
+
 
 $('#mainPage').on('pageshow', function() {
 	resizeMapDiv();
@@ -368,54 +445,14 @@ $('#mainPage').on('pageshow', function() {
 		$('#changeBaseMap').append(option);
 	}
 
-	// 区一覧と区の境界データ、その他公共施設データ読み込み
-	$.getJSON(
-		"data/wards.geojson",
-		function(data){
-			moveToList.push( {name: "区", header:true} );
-			var lineName = "";
-			for(var i=0; i<data.features.length; i++) {
-				switch(data.features[i].geometry.type) {
-					case "Point":
-						_name = data.features[i].properties.name;
-						_lat  = data.features[i].geometry.coordinates[1];
-						_lon  = data.features[i].geometry.coordinates[0];
-						moveToList.push(
-							{name: _name, lat: _lat, lon: _lon, header:false}
-							);
-						break;
-					case "LineString":
-						_name        = data.features[i].properties.CITY1 + data.features[i].properties.name;
-						_coordinates = data.features[i].geometry.coordinates;
-						moveToList.push(
-							{name: _name, coordinates: _coordinates, header:false}
-							);
-				}
-			}
-			appendToMoveToListBox(moveToList);
-		});
-
-	// 駅位置JSONデータ読み込み〜セレクトボックス追加
-	$.getJSON(
-		"data/station.geojson",
-		function(data){
-			moveToList.push( {name: "公共交通機関施設", header:true} );
-			var lineName = "";
-			for(var i=0; i<data.features.length; i++) {
-				_s = data.features[i].properties["shubetsu"] + " (" + data.features[i].properties["line"] + ")";
-				if(lineName !== _s) {
-					moveToList.push({name: _s, header: true});
-					lineName = _s;
-				}
-				_name = data.features[i].properties.station_name;
-				_lat  = data.features[i].properties.lat;
-				_lon  = data.features[i].properties.lon;
-				moveToList.push(
-					{name: _name, lat: _lat, lon: _lon, header:false}
-					);
-			}
-			appendToMoveToListBox(moveToList);
-		});
+	// 移動先セレクトボックスの生成
+	loadWardsJson()
+		.then(
+			loadStationJson, function(){loadWardsJson().then(loadStationJson);}
+			)
+		.then(
+			appendToMoveToListBox, function(){loadStationJson().then(appendToMoveToListBox);}
+			);
 
 	// 中心座標変更セレクトボックス操作イベント定義
 	$('#moveTo').change(function(){
