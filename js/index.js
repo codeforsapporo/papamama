@@ -8,6 +8,7 @@ var map;
 
 // 中心座標変更セレクトボックス用データ
 var moveToList = [];
+var nurseryFacilities = {};
 
 var centerLatOffsetPixel = 75;
 
@@ -316,6 +317,24 @@ function loadStationJson()
 	return d.promise();
 }
 
+/**
+ * 保育施設データの読み込みを行う
+ * @return {[type]} [description]
+ */
+function loadNurseryFacilitiesJson()
+{
+	var d = new $.Deferred();
+	$.getJSON(
+		"data/nurseryFacilities.geojson",
+		function(data){
+			nurseryFacilities = data;
+			d.resolve();
+	}).fail(function(){
+		console.log('station data load failed.');
+		d.reject('load error.');
+	});
+	return d.promise();
+}
 
 $(window).on("orientationchange", function() {
 	resizeMapDiv();
@@ -390,33 +409,7 @@ $('#mainPage').on('pageshow', function() {
 				style: circleStyleFunction,
 				visible: true
 			}),
-			// 認可外
-			new ol.layer.Vector({
-				source: new ol.source.GeoJSON({
-					projection: 'EPSG:3857',
-					url: 'data/nurseryFacilities.geojson'
-				}),
-				name: 'layerNinkagai',
-				style: ninkagaiStyleFunction
-			}),
-			// 認可
-			new ol.layer.Vector({
-				source: new ol.source.GeoJSON({
-					projection: 'EPSG:3857',
-					url: 'data/nurseryFacilities.geojson'
-				}),
-				name: 'layerNinka',
-				style: ninkaStyleFunction
-			}),
-			// 幼稚園
-			new ol.layer.Vector({
-				source: new ol.source.GeoJSON({
-					projection: 'EPSG:3857',
-					url: 'data/nurseryFacilities.geojson'
-				}),
-				name: 'layerKindergarten',
-				style: kindergartenStyleFunction
-			})
+
 		],
 		target: 'map',
 		view: new ol.View({
@@ -433,6 +426,44 @@ $('#mainPage').on('pageshow', function() {
 			}),
 		]
 	});
+
+	// 保育施設の読み込みとレイヤーの追加
+	loadNurseryFacilitiesJson().then(
+		function(){
+			// 認可外
+			map.addLayer(
+				new ol.layer.Vector({
+					source: new ol.source.GeoJSON({
+						projection: 'EPSG:3857',
+						object: nurseryFacilities
+					}),
+					name: 'layerNinkagai',
+					style: ninkagaiStyleFunction
+				})
+			);
+			// 認可
+			map.addLayer(
+				new ol.layer.Vector({
+					source: new ol.source.GeoJSON({
+						projection: 'EPSG:3857',
+						object: nurseryFacilities
+					}),
+					name: 'layerNinka',
+					style: ninkaStyleFunction
+				})
+			);
+			// 幼稚園
+			map.addLayer(
+				new ol.layer.Vector({
+					source: new ol.source.GeoJSON({
+						projection: 'EPSG:3857',
+						object: nurseryFacilities
+					}),
+					name: 'layerKindergarten',
+					style: kindergartenStyleFunction
+				})
+			);
+		});
 
 	// ポップアップ定義
 	var popup = new ol.Overlay({
