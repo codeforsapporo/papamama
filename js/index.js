@@ -336,6 +336,59 @@ function loadNurseryFacilitiesJson()
 	return d.promise();
 }
 
+/**
+ * 指定したgeojsonデータを元に認可外・認可・幼稚園レイヤーを描写する
+ *
+ * @param {[type]} facilitiesData [description]
+ */
+function addNurseryFacilitiesLayer(facilitiesData)
+{
+	if(facilitiesData === undefined || facilitiesData === null) {
+		addNurseryFacilitiesLayer(nurseryFacilities);
+		return;
+	}
+
+	if(map.getLayers().getLength() >= 4) {
+		map.removeLayer(map.getLayers().item(4));
+		map.removeLayer(map.getLayers().item(4));
+		map.removeLayer(map.getLayers().item(4));
+	}
+
+	// 認可外
+	map.addLayer(
+		new ol.layer.Vector({
+			source: new ol.source.GeoJSON({
+				projection: 'EPSG:3857',
+				object: facilitiesData
+			}),
+			name: 'layerNinkagai',
+			style: ninkagaiStyleFunction
+		})
+	);
+	// 認可
+	map.addLayer(
+		new ol.layer.Vector({
+			source: new ol.source.GeoJSON({
+				projection: 'EPSG:3857',
+				object: facilitiesData
+			}),
+			name: 'layerNinka',
+			style: ninkaStyleFunction
+		})
+	);
+	// 幼稚園
+	map.addLayer(
+		new ol.layer.Vector({
+			source: new ol.source.GeoJSON({
+				projection: 'EPSG:3857',
+				object: facilitiesData
+			}),
+			name: 'layerKindergarten',
+			style: kindergartenStyleFunction
+		})
+	);
+}
+
 $(window).on("orientationchange", function() {
 	resizeMapDiv();
 	map.setTarget('null');
@@ -430,39 +483,7 @@ $('#mainPage').on('pageshow', function() {
 	// 保育施設の読み込みとレイヤーの追加
 	loadNurseryFacilitiesJson().then(
 		function(){
-			// 認可外
-			map.addLayer(
-				new ol.layer.Vector({
-					source: new ol.source.GeoJSON({
-						projection: 'EPSG:3857',
-						object: nurseryFacilities
-					}),
-					name: 'layerNinkagai',
-					style: ninkagaiStyleFunction
-				})
-			);
-			// 認可
-			map.addLayer(
-				new ol.layer.Vector({
-					source: new ol.source.GeoJSON({
-						projection: 'EPSG:3857',
-						object: nurseryFacilities
-					}),
-					name: 'layerNinka',
-					style: ninkaStyleFunction
-				})
-			);
-			// 幼稚園
-			map.addLayer(
-				new ol.layer.Vector({
-					source: new ol.source.GeoJSON({
-						projection: 'EPSG:3857',
-						object: nurseryFacilities
-					}),
-					name: 'layerKindergarten',
-					style: kindergartenStyleFunction
-				})
-			);
+			addNurseryFacilitiesLayer(nurseryFacilities);
 		});
 
 	// ポップアップ定義
@@ -742,6 +763,27 @@ $('#mainPage').on('pageshow', function() {
 		}
 
 		map.getLayers().insertAt(0, layer);
+	});
+
+	// 絞り込み検索のサンプル
+	$('#cbTest').click(function() {
+		if($(this).prop('checked')) {
+			// なんもしない
+			var newGeoJson = {
+				"type": "FeatureCollection",
+				"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
+				"features":[]
+			};
+			// 指定した条件に一致する配列要素を抽出
+			var features = nurseryFacilities.features.filter(function(item,idx){
+				if(item.properties['住所１'] == '札幌市中央区') return true;
+			});
+			newGeoJson.features = features;
+			addNurseryFacilitiesLayer(newGeoJson);
+		} else {
+			// 絞り込み条件が何も設定されてない場合は全施設を表示
+			addNurseryFacilitiesLayer(nurseryFacilities);
+		}
 	});
 
 	// ポップアップを閉じる
