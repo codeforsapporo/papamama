@@ -105,13 +105,20 @@ function drawCenterCircle(radius)
 function drawConcentricCircle(coordinate, maxradius)
 {
 	features = [];
-	step = Math.floor(maxradius / 5);
-	for(var i=0; i<=maxradius; i+=step) {
-		circleFeature = new ol.Feature({
-			geometry: new ol.geom.Circle(coordinate, i)
-		});
-		features.push(circleFeature);
-	}
+
+	// 中心部の円を描く
+	circleFeature = new ol.Feature({
+		geometry: new ol.geom.Circle(coordinate, 100)
+	});
+	features.push(circleFeature);
+
+	// 選択した半径の同心円を描く
+	step = Math.floor(maxradius);
+	circleFeature = new ol.Feature({
+		geometry: new ol.geom.Circle(coordinate, step)
+	});
+	features.push(circleFeature);
+
 	return features;
 }
 
@@ -784,6 +791,66 @@ $('#mainPage').on('pageshow', function() {
 			// 絞り込み条件が何も設定されてない場合は全施設を表示
 			addNurseryFacilitiesLayer(nurseryFacilities);
 		}
+	});
+
+	$('#btnFilter').click(function(){
+		var checkflg = false;
+		// 絞り込んだ条件に一致する施設を格納するgeoJsonを準備
+		var newGeoJson = {
+			"type": "FeatureCollection",
+			"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
+			"features":[]
+		};
+		var features = [];
+		if($('#cbTemp').prop('checked')) {
+			_features = nurseryFacilities.features.filter(
+				function(item,idx){
+					if(item.properties['一時'] !== null) return true;
+				});
+			Array.prototype.push.apply(features, _features);
+			checkflg = true;
+		}
+		if($('#cbHoliday').prop('checked')) {
+			_features = nurseryFacilities.features.filter(
+				function(item,idx){
+					if(item.properties['休日'] !== null) return true;
+				});
+			Array.prototype.push.apply(features, _features);
+			checkflg = true;
+		}
+		if($('#cbNight').prop('checked')) {
+			_features = nurseryFacilities.features.filter(
+				function(item,idx){
+					if(item.properties['夜間'] !== null) return true;
+				});
+			Array.prototype.push.apply(features, _features);
+			checkflg = true;
+		}
+		if($('#cb24h').prop('checked')) {
+			_features = nurseryFacilities.features.filter(
+				function(item,idx){
+					if(item.properties['H24'] !== null) return true;
+				});
+			Array.prototype.push.apply(features, _features);
+			checkflg = true;
+		}
+		if($('#cbKodomo').prop('checked')) {
+			_features = nurseryFacilities.features.filter(
+				function(item,idx){
+					if(item.properties['こども園'] !== null) return true;
+				});
+			Array.prototype.push.apply(features, _features);
+			checkflg = true;
+		}
+		newGeoJson.features = features;
+
+		// フィルター実行
+		if(!checkflg) {
+			addNurseryFacilitiesLayer(nurseryFacilities);
+		} else {
+			addNurseryFacilitiesLayer(newGeoJson);
+		}
+		$('#popupLogin').hide();
 	});
 
 	// ポップアップを閉じる
