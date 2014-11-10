@@ -144,7 +144,7 @@ function baseSchoolStyle(mojicolor, fillcolor) {
 			new ol.style.Style({
 				stroke: new ol.style.Stroke({
 					color: mojicolor,
-					width: 1
+					width: 3
 				}),
 				fill: new ol.style.Fill({
 					color: fillcolor
@@ -198,11 +198,11 @@ var circleStyleFunction = function(feature, resolution) {
 	}
 	var style = [new ol.style.Style({
 		stroke: new ol.style.Stroke({
-			color: 'rgba(255, 0, 0, 0.1)',
-			width: 1
+			color: 'rgba(238, 149, 44, 0.30)',
+			width: 3
 		}),
 		fill: new ol.style.Fill({
-			color: 'rgba(255, 0, 0, 0.15)'
+			color: 'rgba(238, 149, 44, 0.30)'
 		}),
 		text: new ol.style.Text({
 			offsetY: -40.0,
