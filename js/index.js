@@ -114,8 +114,17 @@ function drawConcentricCircle(coordinate, maxradius)
 
 	// 選択した半径の同心円を描く
 	step = Math.floor(maxradius);
+
+	// 描画する円からextent情報を取得し、円の大きさに合わせ画面の縮尺率を変更
+	geoCircle = new ol.geom.Circle(coordinate, step);
+	extent = geoCircle.getExtent();
+	view   = map.getView();
+	sizes  = map.getSize();
+	size   = (sizes[0] < sizes[1]) ? sizes[0] : sizes[1];
+	view.fitExtent(extent, [size, size]);
+
 	circleFeature = new ol.Feature({
-		geometry: new ol.geom.Circle(coordinate, step)
+		geometry: geoCircle
 	});
 	features.push(circleFeature);
 
