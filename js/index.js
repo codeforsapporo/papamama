@@ -239,7 +239,7 @@ function getLayerNameBySubStred(cbName, count)
 }
 
 /**
- * 移動先セレクトボックスに要素を追加する
+ * 最寄駅セレクトボックスに要素を追加する
  * @param  array moveToList [description]
  * @return {[type]}            [description]
  */
@@ -265,6 +265,7 @@ function appendToMoveToListBox()
  * 区geojsonファイルを読み込み、移動先セレクトボックスに格納する
  * @return {[type]} [description]
  */
+/*
 function loadWardsJson()
 {
 	var d = new $.Deferred();
@@ -298,6 +299,7 @@ function loadWardsJson()
 		});
 	return d.promise();
 }
+*/
 
 /**
  * 駅geojsonファイルを読み込み、moveToList配列に格納する
@@ -513,11 +515,12 @@ $('#mainPage').on('pageshow', function() {
 		$('#changeBaseMap').append(option);
 	}
 
-	// 移動先セレクトボックスの生成
-	loadWardsJson()
+	// 最寄駅セレクトボックスの生成
+	/*loadWardsJson()
 		.then(
 			loadStationJson, function(){loadWardsJson().then(loadStationJson);}
-			)
+			)*/
+	loadStationJson()
 		.then(
 			appendToMoveToListBox, function(){loadStationJson().then(appendToMoveToListBox);}
 			);
