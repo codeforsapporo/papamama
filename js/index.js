@@ -741,6 +741,24 @@ $('#mainPage').on('pageshow', function() {
 		tileLayer.setOpacity(opacity);
 	});
 
+	$('#btnCurrPos').click(function(evt){
+		if (navigator.geolocation) {
+			navigator.geolocation.getCurrentPosition(
+				function(pos) {
+					
+					var coordinate = ol.proj.transform([pos.coords.longitude, pos.coords.latitude], 'EPSG:4326', 'EPSG:3857');
+					view = map.getView();
+					view.setCenter(coordinate);
+				},
+				function(err) {
+					alert('位置情報が取得できませんでした。');
+				}
+			);
+		} else {
+			alert('位置情報が取得できませんでした。');
+		}
+	});
+
 	$('#changeCircleRadius').change(function(evt){
 		radius = $(this).val();
 		if(radius === "") {
