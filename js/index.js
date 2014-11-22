@@ -12,6 +12,30 @@ var nurseryFacilities = {};
 
 var centerLatOffsetPixel = 75;
 
+window.app = {};
+var app = window.app;
+
+/**
+ * 現在地に移動するためのカスタムコントロールを定義
+ *
+ * @constructor
+ * @extends {ol.control.Control}
+ * @param {Object=} opt_options Control options.
+ */
+app.MoveCurrentLocationControl = function(opt_options) {
+	var options = opt_options || {};
+
+	var element = document.createElement('div');
+	element.id = 'moveCurrentLocation';
+	element.className = 'move-current-location ol-control ui-icon-navigation ui-btn-icon-notext';
+
+	ol.control.Control.call(this, {
+		element: element,
+		target: options.target
+	});
+};
+ol.inherits(app.MoveCurrentLocationControl, ol.control.Control);
+
 // マップサーバ一覧
 var mapServerList = {
 	"cyberjapn-pale": {
@@ -262,46 +286,6 @@ function appendToMoveToListBox()
 }
 
 /**
- * 区geojsonファイルを読み込み、移動先セレクトボックスに格納する
- * @return {[type]} [description]
- */
-/*
-function loadWardsJson()
-{
-	var d = new $.Deferred();
-	$.getJSON(
-		"data/wards.geojson",
-		function(data){
-			moveToList.push( {name: "区", header:true} );
-			var lineName = "";
-			for(var i=0; i<data.features.length; i++) {
-				switch(data.features[i].geometry.type) {
-					case "Point":
-						_name = data.features[i].properties.name;
-						_lat  = data.features[i].geometry.coordinates[1];
-						_lon  = data.features[i].geometry.coordinates[0];
-						moveToList.push(
-							{name: _name, lat: _lat, lon: _lon, header:false}
-							);
-						break;
-					case "LineString":
-						_name        = data.features[i].properties.CITY1 + data.features[i].properties.name;
-						_coordinates = data.features[i].geometry.coordinates;
-						moveToList.push(
-							{name: _name, coordinates: _coordinates, header:false}
-							);
-				}
-			}
-			d.resolve();
-		}).fail(function(){
-			console.log('wards data load failed.');
-			d.reject('load error.');
-		});
-	return d.promise();
-}
-*/
-
-/**
  * 駅geojsonファイルを読み込み、moveToList配列に格納する
  * @return {[type]} [description]
  */
@@ -495,6 +479,7 @@ $('#mainPage').on('pageshow', function() {
 			new ol.control.Zoom({}),
 			new ol.control.ZoomSlider({
 			}),
+			new app.MoveCurrentLocationControl()
 		]
 	});
 
@@ -516,10 +501,6 @@ $('#mainPage').on('pageshow', function() {
 	}
 
 	// 最寄駅セレクトボックスの生成
-	/*loadWardsJson()
-		.then(
-			loadStationJson, function(){loadWardsJson().then(loadStationJson);}
-			)*/
 	loadStationJson()
 		.then(
 			appendToMoveToListBox, function(){loadStationJson().then(appendToMoveToListBox);}
@@ -741,11 +722,11 @@ $('#mainPage').on('pageshow', function() {
 		tileLayer.setOpacity(opacity);
 	});
 
-	$('#btnCurrPos').click(function(evt){
+	// 現在地に移動するボタンのイベント
+	$('#moveCurrentLocation').click(function(evt){
 		if (navigator.geolocation) {
 			navigator.geolocation.getCurrentPosition(
 				function(pos) {
-					
 					var coordinate = ol.proj.transform([pos.coords.longitude, pos.coords.latitude], 'EPSG:4326', 'EPSG:3857');
 					view = map.getView();
 					view.setCenter(coordinate);
@@ -800,27 +781,6 @@ $('#mainPage').on('pageshow', function() {
 		}
 
 		map.getLayers().insertAt(0, layer);
-	});
-
-	// 絞り込み検索のサンプル
-	$('#cbTest').click(function() {
-		if($(this).prop('checked')) {
-			// なんもしない
-			var newGeoJson = {
-				"type": "FeatureCollection",
-				"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
-				"features":[]
-			};
-			// 指定した条件に一致する配列要素を抽出
-			var features = nurseryFacilities.features.filter(function(item,idx){
-				if(item.properties['住所１'] == '札幌市中央区') return true;
-			});
-			newGeoJson.features = features;
-			addNurseryFacilitiesLayer(newGeoJson);
-		} else {
-			// 絞り込み条件が何も設定されてない場合は全施設を表示
-			addNurseryFacilitiesLayer(nurseryFacilities);
-		}
 	});
 
 	$('#btnFilter').click(function(){

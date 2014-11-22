@@ -102,3 +102,21 @@
 	vertical-align: top;
 	background-color: white;
 }
+
+.move-current-location {
+	position: absolute;
+	top: 270px;
+	left: 8px;
+	background-color: rgba(0,60,136,0.5);
+	border-radius: 4px;
+	padding: 2px;
+}
+.ol-touch .move-current-location {
+	top: 270px;
+}
+.move-current-location:hover,
+.move-current-location:focus {
+	text-decoration: none;
+	background-color: #4c6079;
+	background-color: rgba(0,60,136,0.7);
+}
