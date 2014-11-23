@@ -15,27 +15,6 @@ var centerLatOffsetPixel = 75;
 window.app = {};
 var app = window.app;
 
-/**
- * 現在地に移動するためのカスタムコントロールを定義
- *
- * @constructor
- * @extends {ol.control.Control}
- * @param {Object=} opt_options Control options.
- */
-app.MoveCurrentLocationControl = function(opt_options) {
-	var options = opt_options || {};
-
-	var element = document.createElement('div');
-	element.id = 'moveCurrentLocation';
-	element.className = 'move-current-location ol-control ui-icon-navigation ui-btn-icon-notext';
-
-	ol.control.Control.call(this, {
-		element: element,
-		target: options.target
-	});
-};
-ol.inherits(app.MoveCurrentLocationControl, ol.control.Control);
-
 // マップサーバ一覧
 var mapServerList = {
 	"cyberjapn-pale": {
@@ -106,8 +85,8 @@ function drawCenterCircle(radius)
 	source = layer.getSource();
 	source.clear();
 	if($('#cbDisplayCircle').prop('checked')) {
-		view           = map.getView();
-		coord          = view.getCenter();
+		view  = map.getView();
+		coord = view.getCenter();
 		var pixel = map.getPixelFromCoordinate(coord);
 		if ( $('#popup').is(':visible') ) {
 			pixel[1] = pixel[1] + centerLatOffsetPixel;
@@ -479,7 +458,7 @@ $('#mainPage').on('pageshow', function() {
 			new ol.control.Zoom({}),
 			new ol.control.ZoomSlider({
 			}),
-			new app.MoveCurrentLocationControl()
+			new MoveCurrentLocationControl()
 		]
 	});
 
@@ -690,7 +669,6 @@ $('#mainPage').on('pageshow', function() {
 		}
 	});
 
-
 	$('#cbKindergarten').click(function() {
 		switchLayer(getLayerNameBySubStred(this.id, 2), $(this).prop('checked'));
 	});
@@ -724,10 +702,11 @@ $('#mainPage').on('pageshow', function() {
 
 	// 現在地に移動するボタンのイベント
 	$('#moveCurrentLocation').click(function(evt){
-		if (navigator.geolocation) {
-			navigator.geolocation.getCurrentPosition(
+		control = new MoveCurrentLocationControl();
+		control.getCurrentPosition(
 				function(pos) {
-					var coordinate = ol.proj.transform([pos.coords.longitude, pos.coords.latitude], 'EPSG:4326', 'EPSG:3857');
+					var coordinate = ol.proj.transform(
+						[pos.coords.longitude, pos.coords.latitude], 'EPSG:4326', 'EPSG:3857');
 					view = map.getView();
 					view.setCenter(coordinate);
 				},
@@ -735,9 +714,6 @@ $('#mainPage').on('pageshow', function() {
 					alert('位置情報が取得できませんでした。');
 				}
 			);
-		} else {
-			alert('位置情報が取得できませんでした。');
-		}
 	});
 
 	$('#changeCircleRadius').change(function(evt){
