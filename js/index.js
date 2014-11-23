@@ -167,9 +167,7 @@ $('#mainPage').on('pageshow', function() {
 		// クリックした場所に既に描いた同心円がある場合、円を消す
 		if (feature && feature.getGeometry().getType() === "Circle") {
 			$('#cbDisplayCircle').attr('checked', false).checkboxradio('refresh');
-			layer = papamamap.getLayer(papamamap.getLayerName("Circle"));
-			source = layer.getSource();
-			source.clear();
+			papamamap.clearCenterCircle();
 		}
 
 		// クリックした場所に保育施設がある場合、ポップアップダイアログを出力する
@@ -277,6 +275,8 @@ $('#mainPage').on('pageshow', function() {
 		radius = $('#changeCircleRadius').val();
 		if($('#cbDisplayCircle').prop('checked')) {
 			drawCenterCircle(papamamap, radius);
+		} else {
+			papamamap.clearCenterCircle();
 		}
 	});
 

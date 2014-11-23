@@ -409,7 +409,21 @@ Papamamap.prototype.getPopupContent = function(feature)
 };
 
 /**
- * 距離設定用の円を描写する
+ * 円を消す
+ *
+ * @param  {[type]} radius      [description]
+ * @param  {[type]} moveToPixel [description]
+ * @return {[type]}             [description]
+ */
+Papamamap.prototype.clearCenterCircle = function()
+{
+    layer = this.getLayer(this.getLayerName("Circle"));
+    source = layer.getSource();
+    source.clear();
+};
+
+/**
+ * 円を描画する
  *
  * @param  {[type]} radius      [description]
  * @param  {[type]} moveToPixel [description]
@@ -424,9 +438,8 @@ Papamamap.prototype.drawCenterCircle = function(radius, moveToPixel)
         radius = 500;
     }
 
-    layer = this.getLayer(this.getLayerName("Circle"));
-    source = layer.getSource();
-    source.clear();
+    // 円を消す
+    this.clearCenterCircle();
 
     view  = this.map.getView();
     coordinate = view.getCenter();
