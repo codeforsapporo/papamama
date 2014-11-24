@@ -1,101 +1,153 @@
 <!doctype html>
 <html lang="ja">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>さっぽろ保育園マップ by パパママまっぷ</title>
-  <link rel="stylesheet" href="css/ol.css" type="text/css">
-  <link rel="stylesheet" href="css/bootstrap.css" type="text/css">
-  <link rel="stylesheet" href="css/bootstrap.css.map" type="text/css">
-  <link rel="stylesheet" href="css/base.css" type="text/css">
-  <link rel="stylesheet" href="css/jquery.mobile-1.4.4.css">
-  <link rel="stylesheet" href="css/icon-pack-custom.css">
-  <script>
-    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>さっぽろ保育園マップ by パパママまっぷ</title>
+        <link rel="stylesheet" href="css/ol.css" type="text/css">
+        <link rel="stylesheet" href="css/bootstrap.css" type="text/css">
+        <link rel="stylesheet" href="css/bootstrap.css.map" type="text/css">
+        <link rel="stylesheet" href="css/base.css" type="text/css">
+        <link rel="stylesheet" href="css/jquery.mobile-1.4.4.css">
+        <link rel="stylesheet" href="css/icon-pack-custom.css">
+        <script>
+        (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+        })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
 
-    ga('create', 'UA-54609451-2', 'auto');
-    ga('send', 'pageview');
-  </script>
-</head>
-<body>
-  <div data-role="page" id="mainPage">
-    <div data-role="panel" id="mypanel" data-position="right">
-      <a href="#about" data-rel="popup" data-position-to="window" data-transition="pop" class="ui-btn ui-corner-all ui-btn-inline ui-mini ui-btn-a">このマップについて</a>
-      <p>
-      <div data-role="popup" id="about" data-overlay-theme="a" data-theme="a" style="max-height: 400px; max-width:770px;">
-        <div data-role="header" data-theme="a" >
-          <h1>このマップについて</h1>
-        </div>
-        <a href="#" data-rel="back" class="ui-btn ui-corner-all ui-shadow ui-btn-a ui-icon-delete ui-btn-icon-notext ui-btn-right">Close</a>
-        <div role="main" class="ui-content">
-          <iframe src="https://docs.google.com/forms/d/1DqZUvd3PVj8HvIjagFJpXeR0CjLfK8G6osiW65zAnio/viewform?embedded=true" height="350" frameborder="0" marginheight="0" marginwidth="0">読み込み中...</iframe>
-        </div>
-      </div>
-      </p>
-    </div>
+        ga('create', 'UA-54609451-2', 'auto');
+        ga('send', 'pageview');
+        </script>
+    </head>
+    <body>
+        <div data-role="page" id="mainPage">
+            <div role="main" class="ui-content">
+            <div id="nav">
+                <fieldset id="nav1" data-role="controlgroup" data-type="horizontal" data-mini="true">
+                    <label for="cbNinka" id="lblNinka">認可</label>
+                    <input type="checkbox" name="cbNinka" id="cbNinka" checked="checked">
 
-    <div role="main" class="ui-content">
-      <div id="nav">
-        <fieldset id="nav1" data-role="controlgroup" data-type="horizontal" data-mini="true">
-          <input type="checkbox" name="cbNinka" id="cbNinka" checked="checked">
-          <label for="cbNinka" id="lblNinka">認可</label>
-          <input type="checkbox" name="cbNinkagai" id="cbNinkagai" checked="checked">
-          <label for="cbNinkagai" id="lblNinkagai">認可外</label>
-          <input type="checkbox" name="cbKindergarten" id="cbKindergarten" checked="checked">
-          <label for="cbKindergarten" id="lblKindergarten">幼</label>
-          <input type="checkbox" name="cbElementarySchool" id="cbElementarySchool">
-          <label for="cbElementarySchool" id="lblElementarySchool">小</label>
-          <input type="checkbox" name="cbMiddleSchool" id="cbMiddleSchool">
-          <label for="cbMiddleSchool" id="lblMiddleSchool">中</label>
-          <a href="http://www.codeforsapporo.org/papamama/" target="_blank" class="ui-btn ui-icon-question ui-btn-icon-notext">help</a>
-          <!--
-          <label for="cbTest" id="lblTest">Test</label>
-          <input type="checkbox" name="cbTest" id="cbTest">
-          -->
-        </fieldset>
-        <fieldset id="nav2" class="ui-hide-label" data-role="controlgroup" data-type="horizontal" data-mini="true">
-          <label for="changeBaseMap">背景</label>
-          <select id="changeBaseMap" data-mini="true">
-            <option>背景</option>
-          </select>
-          <label for="moveTo">最寄駅</label>
-          <select id="moveTo" data-mini="true">
-            <option>最寄駅</option>
-          </select>
-          <label for="btnCurrPos" class="ui-btn-icon-notext">現在地<span class="ui-icon-bullseye ui-btn-icon-notext"></span></label>
-          <label for="cbDisplayCircle" class="ui-btn-icon-notext">距離円<span class="ui-icon-bullseye ui-btn-icon-notext"></span></label>
-          <input type="checkbox" id="cbDisplayCircle" name="cbDisplayCircle" data-mini="true"/>
-          <label for="changeCircleRadius" class="ui-hidden-accessible">半径</label>
-          <select id="changeCircleRadius" data-mini="true">
-            <option value="">半径</option>
-            <option value="500" selected="selected">500m</option>
-            <option value="1000">1km</option>
-            <option value="3000">3km</option>
-            <option value="5000">5km</option>
-          </select>
-        </fieldset>
-      </div>
-      <div id="map" class="map">
-      </div>
-      <div id="popup" data-role="popup" data-theme="a" class="ui-content ol-popup" style="max-height: 200px;">
-          <a href="#" id="popup-closer" data-rel="back" class="ui-btn ui-corner-all ui-shadow ui-btn-a ui-icon-delete ui-btn-icon-notext ui-btn-right">Close</a>
-          <div id="popup-title" data-role="header" data-theme="a"></div>
-          <div id="popup-content" role="main"></div>
-      </div>
-    </div>
-  <script src="js/jquery-2.1.1.min.js" type="text/javascript"></script>
-  <script src="js/jquery.mobile-1.4.4.min.js" type="text/javascript"></script>
-  <script src="js/bootstrap.min.js" type="text/javascript"></script>
-  <script src="js/v3.0.0/build/ol.js" type="text/javascript"></script>
-  <script src="js/ol_style.js" type="text/javascript"></script>
-  <script src="js/movecurrentlocationcontrol.js" type="text/javascript"></script>
-  <script src="js/movetolist.js" type="text/javascript"></script>
-  <script src="js/papamamap.js" type="text/javascript"></script>
-  <script src="js/index.js" type="text/javascript"></script>
-  <div id="marker" title="Marker"></div>
-  <div id="markerTitle" title="MarkerTitle"></div>
-</body>
+                    <label for="cbNinkagai" id="lblNinkagai">認可外</label>
+                    <input type="checkbox" name="cbNinkagai" id="cbNinkagai" checked="checked">
+
+                    <label for="cbKindergarten" id="lblKindergarten">幼</label>
+                    <input type="checkbox" name="cbKindergarten" id="cbKindergarten" checked="checked">
+
+                    <label for="cbElementarySchool" id="lblElementarySchool">小</label>
+                    <input type="checkbox" name="cbElementarySchool" id="cbElementarySchool">
+
+                    <label for="cbMiddleSchool" id="lblMiddleSchool">中</label>
+                    <input type="checkbox" name="cbMiddleSchool" id="cbMiddleSchool">
+
+                    <a id="btnFilter" href="#filterdialog" data-rel="popup" data-position-to="window" class="ui-btn ui-icon-filter ui-btn-icon-notext" data-transition="pop">Filter</a>
+                    <a href="http://www.codeforsapporo.org/papamama/" target="_blank" class="ui-btn ui-icon-question ui-btn-icon-notext">help</a>
+                </fieldset>
+                <fieldset id="nav2" class="ui-hide-label" data-role="controlgroup" data-type="horizontal" data-mini="true">
+                    <label for="changeBaseMap">背景</label>
+                    <select id="changeBaseMap" data-mini="true">
+                        <option>背景</option>
+                    </select>
+
+                    <label for="moveTo">最寄駅</label>
+                    <select id="moveTo" data-mini="true">
+                        <option>最寄駅</option>
+                    </select>
+
+                    <label for="cbDisplayCircle" class="ui-btn-icon-notext">距離円<span class="ui-icon-bullseye ui-btn-icon-notext"></span></label>
+                    <input type="checkbox" id="cbDisplayCircle" name="cbDisplayCircle" data-mini="true"/>
+
+                    <label for="changeCircleRadius" class="ui-hidden-accessible">半径</label>
+                    <select id="changeCircleRadius" data-mini="true">
+                        <option value="">半径</option>
+                        <option value="500" selected="selected">500m</option>
+                        <option value="1000">1km</option>
+                        <option value="3000">3km</option>
+                        <option value="5000">5km</option>
+                    </select>
+                </fieldset>
+            </div>
+            <div id="map" class="map">
+            </div>
+            <div id="popup" data-role="popup" data-theme="a" class="ui-content ol-popup" style="max-height: 200px;">
+                <a href="#" id="popup-closer" data-rel="back" class="ui-btn ui-corner-all ui-shadow ui-btn-a ui-icon-delete ui-btn-icon-notext ui-btn-right">Close</a>
+                <div id="popup-title" data-role="header" data-theme="a"></div>
+                <div id="popup-content" role="main"></div>
+            </div>
+        </div>
+        <div data-role="popup" data-history="false" id="filterdialog" data-theme="a" class="ui-corner-all ui-icon-delete ui-btn-left">
+            <a href="#" data-rel="back" class="ui-btn ui-corner-all ui-shadow ui-btn-a ui-icon-delete ui-btn-icon-notext ui-btn-right">Close</a>
+            <form>
+                <div style="padding:10px 20px;">
+                    <h3>保育施設 絞り込み</h3>
+                    <legend>認可保育園</legend>
+                    <fieldset data-role="controlgroup" data-type="horizontal" data-mini="false">
+                        <label for="ninkaOpenTime" class="select">開園時間</label>
+                        <select id="ninkaOpenTime">
+                            <option value="">開園時間</option>
+                            <option value="7">7:00</option>
+                        </select>
+                        <label for="ninkaCloseTime" class="select">終園時間</label>
+                        <select id="ninkaCloseTime">
+                            <option value="">終園時間</option>
+                            <option value="18">18:00</option>
+                            <option value="19">19:00</option>
+                            <option value="20">20:00</option>
+                            <option value="22">22:00</option>
+                            <option value="24">00:00</option>
+                        </select>
+                    </fieldset>
+                    <fieldset data-role="controlgroup" data-type="horizontal" data-mini="false">
+                        <label for="ninkaIchijiHoiku">一時保育</label>
+                        <input type="checkbox" id="ninkaIchijiHoiku">
+                        <label for="ninkaYakan">夜間</label>
+                        <input type="checkbox" id="ninkaYakan">
+                        <label for="ninkaKyujitu">休日</label>
+                        <input type="checkbox" id="ninkaKyujitu">
+                    </fieldset>
+                    <legend>認可外保育園</legend>
+                    <fieldset data-role="controlgroup" data-type="horizontal" data-mini="false">
+                        <label for="ninkagaiOpenTime" class="select">開園時間</label>
+                        <select id="ninkagaiOpenTime">
+                            <option value="">開園時間</option>
+                            <option value="7:00">7:00</option>
+                            <option value="7:30">7:30</option>
+                            <option value="7:45">7:45</option>
+                            <option value="8:00">8:00</option>
+                        </select>
+                        <label for="ninkagaiCloseTime" class="select">終園時間</label>
+                        <select id="ninkagaiCloseTime">
+                            <option value="">終園時間</option>
+                            <option value="18">18:00</option>
+                            <option value="19">19:00〜19:45</option>
+                            <option value="20">20:00〜20:30</option>
+                            <option value="22">22:00〜24:00</option>
+                            <option value="27">03:00</option>
+                        </select>
+                    </fieldset>
+                    <fieldset data-role="controlgroup" data-type="horizontal" data-mini="false">
+                        <label for="ninkagai24H">24時間</label>
+                        <input type="checkbox" id="ninkagai24H">
+                        <!--
+                        <label for="ninkagaiShomei">証明書あり</label>
+                        <input type="checkbox" id="ninkagaiShomei">
+                        -->
+                    </fieldset>
+                    <a href="#" data-rel="back" id="filterApply" class="ui-btn ui-corner-all ui-btn-b ui-btn-icon-left ui-icon-check">適用</a>
+                </div>
+            </form>
+        </div>
+        <script src="js/jquery-2.1.1.min.js" type="text/javascript"></script>
+        <script src="js/jquery.mobile-1.4.4.min.js" type="text/javascript"></script>
+        <script src="js/bootstrap.min.js" type="text/javascript"></script>
+        <script src="js/v3.0.0/build/ol.js" type="text/javascript"></script>
+        <script src="js/ol_style.js" type="text/javascript"></script>
+        <script src="js/movecurrentlocationcontrol.js" type="text/javascript"></script>
+        <script src="js/movetolist.js" type="text/javascript"></script>
+        <script src="js/facilityfilter.js" type="text/javascript"></script>
+        <script src="js/papamamap.js" type="text/javascript"></script>
+        <script src="js/index.js" type="text/javascript"></script>
+        <div id="marker" title="Marker"></div>
+        <div id="markerTitle" title="MarkerTitle"></div>
+    </body>
 </html>

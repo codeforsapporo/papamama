@@ -73,6 +73,7 @@ function resizeMapDiv() {
 }
 
 /**
+ * 円を描画する
  *
  * @param  {[type]} papamamap [description]
  * @param  {[type]} radius    [description]
@@ -290,20 +291,6 @@ $('#mainPage').on('pageshow', function() {
 			);
 	});
 
-	// フィルターのイベント定義
-	$('#btnFilter').click(function(){
-		conditions = {};
-		// 条件を作成する処理
-
-		if(conditions.length > 0) {
-			newGeoJson = papamamap.getFilteredFeaturesGeoJson(conditions, nurseryFacilities);
-			papamamap.addNurseryFacilitiesLayer(newGeoJson);
-		} else {
-			papamamap.addNurseryFacilitiesLayer(nurseryFacilities);
-		}
-		$('#popupFilter').hide();
-	});
-
 	// ポップアップを閉じるイベント
 	$('#popup-closer').click(function(evt){
 		$('#popup').hide();
@@ -319,6 +306,56 @@ $('#mainPage').on('pageshow', function() {
 	// 親要素へのイベント伝播を停止する
 	$('.ol-popup').click(function(evt){
 		evt.stopPropagation();
+	});
+
+	// 検索フィルターを有効にする
+	$('#filterApply').click(function(evt){
+		// 条件作成処理
+		conditions = [];
+		if($('#ninkaOpenTime option:selected').val() !== "") {
+			conditions['ninkaOpenTime'] = $('#ninkaOpenTime option:selected').val();
+		}
+		if($('#ninkaCloseTime option:selected').val() !== "") {
+			conditions['ninkaCloseTime'] = $('#ninkaCloseTime option:selected').val();
+		}
+		if($('#ninkaIchijiHoiku').prop('checked')) {
+			conditions['ninkaIchijiHoiku'] = 1;
+		}
+		if($('#ninkaYakan').prop('checked')) {
+			conditions['ninkaYakan'] = 1;
+		}
+		if($('#ninkaKyujitu').prop('checked')) {
+			conditions['ninkaKyujitu'] = 1;
+		}
+		if($('#ninkagaiOpenTime option:selected').val() !== "") {
+			conditions['ninkagaiOpenTime'] = $('#ninkagaiOpenTime option:selected').val();
+		}
+		if($('#ninkagaiCloseTime option:selected').val() !== "") {
+			conditions['ninkagaiCloseTime'] = $('#ninkagaiCloseTime option:selected').val();
+		}
+		if($('#ninkagai24H').prop('checked')) {
+			conditions['ninkagai24H'] = 1;
+		}
+		if($('#ninkagaiShomei').prop('checked')) {
+			conditions['ninkagaiShomei'] = 1;
+		}
+
+		// フィルター適用時
+		if(Object.keys(conditions).length > 0) {
+			filter = new FacilityFilter();
+			newGeoJson = filter.getFilteredFeaturesGeoJson(conditions, nurseryFacilities);
+			papamamap.addNurseryFacilitiesLayer(newGeoJson);
+			$('#btnFilter').css('background-color', '#3388cc');
+			// console.log("filterApply total:", newGeoJson.features.length);
+		} else {
+			papamamap.addNurseryFacilitiesLayer(nurseryFacilities);
+			$('#btnFilter').css('background-color', '#f6f6f6');
+		}
+
+		// レイヤー表示状態によって施設の表示を切り替える
+		papamamap.switchLayer($('#cbNinka').prop('id'), $('#cbNinka').prop('checked'));
+		papamamap.switchLayer($('#cbNinkagai').prop('id'), $('#cbNinkagai').prop('checked'));
+		papamamap.switchLayer($('#cbKindergarten').prop('id'), $('#cbKindergarten').prop('checked'));
 	});
 
 });
