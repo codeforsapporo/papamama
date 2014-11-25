@@ -41,7 +41,7 @@
                     <input type="checkbox" name="cbMiddleSchool" id="cbMiddleSchool">
 
                     <a id="btnFilter" href="#filterdialog" data-rel="popup" data-position-to="window" class="ui-btn ui-icon-filter ui-btn-icon-notext" data-transition="pop">Filter</a>
-                    <a href="http://www.codeforsapporo.org/papamama/" target="_blank" class="ui-btn ui-icon-question ui-btn-icon-notext">help</a>
+                    <a id="btnHelp" href="http://www.codeforsapporo.org/papamama/" target="_blank" class="ui-btn ui-icon-question ui-btn-icon-notext">help</a>
                 </fieldset>
                 <fieldset id="nav2" class="ui-hide-label" data-role="controlgroup" data-type="horizontal" data-mini="true">
                     <label for="changeBaseMap">背景</label>
@@ -54,7 +54,7 @@
                         <option>最寄駅</option>
                     </select>
 
-                    <label for="cbDisplayCircle" class="ui-btn-icon-notext">距離円<span class="ui-icon-bullseye ui-btn-icon-notext"></span></label>
+                    <label id="lblDisplayCircle" for="cbDisplayCircle" class="ui-btn-icon-notext">距離円<span class="ui-icon-bullseye ui-btn-icon-notext"></span></label>
                     <input type="checkbox" id="cbDisplayCircle" name="cbDisplayCircle" data-mini="true"/>
 
                     <label for="changeCircleRadius" class="ui-hidden-accessible">半径</label>
@@ -133,7 +133,10 @@
                         <input type="checkbox" id="ninkagaiShomei">
                         -->
                     </fieldset>
-                    <a href="#" data-rel="back" id="filterApply" class="ui-btn ui-corner-all ui-btn-b ui-btn-icon-left ui-icon-check">適用</a>
+                    <fieldset data-role="controlgroup" data-type="horizontal" data-mini="false">
+                        <a href="#" data-rel="back" id="filterApply" class="ui-btn ui-corner-all ui-btn-b ui-btn-icon-left ui-icon-check">条件の適用</a>
+                        <a href="#" id="filterReset" class="ui-btn ui-corner-all ui-btn-a ui-btn-icon-left ui-icon-delete">リセット</a>
+                    </fieldset>
                 </div>
             </form>
         </div>

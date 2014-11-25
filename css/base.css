@@ -120,3 +120,7 @@
 	background-color: #4c6079;
 	background-color: rgba(0,60,136,0.7);
 }
+
+#btnFilter, #btnHelp, #lblDisplayCircle {
+	width: 45px;
+}

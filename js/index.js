@@ -358,4 +358,19 @@ $('#mainPage').on('pageshow', function() {
 		papamamap.switchLayer($('#cbKindergarten').prop('id'), $('#cbKindergarten').prop('checked'));
 	});
 
+	// 絞込条件のリセット
+	$('#filterReset').click(function(evt){
+		$('#ninkaOpenTime').val('').selectmenu( "refresh" );
+		$('#ninkaCloseTime').val('').selectmenu( "refresh" );
+		$('#ninkaIchijiHoiku').prop('checked', false).checkboxradio('refresh');
+		$('#ninkaYakan').prop('checked', false).checkboxradio('refresh');
+		$('#ninkaKyujitu').prop('checked', false).checkboxradio('refresh');
+		$('#ninkagaiOpenTime').val('').selectmenu( "refresh" );
+		$('#ninkagaiCloseTime').val('').selectmenu( "refresh" );
+		$('#ninkagai24H').prop('checked', false).checkboxradio('refresh');
+		$('#ninkagaiShomei').prop('checked', false).checkboxradio('refresh');
+		papamamap.addNurseryFacilitiesLayer(nurseryFacilities);
+		$('#btnFilter').css('background-color', '#f6f6f6');
+	});
+
 });
