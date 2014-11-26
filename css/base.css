@@ -7,17 +7,19 @@
 	min-width: 300px;
 }
 #marker {
-	width: 20px;
-	height: 20px;
-	border: 1px solid #088;
+	display:none;
+	width: 25px;
+	height: 25px;
+	border: 2px solid #800;
 	border-radius: 10px;
 	background-color: #F00;
 	opacity: 0.7;
 }
 #markerTitle {
+	display:none;
 	text-decoration: none;
 	color: black;
-	font-size: 11pt;
+	font-size: 12pt;
 	font-weight: bold;
 	text-shadow: black 0.1em 0.1em 0.2em;
 }
@@ -93,7 +95,7 @@
 }
 
 #popup-content th {
-	width: 4em;
+	width: 4.5em;
 	vertical-align: top;
 	background-color: white;
 }
@@ -109,7 +111,7 @@
 	left: 8px;
 	background-color: rgba(0,60,136,0.5);
 	border-radius: 4px;
-	padding: 2px;
+	padding: 4px;
 }
 .ol-touch .move-current-location {
 	top: 270px;
@@ -120,7 +122,20 @@
 	background-color: #4c6079;
 	background-color: rgba(0,60,136,0.7);
 }
+.ui-btn-icon-notext {
+	width: 32px;
+	height: 32px;
+}
 
 #btnFilter, #btnHelp, #lblDisplayCircle {
 	width: 45px;
+}
+
+h3 {
+	margin-top: 0;
+	margin-bottom: 0.5em;
+}
+
+legend {
+	margin-bottom: 0;
 }

@@ -373,7 +373,26 @@ Papamamap.prototype.getPopupContent = function(feature)
         content += '</td>';
         content += '</tr>';
     }
-
+    if(feature.get('種別') == "認可外") {
+        content += '<tr>';
+        content += '<th>監督基準</th>';
+        content += '<td>';
+        if (feature.get('証明') !== null) {
+            content += '証明書発行済<a href="http://www.city.sapporo.jp/kodomo/kosodate/ninkagai_shisetsu.html" target="_blank">(詳細)</a>';
+        }
+        content += '</td>';
+        content += '</tr>';
+    }
+    if(feature.get('種別') == "認可保育所") {
+        content += '<tr>';
+        content += '<th>欠員</th>';
+        content += '<td>';
+        if (feature.get('Vacancy') !== null) {
+            content += '<a href="http://www.city.sapporo.jp/kodomo/kosodate/l4_01.html" target="_blank">【空きあり】</a>';
+        }
+        content += '</td>';
+        content += '</tr>';
+    }
     if (feature.get('開始年齢') !== null && feature.get('終了年齢') !== null) {
         content += '<tr>';
         content += '<th>年齢</th>';

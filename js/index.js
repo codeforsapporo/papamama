@@ -194,6 +194,9 @@ $('#mainPage').on('pageshow', function() {
 
 	// 中心座標変更セレクトボックス操作イベント定義
 	$('#moveTo').change(function(){
+		$('#markerTitle').hide();
+		$('#marker').hide();
+
 		// 指定した最寄り駅に移動
 		papamamap.moveToSelectItem(moveToList[$(this).val()]);
 
@@ -218,6 +221,8 @@ $('#mainPage').on('pageshow', function() {
 			element: $('#markerTitle')
 		});
 		map.addOverlay(markerTitle);
+		$('#markerTitle').show();
+		$('#marker').show();
 	});
 
 	// 幼稚園チェックボックスのイベント設定
@@ -312,32 +317,46 @@ $('#mainPage').on('pageshow', function() {
 	$('#filterApply').click(function(evt){
 		// 条件作成処理
 		conditions = [];
+		ninka = ninkagai = youchien = false;
 		if($('#ninkaOpenTime option:selected').val() !== "") {
 			conditions['ninkaOpenTime'] = $('#ninkaOpenTime option:selected').val();
+			ninka = true;
 		}
 		if($('#ninkaCloseTime option:selected').val() !== "") {
 			conditions['ninkaCloseTime'] = $('#ninkaCloseTime option:selected').val();
+			ninka = true;
 		}
 		if($('#ninkaIchijiHoiku').prop('checked')) {
 			conditions['ninkaIchijiHoiku'] = 1;
+			ninka = true;
 		}
 		if($('#ninkaYakan').prop('checked')) {
 			conditions['ninkaYakan'] = 1;
+			ninka = true;
 		}
 		if($('#ninkaKyujitu').prop('checked')) {
 			conditions['ninkaKyujitu'] = 1;
+			ninka = true;
+		}
+		if($('#ninkaVacancy').prop('checked')) {
+			conditions['ninkaVacancy'] = 1;
+			ninka = true;
 		}
 		if($('#ninkagaiOpenTime option:selected').val() !== "") {
 			conditions['ninkagaiOpenTime'] = $('#ninkagaiOpenTime option:selected').val();
+			ninkagai = true;
 		}
 		if($('#ninkagaiCloseTime option:selected').val() !== "") {
 			conditions['ninkagaiCloseTime'] = $('#ninkagaiCloseTime option:selected').val();
+			ninkagai = true;
 		}
 		if($('#ninkagai24H').prop('checked')) {
 			conditions['ninkagai24H'] = 1;
+			ninkagai = true;
 		}
 		if($('#ninkagaiShomei').prop('checked')) {
 			conditions['ninkagaiShomei'] = 1;
+			ninkagai = true;
 		}
 
 		// フィルター適用時
@@ -350,25 +369,30 @@ $('#mainPage').on('pageshow', function() {
 		} else {
 			papamamap.addNurseryFacilitiesLayer(nurseryFacilities);
 			$('#btnFilter').css('background-color', '#f6f6f6');
+			ninka = ninkagai = youchien = true;
 		}
 
 		// レイヤー表示状態によって施設の表示を切り替える
-		papamamap.switchLayer($('#cbNinka').prop('id'), $('#cbNinka').prop('checked'));
-		papamamap.switchLayer($('#cbNinkagai').prop('id'), $('#cbNinkagai').prop('checked'));
-		papamamap.switchLayer($('#cbKindergarten').prop('id'), $('#cbKindergarten').prop('checked'));
+		papamamap.switchLayer($('#cbNinka').prop('id'), ninka);
+		papamamap.switchLayer($('#cbNinkagai').prop('id'), ninkagai);
+		papamamap.switchLayer($('#cbKindergarten').prop('id'), youchien);
+		$('#cbNinka').prop('checked', ninka).checkboxradio('refresh');
+		$('#cbNinkagai').prop('checked', ninkagai).checkboxradio('refresh');
+		$('#cbKindergarten').prop('checked', youchien).checkboxradio('refresh');
 	});
 
 	// 絞込条件のリセット
 	$('#filterReset').click(function(evt){
-		$('#ninkaOpenTime').val('').selectmenu( "refresh" );
-		$('#ninkaCloseTime').val('').selectmenu( "refresh" );
-		$('#ninkaIchijiHoiku').prop('checked', false).checkboxradio('refresh');
-		$('#ninkaYakan').prop('checked', false).checkboxradio('refresh');
-		$('#ninkaKyujitu').prop('checked', false).checkboxradio('refresh');
-		$('#ninkagaiOpenTime').val('').selectmenu( "refresh" );
-		$('#ninkagaiCloseTime').val('').selectmenu( "refresh" );
-		$('#ninkagai24H').prop('checked', false).checkboxradio('refresh');
-		$('#ninkagaiShomei').prop('checked', false).checkboxradio('refresh');
+		// チェックボックスをリセット
+		$(".filtercb").each(function(){
+			$(this).prop('checked', false).checkboxradio('refresh');
+		});
+		// セレクトボックスをリセット
+		$('.filtersb').each(function(){
+			$(this).selectmenu(); // これを実行しないと次の行でエラー発生
+			$(this).val('').selectmenu('refresh');
+		});
+		// 施設情報をリセット
 		papamamap.addNurseryFacilitiesLayer(nurseryFacilities);
 		$('#btnFilter').css('background-color', '#f6f6f6');
 	});

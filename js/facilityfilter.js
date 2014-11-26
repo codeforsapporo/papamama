@@ -60,12 +60,24 @@ FacilityFilter.prototype.getFilteredFeaturesGeoJson = function(conditions, nurse
     if(conditions['ninkaCloseTime']) {
         filterfunc = function(item, idx) {
             f = function(item,idx){
-                if(conditions['ninkaCloseTime'] == 24) {
-                    _time = "0:00";
-                } else {
-                    _time = conditions['ninkaCloseTime'] + ":00";
+                switch(conditions['ninkaCloseTime']) {
+                    case "18":
+                        checkAry = ["18:00","19:00","20:00","22:00","0:00"];
+                        break;
+                    case "19":
+                        checkAry = ["19:00","20:00","22:00","0:00"];
+                        break;
+                    case "20":
+                        checkAry = ["20:00","22:00","0:00"];
+                        break;
+                    case "22":
+                        checkAry = ["22:00","0:00"];
+                        break;
+                    case "24":
+                        checkAry = ["0:00"];
+                        break;
                 }
-                if(item.properties['終園時間'] == _time) {
+                if($.inArray(item.properties['終園時間'], checkAry) >= 0) {
                     return true;
                 }
             };
@@ -101,6 +113,14 @@ FacilityFilter.prototype.getFilteredFeaturesGeoJson = function(conditions, nurse
         };
         ninkaFeatures = ninkaFeatures.filter(filterfunc);
     }
+    if(conditions['ninkaVacancy']) {
+        filterfunc = function(item,idx){
+            if(item.properties['Vacancy'] !== null) {
+                return true;
+            }
+        };
+        ninkaFeatures = ninkaFeatures.filter(filterfunc);
+    }
     // console.log("[after]ninkaFeatures length:", ninkaFeatures.length);
 
     // ----------------------------------------------------------------------
@@ -127,23 +147,22 @@ FacilityFilter.prototype.getFilteredFeaturesGeoJson = function(conditions, nurse
                 checkAry = [];
                 switch(conditions['ninkagaiCloseTime']) {
                     case "18":
-                        checkAry = ["18:00"];
+                        checkAry = ["18:00","19:00","19:30","19:45","20:00","20:30","22:00","23:00","3:00"];
                         break;
                     case "19":
-                        checkAry = ["19:00","19:30","19:45"];
+                        checkAry = ["19:00","19:30","19:45","20:00","20:30","22:00","23:00","3:00"];
                         break;
                     case "20":
-                        checkAry = ["20:00","20:30"];
+                        checkAry = ["20:00","20:30","22:00","23:00","3:00"];
                         break;
                     case "22":
-                        checkAry = ["22:00","23:00"];
+                        checkAry = ["22:00","23:00","3:00"];
                         break;
                     case "27":
                         checkAry = ["3:00"];
                         break;
                 }
-                // if(checkAry.contains(item.properties['終園時間'])) {
-                if($.inArray(item.properties['終園時間'], checkAry) >= 0) {
+                if(item.properties['H24'] !== null || $.inArray(item.properties['終園時間'], checkAry) >= 0) {
                     return true;
                 }
             };
