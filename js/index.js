@@ -72,24 +72,6 @@ function resizeMapDiv() {
 	$("#map").height(contentHeight - navHeight - 48);
 }
 
-/**
- * 円を描画する
- *
- * @param  {[type]} papamamap [description]
- * @param  {[type]} radius    [description]
- * @return {[type]}           [description]
- */
-function drawCenterCircle(papamamap, radius)
-{
-	if($('#cbDisplayCircle').prop('checked')) {
-		if ( $('#popup').is(':visible') ) {
-			papamamap.drawCenterCircle(radius, papamamap.centerLatOffsetPixel);
-		} else {
-			papamamap.drawCenterCircle(radius);
-		}
-	}
-}
-
 $(window).on("orientationchange", function() {
 	resizeMapDiv();
 	map.setTarget('null');
@@ -160,7 +142,8 @@ $('#mainPage').on('pageshow', function() {
 			if($('#cbDisplayCircle').prop('checked')) {
 				radius = $('#changeCircleRadius').val();
 				if(radius !== "") {
-					drawCenterCircle(papamamap, radius);
+					// drawCenterCircle(papamamap, radius);
+					drawCenterCircle(radius);
 				}
 			}
 		}
@@ -272,7 +255,8 @@ $('#mainPage').on('pageshow', function() {
 	$('#changeCircleRadius').change(function(evt){
 		radius = $(this).val();
 		if($('#cbDisplayCircle').prop('checked')) {
-			drawCenterCircle(papamamap, radius);
+			// drawCenterCircle(papamamap, radius);
+			drawCenterCircle(radius);
 		}
 	});
 
@@ -280,7 +264,8 @@ $('#mainPage').on('pageshow', function() {
 	$('#cbDisplayCircle').click(function(evt) {
 		radius = $('#changeCircleRadius').val();
 		if($('#cbDisplayCircle').prop('checked')) {
-			drawCenterCircle(papamamap, radius);
+			// drawCenterCircle(papamamap, radius);
+			drawCenterCircle(radius);
 		} else {
 			papamamap.clearCenterCircle();
 		}
@@ -317,7 +302,7 @@ $('#mainPage').on('pageshow', function() {
 	$('#filterApply').click(function(evt){
 		// 条件作成処理
 		conditions = [];
-		ninka = ninkagai = youchien = false;
+		ninka = ninkagai = kindergarten = false;
 		if($('#ninkaOpenTime option:selected').val() !== "") {
 			conditions['ninkaOpenTime'] = $('#ninkaOpenTime option:selected').val();
 			ninka = true;
@@ -373,12 +358,13 @@ $('#mainPage').on('pageshow', function() {
 		}
 
 		// レイヤー表示状態によって施設の表示を切り替える
-		papamamap.switchLayer($('#cbNinka').prop('id'), ninka);
-		papamamap.switchLayer($('#cbNinkagai').prop('id'), ninkagai);
-		papamamap.switchLayer($('#cbKindergarten').prop('id'), youchien);
-		$('#cbNinka').prop('checked', ninka).checkboxradio('refresh');
-		$('#cbNinkagai').prop('checked', ninkagai).checkboxradio('refresh');
-		$('#cbKindergarten').prop('checked', youchien).checkboxradio('refresh');
+		updateLayerStatus({ninka: ninka, ninkagai: ninkagai, kindergarten: kindergarten});
+		// papamamap.switchLayer($('#cbNinka').prop('id'), ninka);
+		// papamamap.switchLayer($('#cbNinkagai').prop('id'), ninkagai);
+		// papamamap.switchLayer($('#cbKindergarten').prop('id'), youchien);
+		// $('#cbNinka').prop('checked', ninka).checkboxradio('refresh');
+		// $('#cbNinkagai').prop('checked', ninkagai).checkboxradio('refresh');
+		// $('#cbKindergarten').prop('checked', youchien).checkboxradio('refresh');
 	});
 
 	// 絞込条件のリセット
@@ -395,6 +381,41 @@ $('#mainPage').on('pageshow', function() {
 		// 施設情報をリセット
 		papamamap.addNurseryFacilitiesLayer(nurseryFacilities);
 		$('#btnFilter').css('background-color', '#f6f6f6');
+
+		updateLayerStatus({ninka: true, ninkagai: true, kindergarten: true});
 	});
+
+	/**
+	 *
+	 *
+	 * @param  {[type]} checkObj [description]
+	 * @return {[type]}               [description]
+	 */
+	function updateLayerStatus(checkObj)
+	{
+		papamamap.switchLayer($('#cbNinka').prop('id'), checkObj.ninka);
+		papamamap.switchLayer($('#cbNinkagai').prop('id'), checkObj.ninkagai);
+		papamamap.switchLayer($('#cbKindergarten').prop('id'), checkObj.kindergarten);
+		$('#cbNinka').prop('checked', checkObj.ninka).checkboxradio('refresh');
+		$('#cbNinkagai').prop('checked', checkObj.ninkagai).checkboxradio('refresh');
+		$('#cbKindergarten').prop('checked', checkObj.kindergarten).checkboxradio('refresh');
+	}
+
+	/**
+	 * 円を描画する 関数内関数
+	 *
+	 * @param  {[type]} radius    [description]
+	 * @return {[type]}           [description]
+	 */
+	function drawCenterCircle(radius)
+	{
+		if($('#cbDisplayCircle').prop('checked')) {
+			if ( $('#popup').is(':visible') ) {
+				papamamap.drawCenterCircle(radius, papamamap.centerLatOffsetPixel);
+			} else {
+				papamamap.drawCenterCircle(radius);
+			}
+		}
+	}
 
 });

@@ -388,7 +388,7 @@ Papamamap.prototype.getPopupContent = function(feature)
         content += '<th>欠員</th>';
         content += '<td>';
         if (feature.get('Vacancy') !== null) {
-            content += '<a href="http://www.city.sapporo.jp/kodomo/kosodate/l4_01.html" target="_blank">【空きあり】</a>';
+            content += '<a href="http://www.city.sapporo.jp/kodomo/kosodate/l4_01.html" target="_blank">空きあり</a>';
         }
         content += '</td>';
         content += '</tr>';
