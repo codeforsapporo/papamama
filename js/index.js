@@ -126,52 +126,52 @@ $('#mainPage').on('pageshow', function() {
 		}
 
 		// クリック位置の施設情報を取得
-		var feature = map.forEachFeatureAtPixel(evt.pixel,
+		var targetLayer = null;
+		map.forEachFeatureAtPixel(
+			evt.pixel,
 			function(feature, layer) {
-				return feature;
-			}
-		);
+				// クリックした場所に要素がなんにもない場合、クリック位置に地図の移動を行う
+				if (feature === undefined) {
+					coord = map.getCoordinateFromPixel(evt.pixel);
+					view = map.getView();
+					papamamap.animatedMove(coord[0], coord[1], false);
+					view.setCenter(coord);
 
-		// クリックした場所に要素がなんにもない場合、クリック位置に地図の移動を行う
-		if (feature === undefined) {
-			coord = map.getCoordinateFromPixel(evt.pixel);
-			view = map.getView();
-			papamamap.animatedMove(coord[0], coord[1], false);
-			view.setCenter(coord);
-
-			if($('#cbDisplayCircle').prop('checked')) {
-				radius = $('#changeCircleRadius').val();
-				if(radius !== "") {
-					drawCenterCircle(radius);
+					if($('#cbDisplayCircle').prop('checked')) {
+						radius = $('#changeCircleRadius').val();
+						if(radius !== "") {
+							drawCenterCircle(radius);
+						}
+					}
 				}
-			}
-		}
 
-		// クリックした場所に既に描いた同心円がある場合、円を消す
-		if (feature && feature.getGeometry().getType() === "Circle") {
-			$('#cbDisplayCircle').attr('checked', false).checkboxradio('refresh');
-			papamamap.clearCenterCircle();
-		}
+				// クリックした場所に既に描いた同心円がある場合、円を消す
+				if (feature && layer.get('name') === 'layerCircle' &&
+					feature.getGeometry().getType() === "Polygon") {
+					$('#cbDisplayCircle').attr('checked', false).checkboxradio('refresh');
+					papamamap.clearCenterCircle();
+				}
 
-		// クリックした場所に保育施設がある場合、ポップアップダイアログを出力する
-		if (feature && "Point" == feature.getGeometry().getType()) {
-			if(feature.get('種別') === undefined) {
-				return;
-			}
-			var geometry = feature.getGeometry();
-			var coord = geometry.getCoordinates();
-			popup.setPosition(coord);
+				// クリックした場所に保育施設がある場合、ポップアップダイアログを出力する
+				if (feature && "Point" == feature.getGeometry().getType()) {
+					if(feature.get('種別') === undefined) {
+						return;
+					}
+					var geometry = feature.getGeometry();
+					var coord = geometry.getCoordinates();
+					popup.setPosition(coord);
 
-			// タイトル部
-			var title = papamamap.getPopupTitle(feature);
-			$("#popup-title").html(title);
+					// タイトル部
+					var title = papamamap.getPopupTitle(feature);
+					$("#popup-title").html(title);
 
-			// 内容部
-			papamamap.animatedMove(coord[0], coord[1], false);
-			var content = papamamap.getPopupContent(feature);
-			$("#popup-content").html(content);
-			$('#popup').show();
-		}
+					// 内容部
+					papamamap.animatedMove(coord[0], coord[1], false);
+					var content = papamamap.getPopupContent(feature);
+					$("#popup-content").html(content);
+					$('#popup').show();
+				}
+			});
 	});
 
 	// 中心座標変更セレクトボックス操作イベント定義
@@ -300,6 +300,8 @@ $('#mainPage').on('pageshow', function() {
 		// 条件作成処理
 		conditions = [];
 		ninka = ninkagai = kindergarten = false;
+
+		// 認可保育園
 		if($('#ninkaOpenTime option:selected').val() !== "") {
 			conditions['ninkaOpenTime'] = $('#ninkaOpenTime option:selected').val();
 			ninka = true;
@@ -324,6 +326,8 @@ $('#mainPage').on('pageshow', function() {
 			conditions['ninkaVacancy'] = 1;
 			ninka = true;
 		}
+
+		// 認可外
 		if($('#ninkagaiOpenTime option:selected').val() !== "") {
 			conditions['ninkagaiOpenTime'] = $('#ninkagaiOpenTime option:selected').val();
 			ninkagai = true;
@@ -341,27 +345,22 @@ $('#mainPage').on('pageshow', function() {
 			ninkagai = true;
 		}
 
+		// 幼稚園
+
 		// フィルター適用時
 		if(Object.keys(conditions).length > 0) {
 			filter = new FacilityFilter();
 			newGeoJson = filter.getFilteredFeaturesGeoJson(conditions, nurseryFacilities);
 			papamamap.addNurseryFacilitiesLayer(newGeoJson);
 			$('#btnFilter').css('background-color', '#3388cc');
-			// console.log("filterApply total:", newGeoJson.features.length);
 		} else {
 			papamamap.addNurseryFacilitiesLayer(nurseryFacilities);
 			$('#btnFilter').css('background-color', '#f6f6f6');
-			ninka = ninkagai = youchien = true;
+			ninka = ninkagai = kindergarten = true;
 		}
 
 		// レイヤー表示状態によって施設の表示を切り替える
 		updateLayerStatus({ninka: ninka, ninkagai: ninkagai, kindergarten: kindergarten});
-		// papamamap.switchLayer($('#cbNinka').prop('id'), ninka);
-		// papamamap.switchLayer($('#cbNinkagai').prop('id'), ninkagai);
-		// papamamap.switchLayer($('#cbKindergarten').prop('id'), youchien);
-		// $('#cbNinka').prop('checked', ninka).checkboxradio('refresh');
-		// $('#cbNinkagai').prop('checked', ninkagai).checkboxradio('refresh');
-		// $('#cbKindergarten').prop('checked', youchien).checkboxradio('refresh');
 	});
 
 	// 絞込条件のリセット
@@ -379,11 +378,12 @@ $('#mainPage').on('pageshow', function() {
 		papamamap.addNurseryFacilitiesLayer(nurseryFacilities);
 		$('#btnFilter').css('background-color', '#f6f6f6');
 
+		// レイヤー表示状態によって施設の表示を切り替える
 		updateLayerStatus({ninka: true, ninkagai: true, kindergarten: true});
 	});
 
 	/**
-	 *
+	 * レイヤー状態を切り替える
 	 *
 	 * @param  {[type]} checkObj [description]
 	 * @return {[type]}               [description]
