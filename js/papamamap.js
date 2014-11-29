@@ -436,8 +436,8 @@ Papamamap.prototype.getPopupContent = function(feature)
  */
 Papamamap.prototype.clearCenterCircle = function()
 {
-    layer = this.getLayer(this.getLayerName("Circle"));
-    source = layer.getSource();
+    var layer = this.getLayer(this.getLayerName("Circle"));
+    var source = layer.getSource();
     source.clear();
 };
 
@@ -471,27 +471,35 @@ Papamamap.prototype.drawCenterCircle = function(radius, moveToPixel)
 
     circleFeatures = [];
     // 中心部の円を描く
+    var sphere = new ol.Sphere(6378137); // ol.Sphere.WGS84 ol.js には含まれてない
+    coordinate = ol.proj.transform(coordinate, 'EPSG:3857', 'EPSG:4326');
+    geoCircle  = ol.geom.Polygon.circular(sphere, coordinate, 100);
+    geoCircle.transform('EPSG:4326', 'EPSG:3857');
     circleFeature = new ol.Feature({
-        geometry: new ol.geom.Circle(coordinate, 100)
+        geometry: geoCircle
     });
     circleFeatures.push(circleFeature);
 
     // 選択した半径の同心円を描く
-    step = Math.floor(radius);
+    radius = Math.floor(radius);
 
     // 描画する円からextent情報を取得し、円の大きさに合わせ画面の縮尺率を変更
-    geoCircle = new ol.geom.Circle(coordinate, step);
+    geoCircle = ol.geom.Polygon.circular(sphere, coordinate, radius);
+    geoCircle.transform('EPSG:4326', 'EPSG:3857');
+    circleFeature = new ol.Feature({
+        geometry: geoCircle
+    });
+    circleFeatures.push(circleFeature);
+
+    // 大きい円に合わせて extent を設定
     extent = geoCircle.getExtent();
     view   = this.map.getView();
     sizes  = this.map.getSize();
     size   = (sizes[0] < sizes[1]) ? sizes[0] : sizes[1];
     view.fitExtent(extent, [size, size]);
 
-    circleFeature = new ol.Feature({
-        geometry: geoCircle
-    });
-    circleFeatures.push(circleFeature);
-
+    var layer  = this.getLayer(this.getLayerName("Circle"));
+    var source = layer.getSource();
     source.addFeatures(circleFeatures);
     return;
 };

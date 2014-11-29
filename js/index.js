@@ -142,7 +142,6 @@ $('#mainPage').on('pageshow', function() {
 			if($('#cbDisplayCircle').prop('checked')) {
 				radius = $('#changeCircleRadius').val();
 				if(radius !== "") {
-					// drawCenterCircle(papamamap, radius);
 					drawCenterCircle(radius);
 				}
 			}
@@ -255,7 +254,6 @@ $('#mainPage').on('pageshow', function() {
 	$('#changeCircleRadius').change(function(evt){
 		radius = $(this).val();
 		if($('#cbDisplayCircle').prop('checked')) {
-			// drawCenterCircle(papamamap, radius);
 			drawCenterCircle(radius);
 		}
 	});
@@ -264,7 +262,6 @@ $('#mainPage').on('pageshow', function() {
 	$('#cbDisplayCircle').click(function(evt) {
 		radius = $('#changeCircleRadius').val();
 		if($('#cbDisplayCircle').prop('checked')) {
-			// drawCenterCircle(papamamap, radius);
 			drawCenterCircle(radius);
 		} else {
 			papamamap.clearCenterCircle();
