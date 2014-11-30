@@ -15,8 +15,17 @@ var moveToList = [];
 
 // マップサーバ一覧
 var mapServerList = {
+	'bing-road': {
+		label: "標準(Bing)",
+		source_type: "bing",
+		source: new ol.source.BingMaps({
+			culture: 'ja-jp',
+			key: bing_api_key,
+			imagerySet: 'Road',
+		})
+	},
 	"cyberjapn-pale": {
-		label: "標準",
+		label: "国土地理院",
 		source_type: "xyz",
 		source: new ol.source.XYZ({
 			attributions: [
@@ -47,15 +56,6 @@ var mapServerList = {
 			key: bing_api_key,
 			imagerySet: 'Aerial',
 		})
-	},
-	'bing-road': {
-		label: "Bing",
-		source_type: "bing",
-		source: new ol.source.BingMaps({
-			culture: 'ja-jp',
-			key: bing_api_key,
-			imagerySet: 'Road',
-		})
 	}
 };
 
@@ -85,7 +85,7 @@ $('#mainPage').on('pageshow', function() {
 	// 地図レイヤー定義
 	var papamamap = new Papamamap();
 	papamamap.viewCenter = init_center_coords;
-	papamamap.generate(mapServerList['cyberjapn-pale']);
+	papamamap.generate(mapServerList['bing-road']);
 	map = papamamap.map;
 
 	// 保育施設の読み込みとレイヤーの追加
@@ -263,8 +263,8 @@ $('#mainPage').on('pageshow', function() {
 
 	// 地図変更選択ボックス操作時のイベント
 	$('#changeBaseMap').change(function(evt) {
-		if($(this).val() === "地図種類") {
-			return;
+		if($(this).val() === "背景") {
+			$(this).val($(this).prop("selectedIndex", 1).val());
 		}
 		papamamap.changeMapServer(
 			mapServerList[$(this).val()], $('#changeOpacity option:selected').val()

@@ -67,6 +67,9 @@
                     </select>
 
                     <a id="btnHelp" href="http://www.codeforsapporo.org/papamama/" target="_blank" class="ui-btn ui-icon-question ui-btn-icon-notext">help</a>
+                    <!--
+                    <a id="btnHelp" href="#helpDialog" data-rel="popup" data-position-to="window" class="ui-btn ui-icon-question ui-btn-icon-notext">help</a>
+                    -->
                 </fieldset>
             </div>
             <div id="map" class="map">
@@ -143,6 +146,24 @@
                     </fieldset>
                 </div>
             </form>
+        </div>
+        <div data-role="popup" data-history="false" id="helpDialog" data-theme="a" class="ui-corner-all ui-icon-delete ui-btn-left">
+            <a href="#" data-rel="back" class="ui-btn ui-corner-all ui-shadow ui-btn-a ui-icon-delete ui-btn-icon-notext ui-btn-right">Close</a>
+            <div style="padding:10px 20px;">
+                <h3>さっぽろ保育園マップ</h3>
+                <fieldset>
+                    <p>
+                    v1.0 (rev.20141130)
+                    </p>
+                    <a href="http://www.codeforsapporo.org/papamama/" target="_blank">詳しくはこちら</a>
+                </fieldset>
+                <fieldset data-role="controlgroup" data-type="horizontal" data-mini="true">
+                    <p>
+                    (C) 2014 <a href="http://www.codeforsapporo.org/" target="_blank">Code for Sapporo.</a>
+                    </p>
+                    <a href="#" data-rel="back" id="helpClose" class="ui-btn ui-corner-all ui-btn-a ui-btn-icon-left ui-icon-check">閉じる</a>
+                </fieldset>
+            </div>
         </div>
         <script src="js/jquery-2.1.1.min.js" type="text/javascript"></script>
         <script src="js/jquery.mobile-1.4.4.min.js" type="text/javascript"></script>
