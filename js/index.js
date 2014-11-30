@@ -69,7 +69,7 @@ function resizeMapDiv() {
 	var contentHeight = screenHeight - contentCurrentHeight;
 	var navHeight = $("#nav1").outerHeight();
 	$(".ui-content").height(contentHeight);
-	$("#map").height(contentHeight - navHeight - 48);
+	$("#map").height(contentHeight - navHeight);
 }
 
 $(window).on("orientationchange", function() {
@@ -126,58 +126,61 @@ $('#mainPage').on('pageshow', function() {
 		}
 
 		// クリック位置の施設情報を取得
-		var targetLayer = null;
-		map.forEachFeatureAtPixel(
+		obj = map.forEachFeatureAtPixel(
 			evt.pixel,
 			function(feature, layer) {
-				// クリックした場所に要素がなんにもない場合、クリック位置に地図の移動を行う
-				if (feature === undefined) {
-					coord = map.getCoordinateFromPixel(evt.pixel);
-					view = map.getView();
-					papamamap.animatedMove(coord[0], coord[1], false);
-					view.setCenter(coord);
+				return {feature: feature, layer: layer};
+			}
+		);
 
-					if($('#cbDisplayCircle').prop('checked')) {
-						radius = $('#changeCircleRadius').val();
-						if(radius !== "") {
-							drawCenterCircle(radius);
-						}
-					}
-				}
+		var feature = null;
+		var layer   = null;
+		if(obj !== undefined) {
+			feature = obj.feature;
+			layer   = obj.layer;
+		}
+		// クリックした場所に要素がなんにもない場合、クリック位置に地図の移動を行う
+		if (feature === null) {
+			coord = map.getCoordinateFromPixel(evt.pixel);
+			view = map.getView();
+			papamamap.animatedMove(coord[0], coord[1], false);
+			view.setCenter(coord);
+		}
 
-				// クリックした場所に既に描いた同心円がある場合、円を消す
-				if (feature && layer.get('name') === 'layerCircle' &&
-					feature.getGeometry().getType() === "Polygon") {
-					$('#cbDisplayCircle').attr('checked', false).checkboxradio('refresh');
-					papamamap.clearCenterCircle();
-				}
+		// クリックした場所に既に描いた同心円がある場合、円を消す
+		if (feature && layer.get('name') === 'layerCircle' &&
+			feature.getGeometry().getType() === "Polygon") {
+			$('#cbDisplayCircle').attr('checked', false).checkboxradio('refresh');
+			clearCenterCircle();
+		}
 
-				// クリックした場所に保育施設がある場合、ポップアップダイアログを出力する
-				if (feature && "Point" == feature.getGeometry().getType()) {
-					if(feature.get('種別') === undefined) {
-						return;
-					}
-					var geometry = feature.getGeometry();
-					var coord = geometry.getCoordinates();
-					popup.setPosition(coord);
+		// クリックした場所に保育施設がある場合、ポップアップダイアログを出力する
+		if (feature && "Point" == feature.getGeometry().getType()) {
+			if(feature.get('種別') === undefined) {
+				return;
+			}
+			var geometry = feature.getGeometry();
+			var coord = geometry.getCoordinates();
+			popup.setPosition(coord);
 
-					// タイトル部
-					var title = papamamap.getPopupTitle(feature);
-					$("#popup-title").html(title);
+			// タイトル部
+			var title = papamamap.getPopupTitle(feature);
+			$("#popup-title").html(title);
 
-					// 内容部
-					papamamap.animatedMove(coord[0], coord[1], false);
-					var content = papamamap.getPopupContent(feature);
-					$("#popup-content").html(content);
-					$('#popup').show();
-				}
-			});
+			// 内容部
+			papamamap.animatedMove(coord[0], coord[1], false);
+			var content = papamamap.getPopupContent(feature);
+			$("#popup-content").html(content);
+			$('#popup').show();
+			view = map.getView();
+			view.setCenter(coord);
+		}
 	});
 
 	// 中心座標変更セレクトボックス操作イベント定義
 	$('#moveTo').change(function(){
-		$('#markerTitle').hide();
-		$('#marker').hide();
+		// $('#markerTitle').hide();
+		// $('#marker').hide();
 
 		// 指定した最寄り駅に移動
 		papamamap.moveToSelectItem(moveToList[$(this).val()]);
@@ -188,23 +191,7 @@ $('#mainPage').on('pageshow', function() {
 		var label = moveToList[$(this).val()].name;
 		var pos = ol.proj.transform([lon, lat], 'EPSG:4326', 'EPSG:3857');
 		// Vienna marker
-		var marker = new ol.Overlay({
-			position: pos,
-			positioning: 'center-center',
-			element: $('#marker'),
-			stopEvent: false
-		});
-		map.addOverlay(marker);
-
-		// 地図マーカーラベル設定
-		$('#markerTitle').html(label);
-		var markerTitle = new ol.Overlay({
-			position: pos,
-			element: $('#markerTitle')
-		});
-		map.addOverlay(markerTitle);
-		$('#markerTitle').show();
-		$('#marker').show();
+		drawMarker(pos, label);
 	});
 
 	// 幼稚園チェックボックスのイベント設定
@@ -243,6 +230,7 @@ $('#mainPage').on('pageshow', function() {
 					[pos.coords.longitude, pos.coords.latitude], 'EPSG:4326', 'EPSG:3857');
 				view = map.getView();
 				view.setCenter(coordinate);
+				drawMarker(coordinate, "現在地");
 			},
 			function(err) {
 				alert('位置情報が取得できませんでした。');
@@ -253,7 +241,12 @@ $('#mainPage').on('pageshow', function() {
 	// 半径セレクトボックスのイベント定義
 	$('#changeCircleRadius').change(function(evt){
 		radius = $(this).val();
-		if($('#cbDisplayCircle').prop('checked')) {
+		if(radius === "") {
+			clearCenterCircle();
+			$('#cbDisplayCircle').prop('checked', false).checkboxradio('refresh');
+			return;
+		} else {
+			$('#cbDisplayCircle').prop('checked', true).checkboxradio('refresh');
 			drawCenterCircle(radius);
 		}
 	});
@@ -264,7 +257,7 @@ $('#mainPage').on('pageshow', function() {
 		if($('#cbDisplayCircle').prop('checked')) {
 			drawCenterCircle(radius);
 		} else {
-			papamamap.clearCenterCircle();
+			clearCenterCircle();
 		}
 	});
 
@@ -407,12 +400,74 @@ $('#mainPage').on('pageshow', function() {
 	function drawCenterCircle(radius)
 	{
 		if($('#cbDisplayCircle').prop('checked')) {
-			if ( $('#popup').is(':visible') ) {
-				papamamap.drawCenterCircle(radius, papamamap.centerLatOffsetPixel);
-			} else {
-				papamamap.drawCenterCircle(radius);
-			}
+			papamamap.drawCenterCircle(radius);
+
+			$('#center_markerTitle').hide();
+			$('#center_marker').hide();
+
+			var center = map.getView().getCenter();
+			var coordinate = center;
+			var marker = new ol.Overlay({
+				position: coordinate,
+				positioning: 'center-center',
+				element: $('#center_marker'),
+				stopEvent: false
+			});
+			map.addOverlay(marker);
+
+			// 地図マーカーラベル設定
+			$('#center_markerTitle').html("");
+			var markerTitle = new ol.Overlay({
+				position: coordinate,
+				element: $('#center_markerTitle')
+			});
+			map.addOverlay(markerTitle);
+			$('#center_markerTitle').show();
+			$('#center_marker').show();
 		}
+	}
+
+	/**
+	 * 円を消す
+	 *
+	 * @return {[type]} [description]
+	 */
+	function clearCenterCircle()
+	{
+		papamamap.clearCenterCircle();
+		$('#center_markerTitle').hide();
+		$('#center_marker').hide();
+		$('#changeCircleRadius').val('').selectmenu('refresh');
+		return;
+	}
+
+	/**
+	 * 指定座標にマーカーを設定する
+	 * @param  {[type]} coordinate [description]
+	 * @return {[type]}            [description]
+	 */
+	function drawMarker(coordinate, label)
+	{
+		$('#markerTitle').hide();
+		$('#marker').hide();
+		var marker = new ol.Overlay({
+			position: coordinate,
+			positioning: 'center-center',
+			element: $('#marker'),
+			stopEvent: false
+		});
+		map.addOverlay(marker);
+
+		// 地図マーカーラベル設定
+		$('#markerTitle').html(label);
+		var markerTitle = new ol.Overlay({
+			position: coordinate,
+			element: $('#markerTitle')
+		});
+		map.addOverlay(markerTitle);
+		$('#markerTitle').show();
+		$('#marker').show();
+		return;
 	}
 
 });

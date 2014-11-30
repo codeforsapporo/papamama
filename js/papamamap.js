@@ -469,19 +469,19 @@ Papamamap.prototype.drawCenterCircle = function(radius, moveToPixel)
     }
     // circleFeatures = drawConcentricCircle(coord, radius);
 
+    // 選択した半径の同心円を描く
+    radius = Math.floor(radius);
+
     circleFeatures = [];
     // 中心部の円を描く
     var sphere = new ol.Sphere(6378137); // ol.Sphere.WGS84 ol.js には含まれてない
     coordinate = ol.proj.transform(coordinate, 'EPSG:3857', 'EPSG:4326');
-    geoCircle  = ol.geom.Polygon.circular(sphere, coordinate, 100);
-    geoCircle.transform('EPSG:4326', 'EPSG:3857');
-    circleFeature = new ol.Feature({
-        geometry: geoCircle
-    });
-    circleFeatures.push(circleFeature);
-
-    // 選択した半径の同心円を描く
-    radius = Math.floor(radius);
+    // geoCircle  = ol.geom.Polygon.circular(sphere, coordinate, 100);
+    // geoCircle.transform('EPSG:4326', 'EPSG:3857');
+    // circleFeature = new ol.Feature({
+    //     geometry: geoCircle
+    // });
+    // circleFeatures.push(circleFeature);
 
     // 描画する円からextent情報を取得し、円の大きさに合わせ画面の縮尺率を変更
     geoCircle = ol.geom.Polygon.circular(sphere, coordinate, radius);

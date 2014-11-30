@@ -40,10 +40,8 @@
                     <label for="cbMiddleSchool" id="lblMiddleSchool">中</label>
                     <input type="checkbox" name="cbMiddleSchool" id="cbMiddleSchool">
 
-                    <a id="btnFilter" href="#filterdialog" data-rel="popup" data-position-to="window" class="ui-btn ui-icon-filter ui-btn-icon-notext" data-transition="pop">Filter</a>
-                    <a id="btnHelp" href="http://www.codeforsapporo.org/papamama/" target="_blank" class="ui-btn ui-icon-question ui-btn-icon-notext">help</a>
-                </fieldset>
-                <fieldset id="nav2" class="ui-hide-label" data-role="controlgroup" data-type="horizontal" data-mini="true">
+                    <a id="btnFilter" href="#filterdialog" data-rel="popup" data-position-to="window" class="ui-btn ui-corner-all ui-btn-a ui-icon-filter ui-btn-icon-right ui-icon-check">検索</a>
+
                     <label for="changeBaseMap">背景</label>
                     <select id="changeBaseMap" data-mini="true">
                         <option>背景</option>
@@ -59,12 +57,16 @@
 
                     <label for="changeCircleRadius" class="ui-hidden-accessible">半径</label>
                     <select id="changeCircleRadius" data-mini="true">
-                        <option value="">半径</option>
-                        <option value="500" selected="selected">500m</option>
-                        <option value="1000">1km</option>
-                        <option value="3000">3km</option>
-                        <option value="5000">5km</option>
+                        <optgroup label="半径">
+                            <option value="" selected="selected">円を消去</option>
+                            <option value="500">500m</option>
+                            <option value="1000">1km</option>
+                            <option value="3000">3km</option>
+                            <option value="5000">5km</option>
+                        </optgroup>
                     </select>
+
+                    <a id="btnHelp" href="http://www.codeforsapporo.org/papamama/" target="_blank" class="ui-btn ui-icon-question ui-btn-icon-notext">help</a>
                 </fieldset>
             </div>
             <div id="map" class="map">
@@ -152,7 +154,9 @@
         <script src="js/facilityfilter.js" type="text/javascript"></script>
         <script src="js/papamamap.js" type="text/javascript"></script>
         <script src="js/index.js" type="text/javascript"></script>
-        <div id="marker" title="Marker"></div>
-        <div id="markerTitle" title="MarkerTitle"></div>
+        <div id="marker"></div>
+        <div id="markerTitle"></div>
+        <div id="center_marker"></div>
+        <div id="center_markerTitle"></div>
     </body>
 </html>

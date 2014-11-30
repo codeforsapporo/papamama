@@ -6,16 +6,16 @@
 .popover-content {
 	min-width: 300px;
 }
-#marker {
+#marker, #center_marker {
 	display:none;
 	width: 25px;
 	height: 25px;
 	border: 2px solid #800;
-	border-radius: 10px;
-	background-color: #F00;
+	border-radius: 16px;
+	background-color: #F10;
 	opacity: 0.7;
 }
-#markerTitle {
+#markerTitle, #center_markerTitle {
 	display:none;
 	text-decoration: none;
 	color: black;
@@ -50,7 +50,7 @@
 	background-color: white;
 	width: 300px;
 	bottom: 12px;
-	top: -205px;
+	top: -225px;
 	left: -150px;
 	border-radius: 10px;
 	border: 1px solid #cccccc;
@@ -127,8 +127,12 @@
 	height: 32px;
 }
 
-#btnFilter, #btnHelp, #lblDisplayCircle {
+#btnHelp, #lblDisplayCircle {
 	width: 45px;
+}
+
+#lblDisplayCircle, #cbDisplayCircle {
+	display: none;
 }
 
 h3 {
