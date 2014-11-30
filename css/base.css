@@ -50,7 +50,7 @@
 	background-color: white;
 	width: 300px;
 	bottom: 12px;
-	top: -225px;
+	top: -192px;
 	left: -150px;
 	border-radius: 10px;
 	border: 1px solid #cccccc;
@@ -58,6 +58,9 @@
 	-moz-box-shadow: 0 1px 4px rgba(0,0,0,0.5);
 	filter: drop-shadow(0 1px 4px rgba(0,0,0,0.5));
 }
+
+/*吹き出し風表示用の定義 */
+/*
 .ol-popup:after, .ol-popup:before {
 	top: 100%;
 	border: solid transparent;
@@ -67,6 +70,7 @@
 	position: absolute;
 	pointer-events: none;
 }
+*/
 .ol-popup:after {
 	border-top-color: white;
 	border-width: 10px;
