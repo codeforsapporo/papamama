@@ -318,11 +318,14 @@ Papamamap.prototype.getPopupTitle = function(feature)
 {
     // タイトル部
     var title = '';
-    title  = '[' + feature.get('種別') + '] ';
-    if(feature.get('設置') !== null) {
-        title += ' [' +feature.get('設置')+']';
+    var type = feature.get('種別') ? feature.get('種別') : feature.get('Type');
+    title  = '[' + type + '] ';
+    var owner = feature.get('設置') ? feature.get('設置') : feature.get('Ownership');
+    if(owner !== undefined && owner !== null) {
+        title += ' [' + owner +']';
     }
-    title += feature.get('名称');
+    var name = feature.get('名称') ? feature.get('名称') : feature.get('Name');
+    title += name;
     url = feature.get('url');
     if(url !== null) {
         title = '<a href="' +url+ '" target="_blank">' + title + '</a>';
@@ -339,88 +342,106 @@ Papamamap.prototype.getPopupContent = function(feature)
 {
     var content = '';
     content = '<table><tbody>';
-    if (feature.get('開園時間') !== null && feature.get('終園時間') !== null) {
+    var open  = feature.get('開園時間') ? feature.get('開園時間') : feature.get('Open');
+    var close = feature.get('終園時間') ? feature.get('終園時間') : feature.get('Close');
+    if (open != undefined && open !== null && close != undefined && close !== null) {
         content += '<tr>';
         content += '<th>時間</th>';
         content += '<td>';
-        content += feature.get('開園時間') + '〜' + feature.get('終園時間');
+        content += open + '〜' + close;
         content += '</td>';
         content += '</tr>';
     }
-    if (feature.get('備考') !== null) {
+    var memo = feature.get('備考') ? feature.get('備考') : feature.get('Memo');
+    if (memo !== undefined && memo !== null) {
         content += '<tr>';
         content += '<th></th>';
-        content += '<td>'+feature.get('備考')+'</td>';
+        content += '<td>' + memo + '</td>';
         content += '</tr>';
     }
-    if( feature.get('一時') !== null || feature.get('休日') !== null ||
-    feature.get('夜間') !== null || feature.get('H24') !== null) {
+    var temp    = feature.get('一時') ? feature.get('一時') : feature.get('Temp');
+    var holiday = feature.get('休日') ? feature.get('休日') : feature.get('holiday');
+    var night   = feature.get('夜間') ? feature.get('夜間') : feature.get('Night');
+    var h24     = feature.get('H24') ? feature.get('H24') : feature.get('H24');
+
+    if( temp !== null || holiday !== null || night !== null || h24 !== null) {
         content += '<tr>';
         content += '<th></th>';
         content += '<td>';
-        if (feature.get('一時') !== null) {
+        if (temp !== undefined && temp !== null) {
             content += '一時保育 ';
         }
-        if (feature.get('休日') !== null) {
+        if (holiday !== undefined && holiday !== null) {
             content += '休日保育 ';
         }
-        if (feature.get('夜間') !== null) {
+        if (night !== undefined && night !== null) {
             content += '夜間保育 ';
         }
-        if (feature.get('H24') !== null) {
+        if (h24 !== undefined && h24 !== null) {
             content += '24時間 ';
         }
         content += '</td>';
         content += '</tr>';
     }
-    if(feature.get('種別') == "認可外") {
+
+    var type = feature.get('種別') ? feature.get('種別') : feature.get('Type');
+    if(type == "認可外") {
         content += '<tr>';
         content += '<th>監督基準</th>';
         content += '<td>';
-        if (feature.get('証明') !== null) {
+        var proof = feature.get('証明') ? feature.get('証明') : feature.get('Proof');
+        if (proof !== undefined && proof !== null) {
             content += '証明書発行済<a href="http://www.city.sapporo.jp/kodomo/kosodate/ninkagai_shisetsu.html" target="_blank">(詳細)</a>';
         }
         content += '</td>';
         content += '</tr>';
     }
-    if(feature.get('種別') == "認可保育所") {
+    if(type == "認可保育所") {
         content += '<tr>';
         content += '<th>欠員</th>';
         content += '<td>';
-        if (feature.get('Vacancy') !== null) {
+        var vacancy = feature.get('Vacancy') ? feature.get('Vacancy') : feature.get('Vacancy');
+        if (vacancy !== undefined && vacancy !== null) {
             content += '<a href="http://www.city.sapporo.jp/kodomo/kosodate/l4_01.html" target="_blank">空きあり</a>';
         }
         content += '</td>';
         content += '</tr>';
     }
-    if (feature.get('開始年齢') !== null && feature.get('終了年齢') !== null) {
+    var ageS = feature.get('開始年齢') ? feature.get('開始年齢') : feature.get('AgeS');
+    var ageE = feature.get('終了年齢') ? feature.get('終了年齢') : feature.get('AgeE');
+    if (ageS !== undefined && ageS !== null && ageE !== undefined && ageE !== null) {
         content += '<tr>';
         content += '<th>年齢</th>';
-        content += '<td>' + feature.get('開始年齢') + '〜' + feature.get('終了年齢') + '</td>';
+        content += '<td>' + ageS + '〜' + ageE + '</td>';
         content += '</tr>';
     }
-    if (feature.get('定員') !== null) {
+    var full = feature.get('定員') ? feature.get('定員') : feature.get('Full');
+    if (full !== undefined && full !== null) {
         content += '<tr>';
         content += '<th>定員</th>';
-        content += '<td>'+feature.get('定員')+'人</td>';
+        content += '<td>' + full + '人</td>';
         content += '</tr>';
     }
-    if (feature.get('TEL') !== null) {
+    var tel = feature.get('TEL') ? feature.get('TEL') : feature.get('TEL');
+    if (tel !== undefined && tel !== null) {
         content += '<tr>';
         content += '<th>TEL</th>';
-        content += '<td>'+feature.get('TEL')+'</td>';
+        content += '<td>' + tel + '</td>';
         content += '</tr>';
     }
-    if (feature.get('住所１') !== undefined && feature.get('住所２') !== undefined) {
+    var add1 = feature.get('住所１') ? feature.get('住所１') : feature.get('Add1');
+    var add2 = feature.get('住所２') ? feature.get('住所２') : feature.get('Add2');
+    if (add1 !== undefined && add2 !== undefined) {
         content += '<tr>';
         content += '<th>住所</th>';
-        content += '<td>'+feature.get('住所１')+feature.get('住所２')+'</td>';
+        content += '<td>' + add1 + add2 +'</td>';
         content += '</tr>';
     }
-    if (feature.get('設置者') !== null) {
+    var owner = feature.get('設置者') ? feature.get('設置者') : feature.get('Owner');
+    if (owner !== undefined && owner !== null) {
         content += '<tr>';
         content += '<th>設置者</th>';
-        content += '<td>'+feature.get('設置者')+'</td>';
+        content += '<td>' + owner + '</td>';
         content += '</tr>';
     }
     content += '</tbody></table>';

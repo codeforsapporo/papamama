@@ -17,7 +17,7 @@ var featureStyleList = {
  */
 var ninkaStyleFunction = function(feature, resolution)
 {
-	var facilityTypeName = feature.get('種別');
+	var facilityTypeName = feature.get('種別') ? feature.get('種別') : feature.get('Type');
 	var style = [];
 	if(facilityTypeName === "認可保育所") {
 		featureStyle = featureStyleList[facilityTypeName];
@@ -34,7 +34,7 @@ var ninkaStyleFunction = function(feature, resolution)
  */
 var ninkagaiStyleFunction = function(feature, resolution)
 {
-	var facilityTypeName = feature.get('種別');
+	var facilityTypeName = feature.get('種別') ? feature.get('種別') : feature.get('Type');
 	var style = [];
 	if(facilityTypeName === "認可外") {
 		featureStyle = featureStyleList[facilityTypeName];
@@ -51,7 +51,7 @@ var ninkagaiStyleFunction = function(feature, resolution)
  */
 var kindergartenStyleFunction = function(feature, resolution)
 {
-	var facilityTypeName = feature.get('種別');
+	var facilityTypeName = feature.get('種別') ? feature.get('種別') : feature.get('Type');
 	var style = [];
 	if(facilityTypeName === "幼稚園") {
 		featureStyle = featureStyleList[facilityTypeName];
@@ -86,7 +86,8 @@ var nurseryStyleFunction = function(feature, resolution, featureStyle) {
 
 	resolution = Math.floor(resolution * 1000);
 	var _type = "";
-	var text = resolution < 10000 ? feature.get('ラベル') : '';
+	var label = feature.get('ラベル') ? feature.get('ラベル') : feature.get('Label')
+	var text = resolution < 10000 ? label : '';
 	var style = [];
 	style = [
 		new ol.style.Style({image: background}),

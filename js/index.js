@@ -156,7 +156,8 @@ $('#mainPage').on('pageshow', function() {
 
 		// クリックした場所に保育施設がある場合、ポップアップダイアログを出力する
 		if (feature && "Point" == feature.getGeometry().getType()) {
-			if(feature.get('種別') === undefined) {
+			var type = feature.get('種別') ? feature.get('種別') :  feature.get('Type');
+			if(type === undefined) {
 				return;
 			}
 			var geometry = feature.getGeometry();
