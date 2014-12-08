@@ -476,12 +476,6 @@ Papamamap.prototype.drawCenterCircle = function(radius, moveToPixel)
     // 中心部の円を描く
     var sphere = new ol.Sphere(6378137); // ol.Sphere.WGS84 ol.js には含まれてない
     coordinate = ol.proj.transform(coordinate, 'EPSG:3857', 'EPSG:4326');
-    // geoCircle  = ol.geom.Polygon.circular(sphere, coordinate, 100);
-    // geoCircle.transform('EPSG:4326', 'EPSG:3857');
-    // circleFeature = new ol.Feature({
-    //     geometry: geoCircle
-    // });
-    // circleFeatures.push(circleFeature);
 
     // 描画する円からextent情報を取得し、円の大きさに合わせ画面の縮尺率を変更
     geoCircle = ol.geom.Polygon.circular(sphere, coordinate, radius);
@@ -497,6 +491,17 @@ Papamamap.prototype.drawCenterCircle = function(radius, moveToPixel)
     sizes  = this.map.getSize();
     size   = (sizes[0] < sizes[1]) ? sizes[0] : sizes[1];
     view.fitExtent(extent, [size, size]);
+
+    // 円の内部に施設が含まれるかチェック
+    _features = nurseryFacilities.features.filter(function(item,idx){
+        coordinate = ol.proj.transform(item.geometry.coordinates, 'EPSG:4326', 'EPSG:3857');
+        if(ol.extent.containsCoordinate(extent, coordinate))
+            return true;
+        });
+    for(var i=0; i < _features.length; i++) {
+        console.log(_features[i].properties['名称']);
+    }
+    console.log(_features);
 
     var layer  = this.getLayer(this.getLayerName("Circle"));
     var source = layer.getSource();
