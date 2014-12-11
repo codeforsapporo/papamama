@@ -321,7 +321,7 @@ Papamamap.prototype.getPopupTitle = function(feature)
     var type = feature.get('種別') ? feature.get('種別') : feature.get('Type');
     title  = '[' + type + '] ';
     var owner = feature.get('設置') ? feature.get('設置') : feature.get('Ownership');
-    if(owner !== undefined && owner !== null) {
+    if(owner !== undefined && owner !== null && owner !== "") {
         title += ' [' + owner +']';
     }
     var name = feature.get('名称') ? feature.get('名称') : feature.get('Name');
@@ -344,7 +344,7 @@ Papamamap.prototype.getPopupContent = function(feature)
     content = '<table><tbody>';
     var open  = feature.get('開園時間') ? feature.get('開園時間') : feature.get('Open');
     var close = feature.get('終園時間') ? feature.get('終園時間') : feature.get('Close');
-    if (open != undefined && open !== null && close != undefined && close !== null) {
+    if (open != undefined && open !== null && open !== "" && close !== undefined && close !== null && close !== "") {
         content += '<tr>';
         content += '<th>時間</th>';
         content += '<td>';
@@ -403,6 +403,10 @@ Papamamap.prototype.getPopupContent = function(feature)
         var vacancy = feature.get('Vacancy') ? feature.get('Vacancy') : feature.get('Vacancy');
         if (vacancy !== undefined && vacancy !== null) {
             content += '<a href="http://www.city.sapporo.jp/kodomo/kosodate/l4_01.html" target="_blank">空きあり</a>';
+        }
+        var vacancyDate = feature.get('VacancyDate');
+        if (vacancyDate !== undefined && vacancyDate !== null) {
+            content += " (" + vacancyDate + ")";
         }
         content += '</td>';
         content += '</tr>';
