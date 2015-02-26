@@ -327,7 +327,7 @@ Papamamap.prototype.getPopupTitle = function(feature)
     var name = feature.get('名称') ? feature.get('名称') : feature.get('Name');
     title += name;
     url = feature.get('url');
-    if(url !== null) {
+    if(url !== null && url !='') {
         title = '<a href="' +url+ '" target="_blank">' + title + '</a>';
     }
     return title;
