@@ -1,7 +1,7 @@
-# さっぽろパパママMAPについて
+# 流山パパママMAPについて
 ========
 
-札幌市内に点在する保育所（認可、認可外）、幼稚園の位置・定員情報をマッピングした地図を作成しています。
+流山市内に点在する保育所（認可、認可外）、幼稚園の位置・定員情報をマッピングした地図を作成しています。
 
 ## 利用している地図について
 
@@ -15,6 +15,11 @@
 
 - http://www.city.sapporo.jp/kodomo/kosodate/l4_01.html
 - http://nlftp.mlit.go.jp/ksj/index.html
+
+## fork元
+
+Code for Sapporoで開発された「さっぽろパパママMAP」を元にCode for Nagareyamaが作成しました
+
 
 ## ライセンスについて
 
