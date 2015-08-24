@@ -1,5 +1,5 @@
 // 地図表示時の中心座標
-var init_center_coords = [141.347899, 43.063968];
+var init_center_coords = [43.063968, 141.347899];
 
 // Bing APIのキー
 var bing_api_key = 'AhGQykUKW2-u1PwVjLwQkSA_1rCTFESEC7bCZ0MBrnzVbVy7KBHsmLgwW_iRJg17';
@@ -7,463 +7,483 @@ var bing_api_key = 'AhGQykUKW2-u1PwVjLwQkSA_1rCTFESEC7bCZ0MBrnzVbVy7KBHsmLgwW_iR
 // map
 var map;
 
-// Leaflet - Bing
-var bingRoadLayer = null;
-if (L.BingLayer) {
-	bingRoadLayer = new L.BingLayer(bing_api_key, {type: 'Road'});
-}
-// Leaflet - 国土地理院
-var gsiLayer = L.tileLayer('http://cyberjapandata.gsi.go.jp/xyz/pale/{z}/{x}/{y}.png', {
-	attribution: "<a href='http://www.gsi.go.jp/kikakuchousei/kikakuchousei40182.html' target='_blank'>国土地理院</a>"
-});
-// Leaflet - OSM交通
-var osmLayer = L.tileLayer('http://{s}.tile.thunderforest.com/transport/{z}/{x}/{y}.png', {
-	attribution: '&copy; <a href="http://www.opencyclemap.org">OpenCycleMap</a>, &copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>',
-	maxZoom: 19
-});
-// Leaflet - Bing(写真)
-var bingAerialLayer = null;
-if (L.BingLayer) {
-	bingAerialLayer = new L.BingLayer(bing_api_key, {type: 'Aerial'});
-}
-// Leaflet Google
-var googleLayer = null;
-if (L.Google) {
-	googleLayer = new L.Google('ROADMAP');
-}
-
-
-
-// 保育施設JSON格納用オブジェクト
-var nurseryFacilities = {};
-
 // 中心座標変更セレクトボックス用データ
-var moveToList = [];
+var moveToList = {};
+
+var facilities = [];
+
+/**
+ * 初期処理
+ */
+$(document).ready(function(){
+    resizeMapDiv();
+
+    // Leaflet - Bing
+    var bingRoadLayer = null;
+    if (L.BingLayer) {
+        bingRoadLayer = new L.BingLayer(bing_api_key, {type: 'Road'});
+    }
+    // Leaflet - 国土地理院
+    var gsiLayer = L.tileLayer('http://cyberjapandata.gsi.go.jp/xyz/pale/{z}/{x}/{y}.png', {
+        attribution: "<a href='http://www.gsi.go.jp/kikakuchousei/kikakuchousei40182.html' target='_blank'>国土地理院</a>"
+    });
+    // Leaflet - OSM交通
+    var osmLayer = L.tileLayer('http://{s}.tile.thunderforest.com/transport/{z}/{x}/{y}.png', {
+        attribution: '&copy; <a href="http://www.opencyclemap.org">OpenCycleMap</a>, &copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+        maxZoom: 19
+    });
+    // Leaflet - Bing(写真)
+    var bingAerialLayer = null;
+    if (L.BingLayer) {
+        bingAerialLayer = new L.BingLayer(bing_api_key, {type: 'Aerial'});
+    }
+    // Leaflet Google
+    var googleLayer = null;
+    if (L.Google) {
+        googleLayer = new L.Google('ROADMAP');
+    }
+
+    // 地図レイヤー一覧
+    var baseMaps = {
+        "Bing(標準)": bingRoadLayer,
+        "国土地理院": gsiLayer,
+        "交通": osmLayer,
+        "写真": bingAerialLayer,
+        "Google": googleLayer
+    };
+
+    // 地図生成
+    map = L.map('map', {
+        center: init_center_coords,
+        zoom: 14,
+        layers: [bingRoadLayer]
+    });
+
+    // leaflet-hash
+    hash = new L.Hash(map);
+
+    // 現在地移動
+    L.control.locate().addTo(map);
+
+    L.control.aboutCfS().addTo(map);
+
+    // 施設情報読み込み
+    var facilityGroup1 = L.layerGroup();
+    var facilityGroup2 = L.layerGroup();
+    var facilityGroup3 = L.layerGroup();
+    var middleSchool   = L.layerGroup();
+    var elementary     = L.layerGroup();
+
+    // geoJson 読み込み
+    $.when(
+        $.getJSON('data/nurseryFacilities.geojson'),
+        $.getJSON('data/MiddleSchool.geojson'),
+        $.getJSON('data/MiddleSchool_loc.geojson'),
+        $.getJSON('data/Elementary.geojson'),
+        $.getJSON('data/Elementary_loc.geojson')
+    ).done(function(facilityJson, middleSchoolJson, middleSchoolLocJson, elementaryJson, elementaryLocJson) {
+        // 認可保育園
+        facilityGroup1 = L.geoJson(facilityJson, {
+            onEachFeature: onEachFeatureFunc,
+            pointToLayer: pointToLayerFunc,
+            filter: facilityGroup1Filter
+        });
+
+        // 認可外保育園
+        facilityGroup2 = L.geoJson(facilityJson, {
+            onEachFeature: onEachFeatureFunc,
+            pointToLayer: pointToLayerFunc,
+            filter: facilityGroup2Filter
+        });
+
+        // 幼稚園
+        facilityGroup3 = L.geoJson(facilityJson, {
+            onEachFeature: onEachFeatureFunc,
+            pointToLayer: pointToLayerFunc,
+            filter: facilityGroup3Filter
+        });
+
+        // 中学校区ベクター
+        var middleSchoolBg = L.geoJson(middleSchoolJson, {
+            onEachFeature: function(feature,layer) {
+            },
+            style: function(feature) {
+                return {
+                    color: '#7379AE',
+                    weight: '2px'
+                };
+            },
+            filter: schoolGroupFilter
+        });
+
+        // 中学校区アイコン
+        var middleSchoolLoc = L.geoJson(middleSchoolLocJson, {
+            onEachFeature: function(feature,layer) {
+            },
+            pointToLayer: midSchoolPointToLayerFunc,
+            filter: schoolGroupFilter
+        });
+
+        // ベクターとマーカーを合成したレイヤーグループを作成
+        middleSchool = L.layerGroup([middleSchoolBg, middleSchoolLoc]);
+
+        // 小学校区ベクター
+        var elementaryBg = L.geoJson(elementaryJson, {
+            onEachFeature: function(feature,layer) {
+            },
+            style: function(feature) {
+                return {
+                    color: '#1BA466',
+                    weight: '2px'
+                };
+            },
+            filter: schoolGroupFilter
+        });
+        // 小学校区アイコン
+        var elementaryLoc = L.geoJson(elementaryLocJson, {
+            onEachFeature: function(feature,layer) {
+            },
+            pointToLayer: elementarySchoolPointToLayerFunc,
+            filter: schoolGroupFilter
+        });
+        // ベクターとマーカーを合成したレイヤーグループを作成
+        elementary = L.layerGroup([elementaryBg, elementaryLoc]);
+
+
+        // 各施設レイヤーを地図に追加
+        map.addLayer(facilityGroup1);
+        map.addLayer(facilityGroup2);
+        map.addLayer(facilityGroup3);
+
+        var overlayMaps = {
+            '保育園': facilityGroup1,
+            '認可外': facilityGroup2,
+            '幼稚園': facilityGroup3,
+            '小学校区': elementary,
+            '中学校区': middleSchool
+        };
+
+        // 地図上にチェックボックス
+        var chkBoxOption = {
+            layers: overlayMaps,
+            checkStatus: {
+                '保育園': true,
+                '認可外': true,
+                '幼稚園': true,
+                '小学校区': false,
+                '中学校区': false
+            }
+        };
+        L.control.facilityLayerChkbox(chkBoxOption).addTo(map);
+
+        // レイヤーコントロールを設定
+        L.control.layers(baseMaps, overlayMaps).addTo(map);
+    });
+
+});
+
 
 /**
  * デバイス回転時、地図の大きさを画面全体に広げる
  * @return {[type]} [description]
  */
 function resizeMapDiv() {
-	var screenHeight = $.mobile.getScreenHeight();
-	var contentCurrentHeight = $(".ui-content").outerHeight() - $(".ui-content").height();
-	var contentHeight = screenHeight - contentCurrentHeight;
-	var navHeight = $("#nav1").outerHeight();
-	$(".ui-content").height(contentHeight);
-	$("#map").height(contentHeight - navHeight);
+    var screenHeight = $(window).height();
+    var contentCurrentHeight = $(".ui-content").outerHeight() - $(".ui-content").height();
+    var contentHeight = screenHeight - contentCurrentHeight;
+    var navHeight = $("#nav1").outerHeight();
+    $(".ui-content").height(contentHeight);
+    $("#map").height(contentHeight - navHeight);
 }
 
-$(window).on("orientationchange", function() {
-	resizeMapDiv();
-//	map.setTarget('null');
-//	map.setTarget('map');
-});
+/**
+ * アイコン定義
+ */
+function pointToLayerFunc(feature, latlng) {
 
+    var iconSize = [25, 25];
+    var shadowSize = [35, 35];
 
-$('#mainPage').on('pageshow', function() {
-	resizeMapDiv();
+    var iconUrl = '';
+    var shadowUrl = '';
+    if(facilityGroup1Filter(feature, null)) {
+        iconUrl   = 'image/019.png';
+        shadowUrl = 'image/019_bg.png';
+    } else if(facilityGroup2Filter(feature, null)) {
+        iconUrl  = 'image/018.png';
+        shadowUrl = 'image/018_bg.png';
+    } else if(facilityGroup3Filter(feature, null)) {
+        iconUrl  = 'image/029.png';
+        shadowUrl = 'image/029_bg.png';
+    }
 
-	var baseMaps = {
-		"Bing(標準)": bingRoadLayer,
-		"国土地理院": gsiLayer,
-		"交通": osmLayer,
-		"写真": bingAerialLayer,
-		"Google": googleLayer
-	};
-	map = L.map('map', {
-		center:[43.063968, 141.347899],
-		zoom: 14,
-		layers: [bingRoadLayer]
-	});
-	L.control.layers(baseMaps).addTo(map);
+    var facIcon = L.icon({
+        iconUrl : iconUrl,
+        shadowUrl: shadowUrl,
+        iconSize: iconSize, // size of the icon
+        shadowSize: shadowSize
+    });
 
-//	// 地図レイヤー定義
-//	var papamamap = new Papamamap();
-//	papamamap.viewCenter = init_center_coords;
-//	papamamap.generate(mapServerList['bing-road']);
-//	map = papamamap.map;
-//
-//	// 保育施設の読み込みとレイヤーの追加
-//	papamamap.loadNurseryFacilitiesJson(function(data){
-//		nurseryFacilities = data;
-//	}).then(function(){
-//		papamamap.addNurseryFacilitiesLayer(nurseryFacilities);
-//	});
-//
-//	// ポップアップ定義
-//	var popup = new ol.Overlay({
-//		element: $('#popup')
-//	});
-//	map.addOverlay(popup);
-//
-//	// 背景地図一覧リストを設定する
-//	for(var item in mapServerList) {
-//		option = $('<option>').html(mapServerList[item].label).val(item);
-//		$('#changeBaseMap').append(option);
-//	}
-//
-//	// 最寄駅セレクトボックスの生成
-//	mtl = new MoveToList();
-//	mtl.loadStationJson().then(function() {
-//		mtl.appendToMoveToListBox(moveToList);
-//	}, function(){
-//		mtl.loadStationJson().then(function() {
-//			mtl.appendToMoveToListBox(moveToList);
-//		});
-//	});
-//
-//	// 保育施設クリック時の挙動を定義
-//	map.on('click', function(evt) {
-//		if ( $('#popup').is(':visible') ) {
-//			// ポップアップを消す
-//			$('#popup').hide();
-//			return;
-//		}
-//
-//		// クリック位置の施設情報を取得
-//		obj = map.forEachFeatureAtPixel(
-//			evt.pixel,
-//			function(feature, layer) {
-//				return {feature: feature, layer: layer};
-//			}
-//		);
-//
-//		var feature = null;
-//		var layer   = null;
-//		if(obj !== undefined) {
-//			feature = obj.feature;
-//			layer   = obj.layer;
-//		}
-//		// クリックした場所に要素がなんにもない場合、クリック位置に地図の移動を行う
-//		if (feature === null) {
-//			coord = map.getCoordinateFromPixel(evt.pixel);
-//			view = map.getView();
-//			papamamap.animatedMove(coord[0], coord[1], false);
-//			view.setCenter(coord);
-//		}
-//
-//		// クリックした場所に既に描いた同心円がある場合、円を消す
-//		if (feature && layer.get('name') === 'layerCircle' &&
-//			feature.getGeometry().getType() === "Polygon") {
-//			$('#cbDisplayCircle').attr('checked', false).checkboxradio('refresh');
-//			clearCenterCircle();
-//		}
-//
-//		// クリックした場所に保育施設がある場合、ポップアップダイアログを出力する
-//		if (feature && "Point" == feature.getGeometry().getType()) {
-//			var type = feature.get('種別') ? feature.get('種別') :  feature.get('Type');
-//			if(type === undefined) {
-//				return;
-//			}
-//			var geometry = feature.getGeometry();
-//			var coord = geometry.getCoordinates();
-//			popup.setPosition(coord);
-//
-//			// タイトル部
-//			var title = papamamap.getPopupTitle(feature);
-//			$("#popup-title").html(title);
-//
-//			// 内容部
-//			papamamap.animatedMove(coord[0], coord[1], false);
-//			var content = papamamap.getPopupContent(feature);
-//			$("#popup-content").html(content);
-//			$('#popup').show();
-//			view = map.getView();
-//			view.setCenter(coord);
-//		}
-//	});
-//
-//	// 中心座標変更セレクトボックス操作イベント定義
-//	$('#moveTo').change(function(){
-//		// $('#markerTitle').hide();
-//		// $('#marker').hide();
-//
-//		// 指定した最寄り駅に移動
-//		papamamap.moveToSelectItem(moveToList[$(this).val()]);
-//
-//		// 地図上にマーカーを設定する
-//		var lon = moveToList[$(this).val()].lon;
-//		var lat = moveToList[$(this).val()].lat;
-//		var label = moveToList[$(this).val()].name;
-//		var pos = ol.proj.transform([lon, lat], 'EPSG:4326', 'EPSG:3857');
-//		// Vienna marker
-//		drawMarker(pos, label);
-//	});
-//
-//	// 幼稚園チェックボックスのイベント設定
-//	$('#cbKindergarten').click(function() {
-//		papamamap.switchLayer(this.id, $(this).prop('checked'));
-//	});
-//
-//	// 認可保育所チェックボックスのイベント設定
-//	$('#cbNinka').click(function() {
-//		papamamap.switchLayer(this.id, $(this).prop('checked'));
-//	});
-//
-//	// 認可外保育所チェックボックスのイベント設定
-//	$('#cbNinkagai').click(function() {
-//		papamamap.switchLayer(this.id, $(this).prop('checked'));
-//	});
-//
-//	// 中学校区チェックボックスのイベント定義
-//	$('#cbMiddleSchool').click(function() {
-//		layer = map.getLayers().item(1);
-//		layer.setVisible($(this).prop('checked'));
-//	});
-//
-//	// 小学校区チェックボックスのイベント定義
-//	$('#cbElementarySchool').click(function() {
-//		layer = map.getLayers().item(2);
-//		layer.setVisible($(this).prop('checked'));
-//	});
-//
-//	// 現在地に移動するボタンのイベント定義
-//	$('#moveCurrentLocation').click(function(evt){
-//		control = new MoveCurrentLocationControl();
-//		control.getCurrentPosition(
-//			function(pos) {
-//				var coordinate = ol.proj.transform(
-//					[pos.coords.longitude, pos.coords.latitude], 'EPSG:4326', 'EPSG:3857');
-//				view = map.getView();
-//				view.setCenter(coordinate);
-//				drawMarker(coordinate, "現在地");
-//			},
-//			function(err) {
-//				alert('位置情報が取得できませんでした。');
-//			}
-//		);
-//	});
-//
-//	// 半径セレクトボックスのイベント定義
-//	$('#changeCircleRadius').change(function(evt){
-//		radius = $(this).val();
-//		if(radius === "") {
-//			clearCenterCircle();
-//			$('#cbDisplayCircle').prop('checked', false).checkboxradio('refresh');
-//			return;
-//		} else {
-//			$('#cbDisplayCircle').prop('checked', true).checkboxradio('refresh');
-//			drawCenterCircle(radius);
-//		}
-//	});
-//
-//	// 円表示ボタンのイベント定義
-//	$('#cbDisplayCircle').click(function(evt) {
-//		radius = $('#changeCircleRadius').val();
-//		if($('#cbDisplayCircle').prop('checked')) {
-//			drawCenterCircle(radius);
-//		} else {
-//			clearCenterCircle();
-//		}
-//	});
-//
-//	// 地図変更選択ボックス操作時のイベント
-//	$('#changeBaseMap').change(function(evt) {
-//		if($(this).val() === "背景") {
-//			$(this).val($(this).prop("selectedIndex", 1).val());
-//		}
-//		papamamap.changeMapServer(
-//			mapServerList[$(this).val()], $('#changeOpacity option:selected').val()
-//			);
-//	});
-//
-//	// ポップアップを閉じるイベント
-//	$('#popup-closer').click(function(evt){
-//		$('#popup').hide();
-//		return;
-//	});
-//
-//	// ポップアップを閉じる
-//	$('.ol-popup').parent('div').click(function(evt){
-//		$('#popup').hide();
-//		return;
-//	});
-//
-//	// 親要素へのイベント伝播を停止する
-//	$('.ol-popup').click(function(evt){
-//		evt.stopPropagation();
-//	});
-//
-//	// 検索フィルターを有効にする
-//	$('#filterApply').click(function(evt){
-//		// 条件作成処理
-//		conditions = [];
-//		ninka = ninkagai = kindergarten = false;
-//
-//		// 認可保育園
-//		if($('#ninkaOpenTime option:selected').val() !== "") {
-//			conditions['ninkaOpenTime'] = $('#ninkaOpenTime option:selected').val();
-//			ninka = true;
-//		}
-//		if($('#ninkaCloseTime option:selected').val() !== "") {
-//			conditions['ninkaCloseTime'] = $('#ninkaCloseTime option:selected').val();
-//			ninka = true;
-//		}
-//		if($('#ninkaIchijiHoiku').prop('checked')) {
-//			conditions['ninkaIchijiHoiku'] = 1;
-//			ninka = true;
-//		}
-//		if($('#ninkaYakan').prop('checked')) {
-//			conditions['ninkaYakan'] = 1;
-//			ninka = true;
-//		}
-//		if($('#ninkaKyujitu').prop('checked')) {
-//			conditions['ninkaKyujitu'] = 1;
-//			ninka = true;
-//		}
-//		if($('#ninkaVacancy').prop('checked')) {
-//			conditions['ninkaVacancy'] = 1;
-//			ninka = true;
-//		}
-//
-//		// 認可外
-//		if($('#ninkagaiOpenTime option:selected').val() !== "") {
-//			conditions['ninkagaiOpenTime'] = $('#ninkagaiOpenTime option:selected').val();
-//			ninkagai = true;
-//		}
-//		if($('#ninkagaiCloseTime option:selected').val() !== "") {
-//			conditions['ninkagaiCloseTime'] = $('#ninkagaiCloseTime option:selected').val();
-//			ninkagai = true;
-//		}
-//		if($('#ninkagai24H').prop('checked')) {
-//			conditions['ninkagai24H'] = 1;
-//			ninkagai = true;
-//		}
-//		if($('#ninkagaiShomei').prop('checked')) {
-//			conditions['ninkagaiShomei'] = 1;
-//			ninkagai = true;
-//		}
-//
-//		// 幼稚園
-//
-//		// フィルター適用時
-//		if(Object.keys(conditions).length > 0) {
-//			filter = new FacilityFilter();
-//			newGeoJson = filter.getFilteredFeaturesGeoJson(conditions, nurseryFacilities);
-//			papamamap.addNurseryFacilitiesLayer(newGeoJson);
-//			$('#btnFilter').css('background-color', '#3388cc');
-//		} else {
-//			papamamap.addNurseryFacilitiesLayer(nurseryFacilities);
-//			$('#btnFilter').css('background-color', '#f6f6f6');
-//			ninka = ninkagai = kindergarten = true;
-//		}
-//
-//		// レイヤー表示状態によって施設の表示を切り替える
-//		updateLayerStatus({ninka: ninka, ninkagai: ninkagai, kindergarten: kindergarten});
-//	});
-//
-//	// 絞込条件のリセット
-//	$('#filterReset').click(function(evt){
-//		// チェックボックスをリセット
-//		$(".filtercb").each(function(){
-//			$(this).prop('checked', false).checkboxradio('refresh');
-//		});
-//		// セレクトボックスをリセット
-//		$('.filtersb').each(function(){
-//			$(this).selectmenu(); // これを実行しないと次の行でエラー発生
-//			$(this).val('').selectmenu('refresh');
-//		});
-//		// 施設情報をリセット
-//		papamamap.addNurseryFacilitiesLayer(nurseryFacilities);
-//		$('#btnFilter').css('background-color', '#f6f6f6');
-//
-//		// レイヤー表示状態によって施設の表示を切り替える
-//		updateLayerStatus({ninka: true, ninkagai: true, kindergarten: true});
-//	});
-//
-//	/**
-//	 * レイヤー状態を切り替える
-//	 *
-//	 * @param  {[type]} checkObj [description]
-//	 * @return {[type]}               [description]
-//	 */
-//	function updateLayerStatus(checkObj)
-//	{
-//		papamamap.switchLayer($('#cbNinka').prop('id'), checkObj.ninka);
-//		papamamap.switchLayer($('#cbNinkagai').prop('id'), checkObj.ninkagai);
-//		papamamap.switchLayer($('#cbKindergarten').prop('id'), checkObj.kindergarten);
-//		$('#cbNinka').prop('checked', checkObj.ninka).checkboxradio('refresh');
-//		$('#cbNinkagai').prop('checked', checkObj.ninkagai).checkboxradio('refresh');
-//		$('#cbKindergarten').prop('checked', checkObj.kindergarten).checkboxradio('refresh');
-//	}
-//
-//	/**
-//	 * 円を描画する 関数内関数
-//	 *
-//	 * @param  {[type]} radius    [description]
-//	 * @return {[type]}           [description]
-//	 */
-//	function drawCenterCircle(radius)
-//	{
-//		if($('#cbDisplayCircle').prop('checked')) {
-//			papamamap.drawCenterCircle(radius);
-//
-//			$('#center_markerTitle').hide();
-//			$('#center_marker').hide();
-//
-//			var center = map.getView().getCenter();
-//			var coordinate = center;
-//			var marker = new ol.Overlay({
-//				position: coordinate,
-//				positioning: 'center-center',
-//				element: $('#center_marker'),
-//				stopEvent: false
-//			});
-//			map.addOverlay(marker);
-//
-//			// 地図マーカーラベル設定
-//			$('#center_markerTitle').html("");
-//			var markerTitle = new ol.Overlay({
-//				position: coordinate,
-//				element: $('#center_markerTitle')
-//			});
-//			map.addOverlay(markerTitle);
-//			$('#center_markerTitle').show();
-//			$('#center_marker').show();
-//		}
-//	}
-//
-//	/**
-//	 * 円を消す
-//	 *
-//	 * @return {[type]} [description]
-//	 */
-//	function clearCenterCircle()
-//	{
-//		papamamap.clearCenterCircle();
-//		$('#center_markerTitle').hide();
-//		$('#center_marker').hide();
-//		$('#changeCircleRadius').val('').selectmenu('refresh');
-//		return;
-//	}
-//
-//	/**
-//	 * 指定座標にマーカーを設定する
-//	 * @param  {[type]} coordinate [description]
-//	 * @return {[type]}            [description]
-//	 */
-//	function drawMarker(coordinate, label)
-//	{
-//		$('#markerTitle').hide();
-//		$('#marker').hide();
-//		var marker = new ol.Overlay({
-//			position: coordinate,
-//			positioning: 'center-center',
-//			element: $('#marker'),
-//			stopEvent: false
-//		});
-//		map.addOverlay(marker);
-//
-//		// 地図マーカーラベル設定
-//		$('#markerTitle').html(label);
-//		var markerTitle = new ol.Overlay({
-//			position: coordinate,
-//			element: $('#markerTitle')
-//		});
-//		map.addOverlay(markerTitle);
-//		$('#markerTitle').show();
-//		$('#marker').show();
-//		return;
-//	}
+    // アイコン部ラベル定義
+    var featureName = feature.properties.Name;
+    var marker = L.marker(latlng, { icon: facIcon }).bindLabel(featureName);
+    return marker;
+}
 
-});
+/**
+ * 中学校学区用
+ */
+function midSchoolPointToLayerFunc(feature, latlng) {
+    return schoolPointToLayer(feature, latlng, 'image/middleSchool_bg.png');
+}
+
+/**
+ * 中学校学区用
+ */
+function elementarySchoolPointToLayerFunc(feature, latlng) {
+    return schoolPointToLayer(feature, latlng, 'image/elementary_bg.png');
+}
+
+/**
+ * 学区共通
+ */
+function schoolPointToLayer(feature, latlng, shadowUrl) {
+    var iconSize = [25, 25];
+    var shadowSize = [35, 35];
+
+    var iconUrl = 'image/school.png';
+    var facIcon = L.icon({
+        iconUrl : iconUrl,
+        shadowUrl: shadowUrl,
+        iconSize: iconSize, // size of the icon
+        shadowSize: shadowSize
+    });
+
+    // アイコン部ラベル定義
+    var featureName = feature.properties.A32_003;
+    if(feature.properties.A32_003 === undefined) {
+        featureName = feature.properties.A27_007;
+    }
+    var marker = L.marker(latlng, { icon: facIcon }).bindLabel(featureName);
+    return marker;
+}
+
+/**
+ * 学区用フィルター
+ */
+function schoolGroupFilter(feature, layer) {
+    return true;
+}
+
+/**
+ * GeoJson読み込み時、認可保育所を絞り込むフィルター関数
+ */
+function facilityGroup1Filter(feature, layer) {
+    if(feature.properties.Type == '認可保育所') {
+        return true;
+    } else {
+        return false;
+    }
+}
+
+/**
+ * GeoJson読み込み時、認可外を絞り込むフィルター関数
+ */
+function facilityGroup2Filter(feature, layer) {
+    if(feature.properties.Type == '認可外') {
+        return true;
+    } else {
+        return false;
+    }
+}
+
+/**
+ * GeoJson読み込み時、認可保育所を絞り込むフィルター関数
+ */
+function facilityGroup3Filter(feature, layer) {
+    if(feature.properties.Type == '幼稚園') {
+        return true;
+    } else {
+        return false;
+    }
+}
+
+/**
+ * GeoJsonで読み込んだ施設情報にポップアップを設定する
+ */
+function onEachFeatureFunc(feature,layer) {
+    setPopup(feature,layer);
+    setFacilities(feature,layer);
+}
+
+/**
+ * 施設情報管理用変数に値をセット
+ */
+function setFacilities(feature,layer) {
+    if (feature.properties){
+        var facName = feature.properties.Name;
+        var obj = {
+            facility : facName,
+            name : facName,
+            lon : feature.geometry.coordinates[1],
+            lat : feature.geometry.coordinates[0],
+            layer : layer
+        };
+        facilities.push(obj);
+        moveToList[facName] = obj;
+    }
+}
+
+/**
+ * ポップアップコンテンツを定義
+ */
+function setPopup(feature,layer) {
+    var popupTitle = getPopupTitle(feature);
+    var popupContent = getPopupContent(feature);
+
+    // ポップアップ表示内容を生成
+    var content = '';
+    content += '<div id="popup-title" data-role="header" data-theme="a">' + popupTitle + '</div>';
+    content += '<div id="popup-content" role="main">' + popupContent + '</div>';
+
+    layer.bindPopup(content);
+}
+
+/**
+ * ポップアップコンテンツのタイトルを定義する
+ */
+function getPopupTitle(feature)
+{
+    // タイトル部
+    var title = '';
+    var type = feature.properties['種別'] ? feature.properties['種別'] : feature.properties['Type'];
+    title  = '[' + type + '] ';
+    var owner = feature.properties['設置'] ? feature.properties['設置'] : feature.properties['Ownership'];
+    if(owner !== undefined && owner !== null && owner !== "") {
+        title += ' [' + owner +']';
+    }
+    var name = feature.properties['名称'] ? feature.properties['名称'] : feature.properties['Name'];
+    title += name;
+    url = feature.properties['url'];
+    if(url != null && url != '') {
+        title = '<a href="' +url+ '" target="_blank">' + title + '</a>';
+    }
+    return title;
+}
+
+/**
+ * ポップアップコンテンツの内容を定義する
+ */
+function getPopupContent(feature) {
+    var content = '';
+    content += '<table><tbody>';
+    var open  = feature.properties['開園時間'] ? feature.properties['開園時間'] : feature.properties['Open'];
+    var close = feature.properties['終園時間'] ? feature.properties['終園時間'] : feature.properties['Close'];
+    if (open !== undefined && open != null && open != "" && close != undefined && close != null && close != "") {
+        content += '<tr>';
+        content += '<th>時間</th>';
+        content += '<td>';
+        content += open + '〜' + close;
+        content += '</td>';
+        content += '</tr>';
+    }
+    var memo = feature.properties['備考'] ? feature.properties['備考'] : feature.properties['Memo'];
+    if (memo !== undefined && memo !== null) {
+        content += '<tr>';
+        content += '<th></th>';
+        content += '<td>' + memo + '</td>';
+        content += '</tr>';
+    }
+    var temp    = feature.properties['一時'] ? feature.properties['一時'] : feature.properties['Temp'];
+    var holiday = feature.properties['休日'] ? feature.properties['休日'] : feature.properties['holiday'];
+    var night   = feature.properties['夜間'] ? feature.properties['夜間'] : feature.properties['Night'];
+    var h24     = feature.properties['H24'] ? feature.properties['H24'] : feature.properties['H24'];
+
+    if( temp !== null || holiday !== null || night !== null || h24 !== null) {
+        content += '<tr>';
+        content += '<th></th>';
+        content += '<td>';
+        if (temp !== undefined && temp !== null) {
+            content += '一時保育 ';
+        }
+        if (holiday !== undefined && holiday !== null) {
+            content += '休日保育 ';
+        }
+        if (night !== undefined && night !== null) {
+            content += '夜間保育 ';
+        }
+        if (h24 !== undefined && h24 !== null) {
+            content += '24時間 ';
+        }
+        content += '</td>';
+        content += '</tr>';
+    }
+
+    var type = feature.properties['種別'] ? feature.properties['種別'] : feature.properties['Type'];
+    if(type == "認可外") {
+        content += '<tr>';
+        content += '<th>監督基準</th>';
+        content += '<td>';
+        var proof = feature.properties['証明'] ? feature.properties['証明'] : feature.properties['Proof'];
+        if (proof !== undefined && proof !== null) {
+            content += '証明書発行済<a href="http://www.city.sapporo.jp/kodomo/kosodate/ninkagai_shisetsu.html" target="_blank">(詳細)</a>';
+        }
+        content += '</td>';
+        content += '</tr>';
+    }
+    if(type == "認可保育所") {
+        content += '<tr>';
+        content += '<th>欠員</th>';
+        content += '<td>';
+        var vacancy = feature.properties['Vacancy'] ? feature.properties['Vacancy'] : feature.properties['Vacancy'];
+        if (vacancy !== undefined && vacancy !== null) {
+            content += '<a href="http://www.city.sapporo.jp/kodomo/kosodate/l4_01.html" target="_blank">空きあり</a>';
+        }
+        var vacancyDate = feature.properties['VacancyDate'];
+        if (vacancyDate !== undefined && vacancyDate !== null) {
+            content += " (" + vacancyDate + ")";
+        }
+        content += '</td>';
+        content += '</tr>';
+    }
+    var ageS = feature.properties['開始年齢'] ? feature.properties['開始年齢'] : feature.properties['AgeS'];
+    var ageE = feature.properties['終了年齢'] ? feature.properties['終了年齢'] : feature.properties['AgeE'];
+    if (ageS !== undefined && ageS !== null && ageE !== undefined && ageE !== null) {
+        content += '<tr>';
+        content += '<th>年齢</th>';
+        content += '<td>' + ageS + '〜' + ageE + '</td>';
+        content += '</tr>';
+    }
+    var full = feature.properties['定員'] ? feature.properties['定員'] : feature.properties['Full'];
+    if (full !== undefined && full !== null) {
+        content += '<tr>';
+        content += '<th>定員</th>';
+        content += '<td>' + full + '人</td>';
+        content += '</tr>';
+    }
+    var tel = feature.properties['TEL'] ? feature.properties['TEL'] : feature.properties['TEL'];
+    if (tel !== undefined && tel !== null) {
+        content += '<tr>';
+        content += '<th>TEL</th>';
+        content += '<td>' + tel + '</td>';
+        content += '</tr>';
+    }
+    var add1 = feature.properties['住所１'] ? feature.properties['住所１'] : feature.properties['Add1'];
+    var add2 = feature.properties['住所２'] ? feature.properties['住所２'] : feature.properties['Add2'];
+    if (add1 !== undefined && add2 !== undefined) {
+        content += '<tr>';
+        content += '<th>住所</th>';
+        content += '<td>' + add1 + add2 +'</td>';
+        content += '</tr>';
+    }
+    var owner = feature.properties['設置者'] ? feature.properties['設置者'] : feature.properties['Owner'];
+    if (owner !== undefined && owner !== null) {
+        content += '<tr>';
+        content += '<th>設置者</th>';
+        content += '<td>' + owner + '</td>';
+        content += '</tr>';
+    }
+    content += '</tbody></table>';
+    return content;
+}
+

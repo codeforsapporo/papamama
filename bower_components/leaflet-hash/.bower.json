@@ -1,0 +1,14 @@
+{
+  "name": "leaflet-hash",
+  "homepage": "https://github.com/mlevans/leaflet-hash",
+  "_release": "d73fc84d8c",
+  "_resolution": {
+    "type": "branch",
+    "branch": "master",
+    "commit": "d73fc84d8cac7f1ea7068e4fe1dcf70f93791837"
+  },
+  "_source": "git://github.com/mlevans/leaflet-hash.git",
+  "_target": "*",
+  "_originalSource": "leaflet-hash",
+  "_direct": true
+}

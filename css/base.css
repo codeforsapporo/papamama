@@ -1,4 +1,12 @@
 /* CSS Document */
+body {
+    padding: 0;
+    margin: 0;
+}
+html, body, #map {
+    height: 100%;
+}
+
 .ui-content {
 	margin: 0;
 	padding: 0 !important;

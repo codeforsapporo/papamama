@@ -5,20 +5,33 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <title>さっぽろ保育園マップ by Code for Sapporo</title>
 
-        <link rel="stylesheet" href="css/bootstrap.css" type="text/css">
-        <link rel="stylesheet" href="css/bootstrap.css.map" type="text/css">
-        <link rel="stylesheet" href="css/jquery.mobile-1.4.4.css">
+        <link href="bower_components/font-awesome/css/font-awesome.min.css" rel="stylesheet">
         <link rel="stylesheet" href="css/base.css" type="text/css">
-        <link rel="stylesheet" href="css/icon-pack-custom.css">
+        <link rel="stylesheet" href="bower_components/leaflet/dist/leaflet.css" />
+        <link rel="stylesheet" href="bower_components/Leaflet.label/dist/leaflet.label.css" />
+        <link rel="stylesheet" href="bower_components/leaflet.locatecontrol/dist/L.Control.Locate.min.css" />
+        <link rel="stylesheet" href="bower_components/leaflet.locatecontrol/dist/L.Control.Locate.ie.min.css" />
+        <link rel="stylesheet" href="bower_components/leaflet-modal/dist/leaflet.modal.min.css" />
+        <link rel="stylesheet" href="js/leaflet.control.FacilityLayerChkbox.css" />
+        <link rel="stylesheet" href="js/leaflet.control.AboutCfS.css" />
 
-        <link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.3/leaflet.css" />
-        <script src="http://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.3/leaflet.js"></script>
+        <script src="bower_components/jquery/dist/jquery.min.js"></script>
+        <script src="bower_components/leaflet/dist/leaflet.js"></script>
+        <script src="bower_components/Leaflet.label/dist/leaflet.label.js"></script>
+        <script src="bower_components/leaflet-hash/leaflet-hash.js"></script>
+        <script src="bower_components/leaflet.locatecontrol/dist/L.Control.Locate.min.js"></script>
+        <script src="bower_components/leaflet-modal/dist/Leaflet.Modal.min.js"></script>
+        <script src="//maps.google.com/maps/api/js?sensor=true"></script>
+        <script src="js/layer/tile/Bing.js"></script>
+        <script src="js/layer/tile/Google.js"></script>
+        <script src="js/index.js" type="text/javascript"></script>
+        <script src="js/leaflet.control.FacilityLayerChkbox.js" type="text/javascript"></script>
+        <script src="js/leaflet.control.AboutCfS.js" type="text/javascript"></script>
         <script>
         (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
         (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
         m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
         })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-
         ga('create', 'UA-54609451-2', 'auto');
         ga('send', 'pageview');
         </script>
@@ -26,23 +39,9 @@
     <body>
         <div data-role="page" id="mainPage">
             <div role="main" class="ui-content">
+            <!--
             <div id="nav">
                 <fieldset id="nav1" data-role="controlgroup" data-type="horizontal" data-mini="true">
-                    <label for="cbNinka" id="lblNinka">認可</label>
-                    <input type="checkbox" name="cbNinka" id="cbNinka" checked="checked">
-
-                    <label for="cbNinkagai" id="lblNinkagai">認可外</label>
-                    <input type="checkbox" name="cbNinkagai" id="cbNinkagai" checked="checked">
-
-                    <label for="cbKindergarten" id="lblKindergarten">幼</label>
-                    <input type="checkbox" name="cbKindergarten" id="cbKindergarten" checked="checked">
-
-                    <label for="cbElementarySchool" id="lblElementarySchool">小</label>
-                    <input type="checkbox" name="cbElementarySchool" id="cbElementarySchool">
-
-                    <label for="cbMiddleSchool" id="lblMiddleSchool">中</label>
-                    <input type="checkbox" name="cbMiddleSchool" id="cbMiddleSchool">
-
                     <a id="btnFilter" href="#filterdialog" data-rel="popup" data-position-to="window" class="ui-btn ui-corner-all ui-btn-a ui-icon-filter ui-btn-icon-right ui-icon-check">検索</a>
 
                     <label for="moveTo">最寄駅</label>
@@ -65,19 +64,14 @@
                     </select>
 
                     <a id="btnHelp" href="http://www.codeforsapporo.org/papamama/" target="_blank" class="ui-btn ui-icon-question ui-btn-icon-notext">help</a>
-                    <!--
                     <a id="btnHelp" href="#helpDialog" data-rel="popup" data-position-to="window" class="ui-btn ui-icon-question ui-btn-icon-notext">help</a>
-                    -->
                 </fieldset>
             </div>
+            -->
             <div id="map" class="map">
             </div>
-            <div id="popup" data-role="popup" data-theme="a" class="ui-content ol-popup" style="max-height: 200px;">
-                <a href="#" id="popup-closer" data-rel="back" class="ui-btn ui-corner-all ui-shadow ui-btn-a ui-icon-delete ui-btn-icon-notext ui-btn-right">Close</a>
-                <div id="popup-title" data-role="header" data-theme="a"></div>
-                <div id="popup-content" role="main"></div>
-            </div>
         </div>
+        <!--
         <div data-role="popup" data-history="false" id="filterdialog" data-theme="a" class="ui-corner-all ui-icon-delete ui-btn-left">
             <a href="#" data-rel="back" class="ui-btn ui-corner-all ui-shadow ui-btn-a ui-icon-delete ui-btn-icon-notext ui-btn-right">Close</a>
             <form>
@@ -145,41 +139,6 @@
                 </div>
             </form>
         </div>
-        <div data-role="popup" data-history="false" id="helpDialog" data-theme="a" class="ui-corner-all ui-icon-delete ui-btn-left">
-            <a href="#" data-rel="back" class="ui-btn ui-corner-all ui-shadow ui-btn-a ui-icon-delete ui-btn-icon-notext ui-btn-right">Close</a>
-            <div style="padding:10px 20px;">
-                <h3>さっぽろ保育園マップ</h3>
-                <fieldset>
-                    <p>
-                    v1.0 (rev.20141130)
-                    </p>
-                    <a href="http://www.codeforsapporo.org/papamama/" target="_blank">詳しくはこちら</a>
-                </fieldset>
-                <fieldset data-role="controlgroup" data-type="horizontal" data-mini="true">
-                    <p>
-                    (C) 2014 <a href="http://www.codeforsapporo.org/" target="_blank">Code for Sapporo.</a>
-                    </p>
-                    <a href="#" data-rel="back" id="helpClose" class="ui-btn ui-corner-all ui-btn-a ui-btn-icon-left ui-icon-check">閉じる</a>
-                </fieldset>
-            </div>
-        </div>
-        <script src="//maps.google.com/maps/api/js?sensor=true"></script>
-        <script src="js/layer/tile/Bing.js"></script>
-        <script src="js/layer/tile/Google.js"></script>
-
-        <script src="js/jquery-2.1.1.min.js" type="text/javascript"></script>
-        <script src="js/jquery.mobile-1.4.4.min.js" type="text/javascript"></script>
-        <script src="js/bootstrap.min.js" type="text/javascript"></script>
-        <script src="js/v3.0.0/build/ol.js" type="text/javascript"></script>
-        <script src="js/ol_style.js" type="text/javascript"></script>
-        <script src="js/movecurrentlocationcontrol.js" type="text/javascript"></script>
-        <script src="js/movetolist.js" type="text/javascript"></script>
-        <script src="js/facilityfilter.js" type="text/javascript"></script>
-        <script src="js/papamamap.js" type="text/javascript"></script>
-        <script src="js/index.js" type="text/javascript"></script>
-        <div id="marker"></div>
-        <div id="markerTitle"></div>
-        <div id="center_marker"></div>
-        <div id="center_markerTitle"></div>
+        -->
     </body>
 </html>

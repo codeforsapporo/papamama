@@ -1,0 +1,30 @@
+{
+  "name": "papamamap",
+  "version": "2.0.0",
+  "homepage": "https://github.com/codeforsapporo/papamama",
+  "authors": [
+    "Code for Sapporo <codeforsapporo@gmail.com>"
+  ],
+  "description": "さっぽろ保育園マップ ver 2.0",
+  "keywords": [
+    "javascript",
+    "opendata",
+    "leaflet.js"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "Leaflet.label": "~0.2.1",
+    "jquery": "~2.1.4",
+    "leaflet": "~0.7.3",
+    "leaflet-hash": "*",
+    "leaflet-modal": "~0.1.2",
+    "leaflet.locatecontrol": "~0.44.0"
+  }
+}
