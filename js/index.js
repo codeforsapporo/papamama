@@ -178,10 +178,15 @@ $(document).ready(function(){
 
         // レイヤーコントロールを設定
         L.control.layers(baseMaps).addTo(map);
+
+        // 縮尺変更後に発生させるイベントを設定
+        map.on('zoomend', showMarkerLabel);
+
+        // 地図ドラッグ後に発生させるイベントを設定
+        map.on('moveend', showMarkerLabel);
     });
 
 });
-
 
 /**
  * デバイス回転時、地図の大きさを画面全体に広げる
@@ -225,7 +230,7 @@ function pointToLayerFunc(feature, latlng) {
     });
 
     // アイコン部ラベル定義
-    var featureName = feature.properties.Name;
+    var featureName = feature.properties.Label;
     var marker = L.marker(latlng, { icon: facIcon }).bindLabel(featureName);
     return marker;
 }
@@ -487,3 +492,28 @@ function getPopupContent(feature) {
     return content;
 }
 
+/**
+ * 縮尺完了後にマーカーのラベル表示・非表示を切り替える
+ */
+function showMarkerLabel(evt) {
+    map.eachLayer(function(layer){
+        if (layer instanceof L.Marker) {
+            layer.hideLabel();
+            layer.setLabelNoHide(false);
+        }
+    });
+    if(map.getZoom() >= 14) {
+        // 地図の現在の表示範囲を取得
+        var mapBounds = map.getBounds();
+        map.eachLayer(function(layer){
+            if (layer instanceof L.Marker) {
+                var layerLatLng = layer.getLatLng();
+                // マーカーの緯度経度が現在の地図表示範囲に含まれてればラベルを表示
+                if(mapBounds.contains(layerLatLng)) {
+                    layer.showLabel();
+                    layer.setLabelNoHide(true);
+                }
+            }
+        });
+    }
+}
