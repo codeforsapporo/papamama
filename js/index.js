@@ -4,6 +4,31 @@ var init_center_coords = [43.063968, 141.347899];
 // Bing APIのキー
 var bing_api_key = 'AhGQykUKW2-u1PwVjLwQkSA_1rCTFESEC7bCZ0MBrnzVbVy7KBHsmLgwW_iRJg17';
 
+// Leaflet - Bing
+var bingRoadLayer = null;
+if (L.BingLayer) {
+    bingRoadLayer = new L.BingLayer(bing_api_key, {type: 'Road'});
+}
+// Leaflet - 国土地理院
+var gsiLayer = L.tileLayer('http://cyberjapandata.gsi.go.jp/xyz/pale/{z}/{x}/{y}.png', {
+    attribution: "<a href='http://www.gsi.go.jp/kikakuchousei/kikakuchousei40182.html' target='_blank'>国土地理院</a>"
+});
+// Leaflet - OSM交通
+var osmLayer = L.tileLayer('http://{s}.tile.thunderforest.com/transport/{z}/{x}/{y}.png', {
+    attribution: '&copy; <a href="http://www.opencyclemap.org">OpenCycleMap</a>, &copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+    maxZoom: 19
+});
+// Leaflet - Bing(写真)
+var bingAerialLayer = null;
+if (L.BingLayer) {
+    bingAerialLayer = new L.BingLayer(bing_api_key, {type: 'Aerial'});
+}
+// Leaflet Google
+var googleLayer = null;
+if (L.Google) {
+    googleLayer = new L.Google('ROADMAP');
+}
+
 // map
 var map;
 
@@ -18,31 +43,6 @@ var facilities = [];
 $(document).ready(function(){
     resizeMapDiv();
 
-    // Leaflet - Bing
-    var bingRoadLayer = null;
-    if (L.BingLayer) {
-        bingRoadLayer = new L.BingLayer(bing_api_key, {type: 'Road'});
-    }
-    // Leaflet - 国土地理院
-    var gsiLayer = L.tileLayer('http://cyberjapandata.gsi.go.jp/xyz/pale/{z}/{x}/{y}.png', {
-        attribution: "<a href='http://www.gsi.go.jp/kikakuchousei/kikakuchousei40182.html' target='_blank'>国土地理院</a>"
-    });
-    // Leaflet - OSM交通
-    var osmLayer = L.tileLayer('http://{s}.tile.thunderforest.com/transport/{z}/{x}/{y}.png', {
-        attribution: '&copy; <a href="http://www.opencyclemap.org">OpenCycleMap</a>, &copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>',
-        maxZoom: 19
-    });
-    // Leaflet - Bing(写真)
-    var bingAerialLayer = null;
-    if (L.BingLayer) {
-        bingAerialLayer = new L.BingLayer(bing_api_key, {type: 'Aerial'});
-    }
-    // Leaflet Google
-    var googleLayer = null;
-    if (L.Google) {
-        googleLayer = new L.Google('ROADMAP');
-    }
-
     // 地図レイヤー一覧
     var baseMaps = {
         "Bing(標準)": bingRoadLayer,
@@ -56,6 +56,8 @@ $(document).ready(function(){
     map = L.map('map', {
         center: init_center_coords,
         zoom: 14,
+        minZoom: 12,
+        maxZoom: 17,
         layers: [bingRoadLayer]
     });
 
@@ -152,8 +154,6 @@ $(document).ready(function(){
 
         // 各施設レイヤーを地図に追加
         map.addLayer(facilityGroup1);
-        map.addLayer(facilityGroup2);
-        map.addLayer(facilityGroup3);
 
         var overlayMaps = {
             '保育園': facilityGroup1,
@@ -168,8 +168,8 @@ $(document).ready(function(){
             layers: overlayMaps,
             checkStatus: {
                 '保育園': true,
-                '認可外': true,
-                '幼稚園': true,
+                '認可外': false,
+                '幼稚園': false,
                 '小学校区': false,
                 '中学校区': false
             }
@@ -177,7 +177,7 @@ $(document).ready(function(){
         L.control.facilityLayerChkbox(chkBoxOption).addTo(map);
 
         // レイヤーコントロールを設定
-        L.control.layers(baseMaps, overlayMaps).addTo(map);
+        L.control.layers(baseMaps).addTo(map);
     });
 
 });
