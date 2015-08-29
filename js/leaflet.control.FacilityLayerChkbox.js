@@ -38,6 +38,8 @@ L.Control.FacilityLayerChkbox = L.Control.extend({
             label.appendChild(input);
             label.appendChild(name);
             container.appendChild(label);
+            var br = document.createElement('br');
+            container.appendChild(br);
         }
 
         return container;
