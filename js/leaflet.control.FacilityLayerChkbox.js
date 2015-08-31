@@ -45,12 +45,11 @@ L.Control.FacilityLayerChkbox = L.Control.extend({
                 L.DomEvent.on(link, 'focus', this._expand, this);
             }
             //Work around for Firefox android issue https://github.com/Leaflet/Leaflet/issues/2033
-            L.DomEvent.on(form, 'click', function () {
-                setTimeout(L.bind(this._onInputClick, this), 0);
-            }, this);
+            //L.DomEvent.on(form, 'click', function () {
+            //    setTimeout(L.bind(this._onInputClick, this), 0);
+            //}, this);
+            //this._map.on('click', this._collapse, this);
 
-            this._map.on('click', this._collapse, this);
-            // TODO keyboard accessibility
         } else {
             this._expand();
         }
@@ -110,7 +109,7 @@ L.Control.FacilityLayerChkbox = L.Control.extend({
 
     },
     _expand: function () {
-        L.DomUtil.addClass(this._container, 'leaflet-control-layers-expanded');
+        // L.DomUtil.addClass(this._container, 'leaflet-control-layers-expanded');
     },
     _collapse: function () {
         this._container.className = this._container.className.replace(' leaflet-control-layers-expanded', '');
