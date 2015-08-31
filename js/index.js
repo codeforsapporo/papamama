@@ -165,14 +165,7 @@ $(document).ready(function(){
 
         // 地図上にチェックボックス
         var chkBoxOption = {
-            layers: overlayMaps,
-            checkStatus: {
-                '保育園': true,
-                '認可外': false,
-                '幼稚園': false,
-                '小学校区': false,
-                '中学校区': false
-            }
+            layers: overlayMaps
         };
         L.control.facilityLayerChkbox(chkBoxOption).addTo(map);
 
