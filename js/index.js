@@ -58,16 +58,24 @@ $(document).ready(function(){
         zoom: 14,
         minZoom: 12,
         maxZoom: 17,
-        layers: [bingRoadLayer]
+        layers: [bingRoadLayer],
+        zoomControl: false // 地図ズームコントロールを廃止
     });
 
     // leaflet-hash
     hash = new L.Hash(map);
 
+    // 駅移動セレクトボックス
+    var moveToStationList = L.control.moveToStationList().addTo(map);
+
     // 現在地移動
     L.control.locate().addTo(map);
 
+    // 「Code for Sapporoについて」
     L.control.aboutCfS().addTo(map);
+
+    // 地図ズームコントロールを右下に配置
+    new L.Control.Zoom({ position: 'bottomright' }).addTo(map);
 
     // 施設情報読み込み
     var facilityGroup1 = L.layerGroup();
@@ -82,8 +90,9 @@ $(document).ready(function(){
         $.getJSON('data/MiddleSchool.geojson'),
         $.getJSON('data/MiddleSchool_loc.geojson'),
         $.getJSON('data/Elementary.geojson'),
-        $.getJSON('data/Elementary_loc.geojson')
-    ).done(function(facilityJson, middleSchoolJson, middleSchoolLocJson, elementaryJson, elementaryLocJson) {
+        $.getJSON('data/Elementary_loc.geojson'),
+        $.getJSON('data/station.geojson')
+    ).done(function(facilityJson, middleSchoolJson, middleSchoolLocJson, elementaryJson, elementaryLocJson, stationJson) {
         // 認可保育園
         facilityGroup1 = L.geoJson(facilityJson, {
             onEachFeature: onEachFeatureFunc,
@@ -117,7 +126,6 @@ $(document).ready(function(){
             },
             filter: schoolGroupFilter
         });
-
         // 中学校区アイコン
         var middleSchoolLoc = L.geoJson(middleSchoolLocJson, {
             onEachFeature: function(feature,layer) {
@@ -151,7 +159,6 @@ $(document).ready(function(){
         // ベクターとマーカーを合成したレイヤーグループを作成
         elementary = L.layerGroup([elementaryBg, elementaryLoc]);
 
-
         // 各施設レイヤーを地図に追加
         map.addLayer(facilityGroup1);
 
@@ -168,6 +175,10 @@ $(document).ready(function(){
             layers: overlayMaps
         };
         L.control.facilityLayerChkbox(chkBoxOption).addTo(map);
+
+        // 駅セレクトボックスの生成
+        moveToStationList.addMoveToList(stationJson);
+        moveToStationList.createForm();
 
         // レイヤーコントロールを設定
         L.control.layers(baseMaps).addTo(map);
