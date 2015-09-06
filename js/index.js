@@ -188,6 +188,12 @@ $(document).ready(function(){
 
         // 地図ドラッグ後に発生させるイベントを設定
         map.on('moveend', showMarkerLabel);
+
+        // レイヤー追加時に発生させるイベントを設定
+        map.on('layeradd', showMarkerLabelForLayer);
+
+        // 地図表示時に表示されるマーカーについてラベルの表示・非表示を決定する
+        showMarkerLabel();
     });
 
 });
@@ -499,25 +505,32 @@ function getPopupContent(feature) {
 /**
  * 縮尺完了後にマーカーのラベル表示・非表示を切り替える
  */
-function showMarkerLabel(evt) {
+function showMarkerLabel() {
     map.eachLayer(function(layer){
-        if (layer instanceof L.Marker) {
-            layer.hideLabel();
-            layer.setLabelNoHide(false);
-        }
+        showMarkerLabelForLayer(layer);
     });
+}
+
+/**
+ * 縮尺完了後にマーカーのラベル表示・非表示を切り替える:個々のレイヤー版
+ */
+function showMarkerLabelForLayer(layer) {
+    var targetLayer = (layer.layer == undefined) ? layer : layer.layer;
+
+    if (targetLayer instanceof L.Marker) {
+        targetLayer.hideLabel();
+        targetLayer.setLabelNoHide(false);
+    }
     if(map.getZoom() >= 14) {
         // 地図の現在の表示範囲を取得
         var mapBounds = map.getBounds();
-        map.eachLayer(function(layer){
-            if (layer instanceof L.Marker) {
-                var layerLatLng = layer.getLatLng();
-                // マーカーの緯度経度が現在の地図表示範囲に含まれてればラベルを表示
-                if(mapBounds.contains(layerLatLng)) {
-                    layer.showLabel();
-                    layer.setLabelNoHide(true);
-                }
+        if (targetLayer instanceof L.Marker) {
+            var layerLatLng = targetLayer.getLatLng();
+            // マーカーの緯度経度が現在の地図表示範囲に含まれてればラベルを表示
+            if(mapBounds.contains(layerLatLng)) {
+                targetLayer.showLabel();
+                targetLayer.setLabelNoHide(true);
             }
-        });
+        }
     }
 }
