@@ -8,12 +8,12 @@
         <link href="bower_components/font-awesome/css/font-awesome.min.css" rel="stylesheet">
         <link rel="stylesheet" href="css/base.css" type="text/css">
         <link rel="stylesheet" href="bower_components/leaflet/dist/leaflet.css" />
-        <link rel="stylesheet" href="bower_components/Leaflet.label/dist/leaflet.label.css" />
         <link rel="stylesheet" href="bower_components/leaflet.locatecontrol/dist/L.Control.Locate.min.css" />
         <link rel="stylesheet" href="bower_components/leaflet.locatecontrol/dist/L.Control.Locate.ie.min.css" />
         <link rel="stylesheet" href="bower_components/leaflet-modal/dist/leaflet.modal.min.css" />
         <link rel="stylesheet" href="js/leaflet.control.FacilityLayerChkbox.css" />
         <link rel="stylesheet" href="js/leaflet.control.AboutCfS.css" />
+        <link rel="stylesheet" href="css/leaflet.label.custom.css" />
 
         <script src="bower_components/jquery/dist/jquery.min.js"></script>
         <script src="bower_components/leaflet/dist/leaflet.js"></script>
@@ -44,11 +44,6 @@
             <div id="nav">
                 <fieldset id="nav1" data-role="controlgroup" data-type="horizontal" data-mini="true">
                     <a id="btnFilter" href="#filterdialog" data-rel="popup" data-position-to="window" class="ui-btn ui-corner-all ui-btn-a ui-icon-filter ui-btn-icon-right ui-icon-check">検索</a>
-
-                    <label for="moveTo">最寄駅</label>
-                    <select id="moveTo" data-mini="true">
-                        <option>最寄駅</option>
-                    </select>
 
                     <label id="lblDisplayCircle" for="cbDisplayCircle" class="ui-btn-icon-notext">距離円<span class="ui-icon-bullseye ui-btn-icon-notext"></span></label>
                     <input type="checkbox" id="cbDisplayCircle" name="cbDisplayCircle" data-mini="true"/>
