@@ -92,13 +92,10 @@ L.Control.MoveToStationList = L.Control.extend({
         this.moveToList[key].push(feature.properties);
     },
     createForm: function() {
-        console.log(this.moveToList);
-
         var select = this._form.firstChild;
         var optionGroup = null;
         var option = null;
         for(var lineName in this.moveToList) {
-            console.log(lineName);
             optionGroup = document.createElement('optgroup');
             optionGroup.label = lineName;
             for(var i = 0; i < this.moveToList[lineName].length; i++) {
