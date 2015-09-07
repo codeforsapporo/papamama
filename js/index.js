@@ -74,6 +74,9 @@ $(document).ready(function(){
     // 「Code for Sapporoについて」
     L.control.aboutCfS().addTo(map);
 
+    L.control.drawCircle().addTo(map);
+    L.control.scale().addTo(map);
+
     // 地図ズームコントロールを右下に配置
     new L.Control.Zoom({ position: 'bottomright' }).addTo(map);
 
@@ -194,6 +197,8 @@ $(document).ready(function(){
 
         // 地図表示時に表示されるマーカーについてラベルの表示・非表示を決定する
         showMarkerLabel();
+
+
     });
 
 });
