@@ -74,7 +74,10 @@ $(document).ready(function(){
     // 「Code for Sapporoについて」
     L.control.aboutCfS().addTo(map);
 
+    // 円描画コントロール
     L.control.drawCircle().addTo(map);
+
+    // スケールコントロール
     L.control.scale().addTo(map);
 
     // 地図ズームコントロールを右下に配置
@@ -118,17 +121,12 @@ $(document).ready(function(){
         });
 
         // 中学校区ベクター
-        var middleSchoolBg = L.geoJson(middleSchoolJson, {
-            onEachFeature: function(feature,layer) {
-            },
-            style: function(feature) {
-                return {
-                    color: '#7379AE',
-                    weight: '2px'
-                };
-            },
-            filter: schoolGroupFilter
-        });
+        var middleSchoolBg = L.d3Layer(
+            middleSchoolJson[0],
+            {
+                'stroke': "#7379AE",
+                'fill': "#7379AE"
+            });
         // 中学校区アイコン
         var middleSchoolLoc = L.geoJson(middleSchoolLocJson, {
             onEachFeature: function(feature,layer) {
@@ -141,17 +139,13 @@ $(document).ready(function(){
         middleSchool = L.layerGroup([middleSchoolBg, middleSchoolLoc]);
 
         // 小学校区ベクター
-        var elementaryBg = L.geoJson(elementaryJson, {
-            onEachFeature: function(feature,layer) {
-            },
-            style: function(feature) {
-                return {
-                    color: '#1BA466',
-                    weight: '2px'
-                };
-            },
-            filter: schoolGroupFilter
-        });
+        var elementaryBg = L.d3Layer(
+            elementaryJson[0],
+            {
+                'stroke': "#1BA466",
+                'fill': "#1BA466"
+            });
+
         // 小学校区アイコン
         var elementaryLoc = L.geoJson(elementaryLocJson, {
             onEachFeature: function(feature,layer) {
