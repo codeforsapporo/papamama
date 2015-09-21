@@ -68,6 +68,10 @@ L.Control.FacilityLayerChkbox = L.Control.extend({
             };
 
             L.DomEvent.on(input, 'click', this._onInputClick, this);
+            // コールバック関数が存在する場合、チェックボックスのclickイベントにコールバック関数を関連付ける
+            if(this.options.callback) {
+                L.DomEvent.on(input, 'click', this.options.callback, this);
+            }
 
             // 名称の表示
             var name = document.createElement('span');

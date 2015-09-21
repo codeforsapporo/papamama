@@ -37,6 +37,10 @@ var moveToList = {};
 
 var facilities = [];
 
+var facJson = {};
+
+var facLayerIds = {};
+
 /**
  * 初期処理
  */
@@ -89,6 +93,9 @@ $(document).ready(function(){
     var facilityGroup3 = L.layerGroup();
     var middleSchool   = L.layerGroup();
     var elementary     = L.layerGroup();
+    facLayerIds['facilityGroup1'] = L.stamp(facilityGroup1);
+    facLayerIds['facilityGroup2'] = L.stamp(facilityGroup2);
+    facLayerIds['facilityGroup3'] = L.stamp(facilityGroup3);
 
     // geoJson 読み込み
     $.when(
@@ -99,26 +106,8 @@ $(document).ready(function(){
         $.getJSON('data/Elementary_loc.geojson'),
         $.getJSON('data/station.geojson')
     ).done(function(facilityJson, middleSchoolJson, middleSchoolLocJson, elementaryJson, elementaryLocJson, stationJson) {
-        // 認可保育園
-        facilityGroup1 = L.geoJson(facilityJson, {
-            onEachFeature: onEachFeatureFunc,
-            pointToLayer: pointToLayerFunc,
-            filter: facilityGroup1Filter
-        });
-
-        // 認可外保育園
-        facilityGroup2 = L.geoJson(facilityJson, {
-            onEachFeature: onEachFeatureFunc,
-            pointToLayer: pointToLayerFunc,
-            filter: facilityGroup2Filter
-        });
-
-        // 幼稚園
-        facilityGroup3 = L.geoJson(facilityJson, {
-            onEachFeature: onEachFeatureFunc,
-            pointToLayer: pointToLayerFunc,
-            filter: facilityGroup3Filter
-        });
+        // 認可保育園、認可外保育園、幼稚園
+        facJson = facilityJson;
 
         // 中学校区ベクター
         var middleSchoolBg = L.d3Layer(
@@ -169,7 +158,8 @@ $(document).ready(function(){
 
         // 地図上にチェックボックス
         var chkBoxOption = {
-            layers: overlayMaps
+            layers: overlayMaps,
+            callback: showFacilities
         };
         L.control.facilityLayerChkbox(chkBoxOption).addTo(map);
 
@@ -185,6 +175,7 @@ $(document).ready(function(){
 
         // 地図ドラッグ後に発生させるイベントを設定
         map.on('moveend', showMarkerLabel);
+        map.on('moveend', showFacilities);
 
         // レイヤー追加時に発生させるイベントを設定
         map.on('layeradd', showMarkerLabelForLayer);
@@ -192,7 +183,8 @@ $(document).ready(function(){
         // 地図表示時に表示されるマーカーについてラベルの表示・非表示を決定する
         showMarkerLabel();
 
-
+        // 施設情報を表示する
+        showFacilities();
     });
 
 });
@@ -220,13 +212,13 @@ function pointToLayerFunc(feature, latlng) {
 
     var iconUrl = '';
     var shadowUrl = '';
-    if(facilityGroup1Filter(feature, null)) {
+    if(feature.properties.Type == '認可保育所') {
         iconUrl   = 'image/019.png';
         shadowUrl = 'image/019_bg.png';
-    } else if(facilityGroup2Filter(feature, null)) {
+    } else if(feature.properties.Type == '認可外') {
         iconUrl  = 'image/018.png';
         shadowUrl = 'image/018_bg.png';
-    } else if(facilityGroup3Filter(feature, null)) {
+    } else if(feature.properties.Type == '幼稚園') {
         iconUrl  = 'image/029.png';
         shadowUrl = 'image/029_bg.png';
     }
@@ -293,33 +285,41 @@ function schoolGroupFilter(feature, layer) {
  * GeoJson読み込み時、認可保育所を絞り込むフィルター関数
  */
 function facilityGroup1Filter(feature, layer) {
-    if(feature.properties.Type == '認可保育所') {
-        return true;
-    } else {
-        return false;
-    }
+    return facilityGroupFilterBase(feature, layer, '認可保育所');
 }
 
 /**
  * GeoJson読み込み時、認可外を絞り込むフィルター関数
  */
 function facilityGroup2Filter(feature, layer) {
-    if(feature.properties.Type == '認可外') {
-        return true;
-    } else {
-        return false;
-    }
+    return facilityGroupFilterBase(feature, layer, '認可外');
 }
 
 /**
  * GeoJson読み込み時、認可保育所を絞り込むフィルター関数
  */
 function facilityGroup3Filter(feature, layer) {
-    if(feature.properties.Type == '幼稚園') {
-        return true;
-    } else {
-        return false;
+    return facilityGroupFilterBase(feature, layer, '幼稚園');
+}
+
+/**
+ * 指定施設の絞込フィルター関数
+ */
+function facilityGroupFilterBase(feature, layer, matchStr) {
+    var mapBounds = map.getBounds();
+    var featureLatLng = L.latLng(
+        feature.geometry.coordinates[1],
+        feature.geometry.coordinates[0]
+        );
+    // 現在の地図表示範囲にマーカーの緯度経度が含まれてれば表示
+    if(mapBounds.contains(featureLatLng)) {
+        if(feature.properties.Type == matchStr) {
+            return true;
+        } else {
+            return false;
+        }
     }
+    return false;
 }
 
 /**
@@ -531,5 +531,64 @@ function showMarkerLabelForLayer(layer) {
                 targetLayer.setLabelNoHide(true);
             }
         }
+    }
+}
+
+/**
+ * 地図移動時に、変数で保持してるJSONから施設情報を読み込みマーカーを設定する
+ */
+function showFacilities() {
+    // マップのレイヤー情報から施設のレイヤー情報を取得する
+    var facilityGroup1, facilityGroup2, facilityGroup3 = null;
+    var _facilityGroup1, _facilityGroup2, _facilityGroup3 = null;
+    map.eachLayer(function(layer){
+        var facFlag = false;
+        if(L.stamp(layer) == facLayerIds['facilityGroup1']) {
+            facilityGroup1 = layer;
+            _facilityGroup1 = L.geoJson(
+                facJson, {
+                onEachFeature: onEachFeatureFunc,
+                pointToLayer: pointToLayerFunc,
+                filter: facilityGroup1Filter
+            });
+            facFlag = true;
+        } else if(L.stamp(layer) == facLayerIds['facilityGroup2']) {
+            facilityGroup2 = layer;
+            _facilityGroup2 = L.geoJson(
+                facJson, {
+                onEachFeature: onEachFeatureFunc,
+                pointToLayer: pointToLayerFunc,
+                filter: facilityGroup2Filter
+            });
+            facFlag = true;
+        } else if(L.stamp(layer) == facLayerIds['facilityGroup3']) {
+            facilityGroup3 = layer;
+            _facilityGroup3 = L.geoJson(
+                facJson, {
+                onEachFeature: onEachFeatureFunc,
+                pointToLayer: pointToLayerFunc,
+                filter: facilityGroup3Filter
+            });
+            facFlag = true;
+        }
+        if(facFlag) {
+            layer.clearLayers();
+        }
+    });
+
+    if(facilityGroup1 != null) {
+        _facilityGroup1.eachLayer(function(layer){
+            facilityGroup1.addLayer(layer);
+        });
+    }
+    if(facilityGroup2 != null) {
+        _facilityGroup2.eachLayer(function(layer){
+            facilityGroup2.addLayer(layer);
+        });
+    }
+    if(facilityGroup3 != null) {
+        _facilityGroup3.eachLayer(function(layer){
+            facilityGroup3.addLayer(layer);
+        });
     }
 }
