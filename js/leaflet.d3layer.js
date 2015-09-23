@@ -20,7 +20,31 @@ L.d3layer = L.Class.extend({
     onAdd: function (map) {
         this._map = map;
 
-        var geoShape = this._geojson;
+        // 表示用ポリゴン情報を格納するオブジェクト
+        var obj = {
+            type: "FeatureCollection",
+            crs: this._geojson.crs,
+            features: []
+        };
+
+        // 地図の表示範囲だけポリゴン情報を表示するように制御
+        var geoShape = null;
+        var mapBounds = this._map.getBounds();
+        for(var i=0; i < this._geojson.features.length; i++) {
+            var poly = L.polygon(this._geojson.features[i].geometry.coordinates[0]);
+            for(var j=0; j < poly.getLatLngs().length; j++) {
+                var featureLatLng = L.latLng(
+                        poly.getLatLngs()[j].lng,
+                        poly.getLatLngs()[j].lat
+                    );
+                if(mapBounds.contains(featureLatLng)) {
+                    obj.features.push(this._geojson.features[i]);
+                    break;
+                }
+            }
+        }
+        geoShape = obj;
+
         var svg = d3.select(this._map.getPanes().overlayPane).append("svg");
         var g = svg.append("g").attr("class", "my-custom-layer leaflet-zoom-hide");
         this._svg = svg;
@@ -39,7 +63,7 @@ L.d3layer = L.Class.extend({
         var path = d3.geo.path().projection(transform);
         this._path = path;
 
-        d3_features = g.selectAll("path")
+        var d3_features = g.selectAll("path")
             .data(geoShape.features)
             .enter().append("path");
         this._d3_features = d3_features;

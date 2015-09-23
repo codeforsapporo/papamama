@@ -37,8 +37,10 @@ var moveToList = {};
 
 var facilities = [];
 
-var facJson = {};
+// 施設, 中学校マーカー, 小学校マーカーGeoJson情報を保存
+var facJson, midSchoolJson, elemJson, midSchoolBgJson, elemBgJson = {};
 
+// 施設レイヤーIDを管理
 var facLayerIds = {};
 
 /**
@@ -93,9 +95,13 @@ $(document).ready(function(){
     var facilityGroup3 = L.layerGroup();
     var middleSchool   = L.layerGroup();
     var elementary     = L.layerGroup();
+
+    // 地物保存レイヤーのIDを L.stamp を用いて取得
     facLayerIds['facilityGroup1'] = L.stamp(facilityGroup1);
     facLayerIds['facilityGroup2'] = L.stamp(facilityGroup2);
     facLayerIds['facilityGroup3'] = L.stamp(facilityGroup3);
+    facLayerIds['middleSchool'] = L.stamp(middleSchool);
+    facLayerIds['elementary'] = L.stamp(elementary);
 
     // geoJson 読み込み
     $.when(
@@ -107,43 +113,34 @@ $(document).ready(function(){
         $.getJSON('data/station.geojson')
     ).done(function(facilityJson, middleSchoolJson, middleSchoolLocJson, elementaryJson, elementaryLocJson, stationJson) {
         // 認可保育園、認可外保育園、幼稚園
+        // 小学校、中学校マーカー
         facJson = facilityJson;
+        midSchoolJson = middleSchoolLocJson;
+        elemJson = elementaryLocJson;
+        midSchoolBgJson = middleSchoolJson;
+        elemBgJson = elementaryJson;
 
         // 中学校区ベクター
         var middleSchoolBg = L.d3Layer(
-            middleSchoolJson[0],
+            midSchoolBgJson[0],
             {
                 'stroke': "#7379AE",
                 'fill': "#7379AE"
             });
-        // 中学校区アイコン
-        var middleSchoolLoc = L.geoJson(middleSchoolLocJson, {
-            onEachFeature: function(feature,layer) {
-            },
-            pointToLayer: midSchoolPointToLayerFunc,
-            filter: schoolGroupFilter
-        });
-
         // ベクターとマーカーを合成したレイヤーグループを作成
-        middleSchool = L.layerGroup([middleSchoolBg, middleSchoolLoc]);
+        middleSchool = L.layerGroup([middleSchoolBg]);
+        facLayerIds['middleSchool'] = L.stamp(middleSchool);
 
         // 小学校区ベクター
         var elementaryBg = L.d3Layer(
-            elementaryJson[0],
+            elemBgJson[0],
             {
                 'stroke': "#1BA466",
                 'fill': "#1BA466"
             });
-
-        // 小学校区アイコン
-        var elementaryLoc = L.geoJson(elementaryLocJson, {
-            onEachFeature: function(feature,layer) {
-            },
-            pointToLayer: elementarySchoolPointToLayerFunc,
-            filter: schoolGroupFilter
-        });
         // ベクターとマーカーを合成したレイヤーグループを作成
-        elementary = L.layerGroup([elementaryBg, elementaryLoc]);
+        elementary = L.layerGroup([elementaryBg]);
+        facLayerIds['elementary'] = L.stamp(elementary);
 
         // 各施設レイヤーを地図に追加
         map.addLayer(facilityGroup1);
@@ -278,7 +275,16 @@ function schoolPointToLayer(feature, latlng, shadowUrl) {
  * 学区用フィルター
  */
 function schoolGroupFilter(feature, layer) {
-    return true;
+    var mapBounds = map.getBounds();
+    var featureLatLng = L.latLng(
+        feature.geometry.coordinates[1],
+        feature.geometry.coordinates[0]
+        );
+    // 現在の地図表示範囲にマーカーの緯度経度が含まれてれば表示
+    if(mapBounds.contains(featureLatLng)) {
+        return true;
+    }
+    return false;
 }
 
 /**
@@ -539,8 +545,8 @@ function showMarkerLabelForLayer(layer) {
  */
 function showFacilities() {
     // マップのレイヤー情報から施設のレイヤー情報を取得する
-    var facilityGroup1, facilityGroup2, facilityGroup3 = null;
-    var _facilityGroup1, _facilityGroup2, _facilityGroup3 = null;
+    var facilityGroup1, facilityGroup2, facilityGroup3, middleSchool, elementary = null;
+    var _facilityGroup1, _facilityGroup2, _facilityGroup3, _middleSchool, _elementary = null;
     map.eachLayer(function(layer){
         var facFlag = false;
         if(L.stamp(layer) == facLayerIds['facilityGroup1']) {
@@ -570,7 +576,29 @@ function showFacilities() {
                 filter: facilityGroup3Filter
             });
             facFlag = true;
+        } else if(L.stamp(layer) == facLayerIds['middleSchool']) {
+            middleSchool = layer;
+            _middleSchool = L.geoJson(
+                midSchoolJson, {
+                onEachFeature: function(feature, layer) {
+                },
+                pointToLayer: midSchoolPointToLayerFunc,
+                filter: schoolGroupFilter
+            });
+            facFlag = true;
+        } else if(L.stamp(layer) == facLayerIds['elementary']) {
+            elementary = layer;
+            _elementary = L.geoJson(
+                elemJson, {
+                onEachFeature: function(feature, layer) {
+                },
+                pointToLayer: elementarySchoolPointToLayerFunc,
+                filter: schoolGroupFilter
+            });
+            facFlag = true;
         }
+
+
         if(facFlag) {
             layer.clearLayers();
         }
@@ -589,6 +617,31 @@ function showFacilities() {
     if(facilityGroup3 != null) {
         _facilityGroup3.eachLayer(function(layer){
             facilityGroup3.addLayer(layer);
+        });
+    }
+    if(middleSchool != null) {
+        var middleSchoolBg = L.d3Layer(
+            midSchoolBgJson[0],
+            {
+                'stroke': "#7379AE",
+                'fill': "#7379AE"
+            });
+        middleSchool.addLayer(middleSchoolBg);
+
+        _middleSchool.eachLayer(function(layer) {
+            middleSchool.addLayer(layer);
+        });
+    }
+    if(elementary != null) {
+        var elementaryBg = L.d3Layer(
+            elemBgJson[0],
+            {
+                'stroke': "#1BA466",
+                'fill': "#1BA466"
+            });
+        elementary.addLayer(elementaryBg);
+        _elementary.eachLayer(function(layer) {
+            elementary.addLayer(layer);
         });
     }
 }
