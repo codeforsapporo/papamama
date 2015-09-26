@@ -43,6 +43,12 @@ var facJson, midSchoolJson, elemJson, midSchoolBgJson, elemBgJson = {};
 // 施設レイヤーIDを管理
 var facLayerIds = {};
 
+// 絞込フィルター有効/無効
+var enableFilter = false;
+
+// 絞込フィルター表示/非表示
+var showSearchFilter = false;
+
 /**
  * 初期処理
  */
@@ -74,17 +80,37 @@ $(document).ready(function(){
     // 駅移動セレクトボックス
     var moveToStationList = L.control.moveToStationList().addTo(map);
 
+    // 円描画コントロール
+    L.control.drawCircle().addTo(map);
+
     // 現在地移動
     L.control.locate().addTo(map);
 
     // 「Code for Sapporoについて」
     L.control.aboutCfS().addTo(map);
 
-    // 円描画コントロール
-    L.control.drawCircle().addTo(map);
-
     // スケールコントロール
     L.control.scale().addTo(map);
+
+    // 絞込検索
+    var sidebar = L.control.sidebar('sidebar', {
+        position: 'left',
+        autoPan: false
+    });
+
+    L.control.searchFilter({
+        callback: function(){
+            if(showSearchFilter) {
+                sidebar.hide();
+                showSearchFilter = false;
+            } else {
+                sidebar.show();
+                showSearchFilter = true;
+            }
+        }
+    }).addTo(map);
+
+    map.addControl(sidebar);
 
     // 地図ズームコントロールを右下に配置
     new L.Control.Zoom({ position: 'bottomright' }).addTo(map);
@@ -291,21 +317,33 @@ function schoolGroupFilter(feature, layer) {
  * GeoJson読み込み時、認可保育所を絞り込むフィルター関数
  */
 function facilityGroup1Filter(feature, layer) {
-    return facilityGroupFilterBase(feature, layer, '認可保育所');
+    var result = false;
+    result = facilityGroupFilterBase(feature, layer, '認可保育所');
+    if(result && enableFilter) {
+        result = facilityGroup1SearchFilter(feature, layer);
+    }
+    return result;
 }
 
 /**
- * GeoJson読み込み時、認可外を絞り込むフィルター関数
+ * GeoJson読み込み時、認可外保育所を絞り込むフィルター関数
  */
 function facilityGroup2Filter(feature, layer) {
-    return facilityGroupFilterBase(feature, layer, '認可外');
+    var result = false;
+    result = facilityGroupFilterBase(feature, layer, '認可外');
+    if(result && enableFilter) {
+        result = facilityGroup2SearchFilter(feature, layer);
+    }
+    return result;
 }
 
 /**
- * GeoJson読み込み時、認可保育所を絞り込むフィルター関数
+ * GeoJson読み込み時、幼稚園を絞り込むフィルター関数
  */
 function facilityGroup3Filter(feature, layer) {
-    return facilityGroupFilterBase(feature, layer, '幼稚園');
+    var result = false;
+    result = facilityGroupFilterBase(feature, layer, '幼稚園');
+    return result;
 }
 
 /**
@@ -317,13 +355,10 @@ function facilityGroupFilterBase(feature, layer, matchStr) {
         feature.geometry.coordinates[1],
         feature.geometry.coordinates[0]
         );
+
     // 現在の地図表示範囲にマーカーの緯度経度が含まれてれば表示
-    if(mapBounds.contains(featureLatLng)) {
-        if(feature.properties.Type == matchStr) {
-            return true;
-        } else {
-            return false;
-        }
+    if(mapBounds.contains(featureLatLng) && feature.properties.Type == matchStr) {
+        return true;
     }
     return false;
 }
@@ -644,4 +679,184 @@ function showFacilities() {
             elementary.addLayer(layer);
         });
     }
+}
+
+/**
+ * 絞込フィルターを適用する
+ */
+function applySearchFilter() {
+    enableFilter = true;
+    showFacilities();
+}
+
+/**
+ * 絞込フィルターを外す
+ */
+function resetSearchFilter() {
+    enableFilter = false;
+    showFacilities();
+}
+
+/**
+ * 認可保育園 : 保育施設の属性で絞り込むフィルター
+ * openLayers版は複数施設に対するフィルターだったが、
+ * Leaflet.js 版は施設ごとにフィルタリング
+ */
+function facilityGroup1SearchFilter(feature, layer) {
+    // 終園時間
+    var ninkaFlag = true;
+    var ninkaCloseTime = $('#ninkaCloseTime').val();
+    if(ninkaCloseTime) {
+        switch(ninkaCloseTime) {
+            case "18":
+                checkAry = ["18:00","19:00","20:00","22:00","0:00"];
+                break;
+            case "19":
+                checkAry = ["19:00","20:00","22:00","0:00"];
+                break;
+            case "20":
+                checkAry = ["20:00","22:00","0:00"];
+                break;
+            case "22":
+                checkAry = ["22:00","0:00"];
+                break;
+            case "24":
+                checkAry = ["0:00"];
+                break;
+        }
+        var close = feature.properties['Close'];
+        if($.inArray(close, checkAry) >= 0) {
+            ninkaFlag = true;
+        } else {
+            ninkaFlag = false;
+        }
+    }
+
+    // 一時保育
+    var tmpFlag = true;
+    var ninkaIchijiHoiku = $('#ninkaIchijiHoiku:checked').val();
+    if(ninkaIchijiHoiku != undefined) {
+        var temp = feature.properties['Temp'];
+        if(temp != null) {
+            tmpFlag = true;
+        } else {
+            tmpFlag = false;
+        }
+    }
+
+    // 夜間
+    var yakanFlag = true;
+    var ninkaYakan = $('#ninkaYakan:checked').val();
+    if(ninkaYakan !== undefined) {
+        var night = feature.properties['Night'];
+        if(night != null) {
+            yakanFlag = true;
+        } else {
+            yakanFlag = false;
+        }
+    }
+
+    // 休日
+    var holydayFlag = true;
+    var ninkaYakan = $('#ninkaYakan:checked').val();
+    if(ninkaYakan !== undefined) {
+        var night = feature.properties['Night'];
+        if(night != null) {
+            holydayFlag = true;
+        } else {
+            holydayFlag = false;
+        }
+    }
+
+    // 空きあり
+    var ninkaVacancyFlag = true;
+    var ninkaVacancy = $('#ninkaVacancy:checked').val();
+    if(ninkaVacancy !== undefined) {
+        var vacancy = feature.properties['Vacancy'];
+        if(vacancy != null) {
+            ninkaVacancyFlag = true;
+        } else {
+            ninkaVacancyFlag = false;
+        }
+    }
+
+    // 複数条件の結果を論理演算
+    var result = (ninkaFlag && tmpFlag && yakanFlag && holydayFlag && ninkaVacancyFlag);
+    return result;
+}
+
+/**
+ * 認可外保育園 : 保育施設の属性で絞り込むフィルター
+ * openLayers版は複数施設に対するフィルターだったが、
+ * Leaflet.js 版は施設ごとにフィルタリング
+ */
+function facilityGroup2SearchFilter(feature, layer) {
+    // 開園時間
+    var ninkagaiOpenTimeFlag = true;
+    var ninkagaiOpenTime = $('#ninkagaiOpenTime').val();
+    if(ninkagaiOpenTime) {
+        var open = feature.properties['Open'];
+        if(open == ninkagaiOpenTime) {
+            ninkagaiOpenTimeFlag = true;
+        } else {
+            ninkagaiOpenTimeFlag = false;
+        }
+    }
+
+    // 終園時間
+    var ninkagaiCloseTimeFlag = true;
+    var ninkagaiCloseTime = $('#ninkagaiCloseTime').val();
+    if(ninkagaiCloseTime) {
+        switch(ninkagaiCloseTime) {
+            case "18":
+                checkAry = ["18:00","19:00","19:30","19:45","20:00","20:30","22:00","23:00","3:00"];
+                break;
+            case "19":
+                checkAry = ["19:00","19:30","19:45","20:00","20:30","22:00","23:00","3:00"];
+                break;
+            case "20":
+                checkAry = ["20:00","20:30","22:00","23:00","3:00"];
+                break;
+            case "22":
+                checkAry = ["22:00","23:00","3:00"];
+                break;
+            case "27":
+                checkAry = ["3:00"];
+                break;
+        }
+        var h24   = feature.properties['H24'];
+        var close = feature.properties['Close'];
+        if(h24 !== null || $.inArray(close, checkAry) >= 0) {
+            ninkagaiCloseTimeFlag = true;
+        } else {
+            ninkagaiCloseTimeFlag = false;
+        }
+    }
+
+    // 24時間フラグ
+    var ninkagai24HFlag = true;
+    var ninkagai24H = $('#ninkagai24H:checked').val();
+    if(ninkagai24H !== undefined) {
+        var h24 = feature.properties['H24'];
+        if(h24 !== null) {
+            ninkagai24HFlag = true;
+        } else {
+            ninkagai24HFlag = false;
+        }
+    }
+
+    // 証明書あり
+    var ninkagaiShomeiFlag = true;
+    var ninkagaiShomei = $('#ninkagaiShomei:checked').val();
+    if(ninkagaiShomei !== undefined) {
+        var proof = feature.properties['Proof'];
+        if(proof !== null) {
+            ninkagaiShomeiFlag = true;
+        } else {
+            ninkagaiShomeiFlag = false;
+        }
+    }
+
+    var result = (ninkagaiOpenTimeFlag && ninkagaiCloseTimeFlag && ninkagai24HFlag && ninkagaiShomeiFlag);
+    return result;
 }

@@ -155,3 +155,8 @@ h3 {
 legend {
 	margin-bottom: 0;
 }
+
+fieldset {
+	margin: 0.5em 0;
+	border: 1px solid #ccc;
+}
