@@ -49,6 +49,7 @@ var enableFilter = false;
 // 絞込フィルター表示/非表示
 var showSearchFilter = false;
 
+var sidebar = null;
 /**
  * 初期処理
  */
@@ -68,7 +69,7 @@ $(document).ready(function(){
     map = L.map('map', {
         center: init_center_coords,
         zoom: 14,
-        minZoom: 12,
+        minZoom: 11,
         maxZoom: 17,
         layers: [bingRoadLayer],
         zoomControl: false // 地図ズームコントロールを廃止
@@ -93,10 +94,11 @@ $(document).ready(function(){
     L.control.scale().addTo(map);
 
     // 絞込検索
-    var sidebar = L.control.sidebar('sidebar', {
-        position: 'left',
-        autoPan: false
-    });
+    sidebar = L.control.sidebar(
+        'sidebar', {
+            position: 'left',
+            autoPan: false
+        });
 
     L.control.searchFilter({
         callback: function(){
@@ -109,7 +111,6 @@ $(document).ready(function(){
             }
         }
     }).addTo(map);
-
     map.addControl(sidebar);
 
     // 地図ズームコントロールを右下に配置
@@ -633,9 +634,13 @@ function showFacilities() {
             facFlag = true;
         }
 
-
         if(facFlag) {
-            layer.clearLayers();
+            // ポップアップを開いていないマーカーだけlayerGroupから削除
+            layer.eachLayer(function(innerLayer){
+                if(innerLayer._popup._isOpen == false) {
+                    layer.removeLayer(innerLayer);
+                }
+            });
         }
     });
 
@@ -686,6 +691,8 @@ function showFacilities() {
  */
 function applySearchFilter() {
     enableFilter = true;
+    showSearchFilter = false;
+    sidebar.hide();
     showFacilities();
 }
 
