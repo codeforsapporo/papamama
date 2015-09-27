@@ -451,7 +451,7 @@ function getPopupContent(feature) {
         content += '</tr>';
     }
     var temp    = feature.properties['一時'] ? feature.properties['一時'] : feature.properties['Temp'];
-    var holiday = feature.properties['休日'] ? feature.properties['休日'] : feature.properties['holiday'];
+    var holiday = feature.properties['休日'] ? feature.properties['休日'] : feature.properties['Holiday'];
     var night   = feature.properties['夜間'] ? feature.properties['夜間'] : feature.properties['Night'];
     var h24     = feature.properties['H24'] ? feature.properties['H24'] : feature.properties['H24'];
 
@@ -765,10 +765,10 @@ function facilityGroup1SearchFilter(feature, layer) {
 
     // 休日
     var holydayFlag = true;
-    var ninkaYakan = $('#ninkaYakan:checked').val();
-    if(ninkaYakan !== undefined) {
-        var night = feature.properties['Night'];
-        if(night != null) {
+    var ninkaKyujitu = $('#ninkaKyujitu:checked').val();
+    if(ninkaKyujitu !== undefined) {
+        var holiday = feature.properties['Holiday'];
+        if(holiday != null) {
             holydayFlag = true;
         } else {
             holydayFlag = false;
