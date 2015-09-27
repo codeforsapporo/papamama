@@ -585,6 +585,7 @@ function showFacilities() {
     var _facilityGroup1, _facilityGroup2, _facilityGroup3, _middleSchool, _elementary = null;
     map.eachLayer(function(layer){
         var facFlag = false;
+        var schoolFlag = false;
         if(L.stamp(layer) == facLayerIds['facilityGroup1']) {
             facilityGroup1 = layer;
             _facilityGroup1 = L.geoJson(
@@ -621,7 +622,7 @@ function showFacilities() {
                 pointToLayer: midSchoolPointToLayerFunc,
                 filter: schoolGroupFilter
             });
-            facFlag = true;
+            schoolFlag = true;
         } else if(L.stamp(layer) == facLayerIds['elementary']) {
             elementary = layer;
             _elementary = L.geoJson(
@@ -631,7 +632,7 @@ function showFacilities() {
                 pointToLayer: elementarySchoolPointToLayerFunc,
                 filter: schoolGroupFilter
             });
-            facFlag = true;
+            schoolFlag = true;
         }
 
         if(facFlag) {
@@ -641,6 +642,9 @@ function showFacilities() {
                     layer.removeLayer(innerLayer);
                 }
             });
+        }
+        if(schoolFlag) {
+            layer.clearLayers();
         }
     });
 
