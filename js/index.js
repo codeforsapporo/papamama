@@ -1,8 +1,8 @@
 // 地図表示時の中心座標
-var init_center_coords = [141.347899, 43.063968];
+var init_center_coords = [139.766084, 35.681382];
 
 // Bing APIのキー
-var bing_api_key = 'AhGQykUKW2-u1PwVjLwQkSA_1rCTFESEC7bCZ0MBrnzVbVy7KBHsmLgwW_iRJg17';
+var bing_api_key = 'Ap-kk3eox-rGrZ07nFRNVGWy6BlbbkhXeXi-TwvOuIcltcoLsuEsEoBEWmVTWHOe';
 
 // map
 var map;
@@ -12,6 +12,8 @@ var nurseryFacilities = {};
 
 // 中心座標変更セレクトボックス用データ
 var moveToList = [];
+
+var moveToCityhall = [];
 
 // マップサーバ一覧
 var mapServerList = {
@@ -117,6 +119,16 @@ $('#mainPage').on('pageshow', function() {
 		});
 	});
 
+	// 区役所セレクトボックスの生成
+	mtc = new MoveToCityhall();
+	mtc.loadCityhallJson().then(function() {
+		mtc.appendToMoveToCityhall(moveToCityhall);
+	}, function(){
+		mtc.loadCityhallJson().then(function() {
+			mtc.appendToMoveToCityhall(moveToCityhall);
+		})
+	});
+
 	// 保育施設クリック時の挙動を定義
 	map.on('click', function(evt) {
 		if ( $('#popup').is(':visible') ) {
@@ -194,6 +206,24 @@ $('#mainPage').on('pageshow', function() {
 		// Vienna marker
 		drawMarker(pos, label);
 	});
+
+	// 区役所中心座標変更セレクトボックス操作イベント定義
+	$('#moveToCityhall').change(function(){
+		// $('#markerTitle').hide();
+		// $('#marker').hide();
+
+		// 指定した最寄り駅に移動
+		papamamap.moveToSelectItem(moveToCityhall[$(this).val()]);
+
+		// 地図上にマーカーを設定する
+		var lon = moveToCityhall[$(this).val()].lon;
+		var lat = moveToCityhall[$(this).val()].lat;
+		var label = moveToCityhall[$(this).val()].name;
+		var pos = ol.proj.transform([lon, lat], 'EPSG:4326', 'EPSG:3857');
+		// Vienna marker
+		drawMarker(pos, label);
+	});
+
 
 	// 幼稚園チェックボックスのイベント設定
 	$('#cbKindergarten').click(function() {

@@ -1,0 +1,327 @@
+{
+   "type": "FeatureCollection",
+   "features": [
+  {
+    "type": "Feature",
+    "geometry": {
+       "type": "Point",
+       "coordinates":  [ 139.753634,35.694003 ]
+    },
+    "properties": {
+    "citycode":13101,
+    "name":"千代田区役所",
+    "address":"千代田区九段南1-2-1",
+    "lon":139.753634,
+    "lat":35.694003
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+       "type": "Point",
+       "coordinates":  [ 139.772003,35.670587 ]
+    },
+    "properties": {
+    "citycode":13102,
+    "name":"中央区役所",
+    "address":"中央区築地1-1-1",
+    "lon":139.772003,
+    "lat":35.670587
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+       "type": "Point",
+       "coordinates":  [ 139.751599,35.658071 ]
+    },
+    "properties": {
+    "citycode":13103,
+    "name":"港区役所",
+    "address":"港区芝公園1-5-25",
+    "lon":139.751599,
+    "lat":35.658071
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+       "type": "Point",
+       "coordinates":  [ 139.703463,35.69389 ]
+    },
+    "properties": {
+    "citycode":13104,
+    "name":"新宿区役所",
+    "address":"新宿区歌舞伎町1-4-1",
+    "lon":139.703463,
+    "lat":35.69389
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+       "type": "Point",
+       "coordinates":  [ 139.752473,35.707976 ]
+    },
+    "properties": {
+    "citycode":13105,
+    "name":"文京区役所",
+    "address":"文京区春日1-16-21",
+    "lon":139.752473,
+    "lat":35.707976
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+       "type": "Point",
+       "coordinates":  [ 139.779984,35.712607 ]
+    },
+    "properties": {
+    "citycode":13106,
+    "name":"台東区役所",
+    "address":"台東区東上野4-5-6",
+    "lon":139.779984,
+    "lat":35.712607
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+       "type": "Point",
+       "coordinates":  [ 139.801497,35.710724 ]
+    },
+    "properties": {
+    "citycode":13107,
+    "name":"墨田区役所",
+    "address":"墨田区吾妻橋1-23-20",
+    "lon":139.801497,
+    "lat":35.710724
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+       "type": "Point",
+       "coordinates":  [ 139.817365,35.672859 ]
+    },
+    "properties": {
+    "citycode":13108,
+    "name":"江東区役所",
+    "address":"江東区東陽4-11-28",
+    "lon":139.817365,
+    "lat":35.672859
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+       "type": "Point",
+       "coordinates":  [ 139.73025,35.609066 ]
+    },
+    "properties": {
+    "citycode":13109,
+    "name":"品川区役所",
+    "address":"品川区広町2-1-36",
+    "lon":139.73025,
+    "lat":35.609066
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+       "type": "Point",
+       "coordinates":  [ 139.698118,35.64141 ]
+    },
+    "properties": {
+    "citycode":13110,
+    "name":"目黒区役所",
+    "address":"目黒区上目黒2-19-15",
+    "lon":139.698118,
+    "lat":35.64141
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+       "type": "Point",
+       "coordinates":  [ 139.715987,35.56126 ]
+    },
+    "properties": {
+    "citycode":13111,
+    "name":"大田区役所",
+    "address":"大田区蒲田5-13-14",
+    "lon":139.715987,
+    "lat":35.56126
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+       "type": "Point",
+       "coordinates":  [ 139.653208,35.646481 ]
+    },
+    "properties": {
+    "citycode":13112,
+    "name":"世田谷区役所",
+    "address":"世田谷区世田谷4-21-27",
+    "lon":139.653208,
+    "lat":35.646481
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+       "type": "Point",
+       "coordinates":  [ 139.697948,35.663982 ]
+    },
+    "properties": {
+    "citycode":13113,
+    "name":"渋谷区役所",
+    "address":"渋谷区宇田川町1-1",
+    "lon":139.697948,
+    "lat":35.663982
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+       "type": "Point",
+       "coordinates":  [ 139.663738,35.707268 ]
+    },
+    "properties": {
+    "citycode":13114,
+    "name":"中野区役所",
+    "address":"中野区中野4-8-1",
+    "lon":139.663738,
+    "lat":35.707268
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+       "type": "Point",
+       "coordinates":  [ 139.636414,35.699546 ]
+    },
+    "properties": {
+    "citycode":13115,
+    "name":"杉並区役所",
+    "address":"杉並区阿佐谷南1-15-1",
+    "lon":139.636414,
+    "lat":35.699546
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+       "type": "Point",
+       "coordinates":  [ 139.715469,35.732437 ]
+    },
+    "properties": {
+    "citycode":13116,
+    "name":"豊島区役所",
+    "address":"豊島区東池袋1-18-1",
+    "lon":139.715469,
+    "lat":35.732437
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+       "type": "Point",
+       "coordinates":  [ 139.733657,35.752805 ]
+    },
+    "properties": {
+    "citycode":13117,
+    "name":"北区役所",
+    "address":"北区王子本町1-15-22",
+    "lon":139.733657,
+    "lat":35.752805
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+       "type": "Point",
+       "coordinates":  [ 139.783372,35.736083 ]
+    },
+    "properties": {
+    "citycode":13118,
+    "name":"荒川区役所",
+    "address":"荒川区荒川2-2-3",
+    "lon":139.783372,
+    "lat":35.736083
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+       "type": "Point",
+       "coordinates":  [ 139.709246,35.751245 ]
+    },
+    "properties": {
+    "citycode":13119,
+    "name":"板橋区役所",
+    "address":"板橋区板橋2-66-1",
+    "lon":139.709246,
+    "lat":35.751245
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+       "type": "Point",
+       "coordinates":  [ 139.651725,35.7356 ]
+    },
+    "properties": {
+    "citycode":13120,
+    "name":"練馬区役所",
+    "address":"練馬区豊玉北6-12-1",
+    "lon":139.651725,
+    "lat":35.7356
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+       "type": "Point",
+       "coordinates":  [ 139.804584,35.774945 ]
+    },
+    "properties": {
+    "citycode":13121,
+    "name":"足立区役所",
+    "address":"足立区中央本町1-17-1",
+    "lon":139.804584,
+    "lat":35.774945
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+       "type": "Point",
+       "coordinates":  [ 139.847213,35.74343 ]
+    },
+    "properties": {
+    "citycode":13122,
+    "name":"葛飾区役所",
+    "address":"葛飾区立石5-13-1",
+    "lon":139.847213,
+    "lat":35.74343
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+       "type": "Point",
+       "coordinates":  [ 139.868312,35.706648 ]
+    },
+    "properties": {
+    "citycode":13123,
+    "name":"江戸川区役所",
+    "address":"江戸川区中央1-4-1",
+    "lon":139.868312,
+    "lat":35.706648
+    }
+  }
+]
+}

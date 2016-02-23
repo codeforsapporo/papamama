@@ -402,12 +402,13 @@ Papamamap.prototype.getPopupContent = function(feature)
         content += '<td>';
         var vacancy = feature.get('Vacancy') ? feature.get('Vacancy') : feature.get('Vacancy');
         if (vacancy !== undefined && vacancy !== null) {
-            content += '<a href="http://www.city.sapporo.jp/kodomo/kosodate/l4_01.html" target="_blank">空きあり</a>';
+            content += '不明';
+            //content += '<a href="http://www.city.sapporo.jp/kodomo/kosodate/l4_01.html" target="_blank">空きあり</a>';
         }
-        var vacancyDate = feature.get('VacancyDate');
-        if (vacancyDate !== undefined && vacancyDate !== null) {
-            content += " (" + vacancyDate + ")";
-        }
+        // var vacancyDate = feature.get('VacancyDate');
+        // if (vacancyDate !== undefined && vacancyDate !== null) {
+        //     content += " (" + vacancyDate + ")";
+        // }
         content += '</td>';
         content += '</tr>';
     }
