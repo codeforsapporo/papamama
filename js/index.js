@@ -25,7 +25,7 @@ var mapServerList = {
 		})
 	},
 	'mierune-mono': {
-		label: "MIERUNE MONO",
+		label: "白地図",
 		source_type: "xyz",
 		source: new ol.source.XYZ({
 			attributions: [
