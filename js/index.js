@@ -24,6 +24,19 @@ var mapServerList = {
 			imagerySet: 'Road',
 		})
 	},
+	'mierune-mono': {
+		label: "MIERUNE MONO",
+		source_type: "xyz",
+		source: new ol.source.XYZ({
+			attributions: [
+				new ol.Attribution({
+					html: "Maptiles by MIERUNE, under CC BY. Data by OpenStreetMap contributors, under ODbL."
+				})
+			],
+			url: "https://tile.mierune.co.jp/mierune_mono/{z}/{x}/{y}.png",
+			projection: "EPSG:3857"
+		})
+	},
 	"cyberjapn-pale": {
 		label: "国土地理院",
 		source_type: "xyz",
