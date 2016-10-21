@@ -27,4 +27,4 @@ MITライセンス条件を満たす限り、自由な複製・配布・修正�
 - dataフォルダの情報を自分の地域に合わせて作成します。
 - データの定義については、以下を参考にしてください。
 https://github.com/codeforsapporo/papamama/blob/master/doc/dataSpecification.xls
-- index.js の変数 init_center_coords、bing_api_key の値を変更することで、初期表示位置情報を変更できます。
+- js/index.js の変数 init_center_coords、bing_api_key の値を変更することで、初期表示位置情報を変更できます。
