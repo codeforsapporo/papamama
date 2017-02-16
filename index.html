@@ -3,7 +3,7 @@
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <title>さっぽろ保育園マップ by Code for Sapporo</title>
+        <title>さんだ保育園マップ by Code for</title>
         <link rel="stylesheet" href="css/ol.css" type="text/css">
         <link rel="stylesheet" href="css/bootstrap.css" type="text/css">
         <link rel="stylesheet" href="css/bootstrap.css.map" type="text/css">
@@ -25,11 +25,17 @@
             <div role="main" class="ui-content">
             <div id="nav">
                 <fieldset id="nav1" data-role="controlgroup" data-type="horizontal" data-mini="true">
-                    <label for="cbNinka" id="lblNinka">認可</label>
+                    <label for="cbNinka" id="lblNinka">保育所（園）</label>
                     <input type="checkbox" name="cbNinka" id="cbNinka" checked="checked">
 
-                    <label for="cbNinkagai" id="lblNinkagai">認可外</label>
+                    <label for="cbNinkagai" id="lblNinkagai">認可外保育園</label>
                     <input type="checkbox" name="cbNinkagai" id="cbNinkagai" checked="checked">
+
+                    <label for="cbSmall" id="lblSmall">小規模保育</label>
+                    <input type="checkbox" name="cbSmall" id="cbSmall" checked="checked">
+
+                    <label for="cbKodomo" id="lblKodomo">認定こども園</label>
+                    <input type="checkbox" name="cbKodomo" id="cbKodomo" checked="checked">
 
                     <label for="cbKindergarten" id="lblKindergarten">幼</label>
                     <input type="checkbox" name="cbKindergarten" id="cbKindergarten" checked="checked">
@@ -150,7 +156,7 @@
         <div data-role="popup" data-history="false" id="helpDialog" data-theme="a" class="ui-corner-all ui-icon-delete ui-btn-left">
             <a href="#" data-rel="back" class="ui-btn ui-corner-all ui-shadow ui-btn-a ui-icon-delete ui-btn-icon-notext ui-btn-right">Close</a>
             <div style="padding:10px 20px;">
-                <h3>さっぽろ保育園マップ</h3>
+                <h3>さんだ保育園マップ</h3>
                 <fieldset>
                     <p>
                     v1.0 (rev.20141130)

@@ -178,6 +178,28 @@ Papamamap.prototype.addNurseryFacilitiesLayer = function(facilitiesData)
             style: ninkagaiStyleFunction
         })
     );
+    // 小規模
+    this.map.addLayer(
+        new ol.layer.Vector({
+            source: new ol.source.GeoJSON({
+                projection: 'EPSG:3857',
+                object: facilitiesData
+            }),
+            name: 'layerSmall',
+            style: smallStyleFunction
+        })
+    );
+    // こども園
+    this.map.addLayer(
+        new ol.layer.Vector({
+            source: new ol.source.GeoJSON({
+                projection: 'EPSG:3857',
+                object: facilitiesData
+            }),
+            name: 'layerKodomo',
+            style: kodomoStyleFunction
+        })
+    );
     // 認可
     this.map.addLayer(
         new ol.layer.Vector({
@@ -368,16 +390,16 @@ Papamamap.prototype.getPopupContent = function(feature)
         content += '<tr>';
         content += '<th></th>';
         content += '<td>';
-        if (temp !== undefined && temp !== null) {
+        if (temp !== undefined && temp !== null && temp !== '') {
             content += '一時保育 ';
         }
-        if (holiday !== undefined && holiday !== null) {
+        if (holiday !== undefined && holiday !== null && holiday !== '') {
             content += '休日保育 ';
         }
-        if (night !== undefined && night !== null) {
+        if (night !== undefined && night !== null && night !== '') {
             content += '夜間保育 ';
         }
-        if (h24 !== undefined && h24 !== null) {
+        if (h24 !== undefined && h24 !== null && h24 !== '') {
             content += '24時間 ';
         }
         content += '</td>';
@@ -391,7 +413,7 @@ Papamamap.prototype.getPopupContent = function(feature)
         content += '<td>';
         var proof = feature.get('証明') ? feature.get('証明') : feature.get('Proof');
         if (proof !== undefined && proof !== null) {
-            content += '証明書発行済<a href="http://www.city.sapporo.jp/kodomo/kosodate/ninkagai_shisetsu.html" target="_blank">(詳細)</a>';
+            content += '証明書発行済<a href="http://www.city.sanda.lg.jp/kodomoshien/ninkagai.html" target="_blank">(詳細)</a>';
         }
         content += '</td>';
         content += '</tr>';
@@ -401,11 +423,12 @@ Papamamap.prototype.getPopupContent = function(feature)
         content += '<th>欠員</th>';
         content += '<td>';
         var vacancy = feature.get('Vacancy') ? feature.get('Vacancy') : feature.get('Vacancy');
-        if (vacancy !== undefined && vacancy !== null) {
-            content += '<a href="http://www.city.sapporo.jp/kodomo/kosodate/l4_01.html" target="_blank">空きあり</a>';
+        if (vacancy !== undefined && vacancy !== null && vacancy !== '') {
+            // TODO: This URL should be parameterized
+            content += '<a href="http://www.city.sanda.lg.jp/kodomoshien/ninkahoikushoannai.html" target="_blank">空きあり</a>';
         }
         var vacancyDate = feature.get('VacancyDate');
-        if (vacancyDate !== undefined && vacancyDate !== null) {
+        if (vacancyDate !== undefined && vacancyDate !== null && vacancyDate !== '') {
             content += " (" + vacancyDate + ")";
         }
         content += '</td>';

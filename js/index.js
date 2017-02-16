@@ -1,8 +1,8 @@
 // 地図表示時の中心座標
-var init_center_coords = [141.347899, 43.063968];
+var init_center_coords = [135.21992, 34.884];
 
 // Bing APIのキー
-var bing_api_key = 'AhGQykUKW2-u1PwVjLwQkSA_1rCTFESEC7bCZ0MBrnzVbVy7KBHsmLgwW_iRJg17';
+var bing_api_key = 'IFqVGTZfWIfqUcCuVPgf~HvaGXNAoe0BeKk7d_A4RVQ~AqBvLy_zvh_kQfW7077QnTTUBSjrC1JuX51aEnLXLLK72cQniyMeS1tFcfJzOKmb';
 
 // map
 var map;
@@ -223,6 +223,16 @@ $('#mainPage').on('pageshow', function() {
 		papamamap.switchLayer(this.id, $(this).prop('checked'));
 	});
 
+	// 小規模保育所
+	$('#cbSmall').click(function() {
+		papamamap.switchLayer(this.id, $(this).prop('checked'));
+	});
+
+	// こども園
+	$('#cbKodomo').click(function() {
+		papamamap.switchLayer(this.id, $(this).prop('checked'));
+	});
+
 	// 中学校区チェックボックスのイベント定義
 	$('#cbMiddleSchool').click(function() {
 		layer = map.getLayers().item(1);
@@ -399,6 +409,8 @@ $('#mainPage').on('pageshow', function() {
 	{
 		papamamap.switchLayer($('#cbNinka').prop('id'), checkObj.ninka);
 		papamamap.switchLayer($('#cbNinkagai').prop('id'), checkObj.ninkagai);
+		papamamap.switchLayer($('#cbSmall').prop('id'), checkObj.small);
+		papamamap.switchLayer($('#cbKodomo').prop('id'), checkObj.kodomo);
 		papamamap.switchLayer($('#cbKindergarten').prop('id'), checkObj.kindergarten);
 		$('#cbNinka').prop('checked', checkObj.ninka).checkboxradio('refresh');
 		$('#cbNinkagai').prop('checked', checkObj.ninkagai).checkboxradio('refresh');
