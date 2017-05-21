@@ -144,13 +144,17 @@ Papamamap.prototype.animatedMove = function(lon, lat, isTransform)
 
 
 /**
- * 指定したgeojsonデータを元に認可外・認可・幼稚園レイヤーを描写する
+ * 指定したgeojsonデータを元に公立認可・私立認可・小規模等・横浜保育室・認可外・幼稚園レイヤーを描写する
+ *    ※上記以外に描写レイヤーを追加する時は、下の this.map.removeLayer(this.map.getLayers().item(4)); も追加レイヤーの数だけ追加してください！
  *
  * @param {[type]} facilitiesData [description]
  */
 Papamamap.prototype.addNurseryFacilitiesLayer = function(facilitiesData)
 {
     if(this.map.getLayers().getLength() >= 4) {
+        this.map.removeLayer(this.map.getLayers().item(4));
+        this.map.removeLayer(this.map.getLayers().item(4));
+        this.map.removeLayer(this.map.getLayers().item(4));
         this.map.removeLayer(this.map.getLayers().item(4));
         this.map.removeLayer(this.map.getLayers().item(4));
         this.map.removeLayer(this.map.getLayers().item(4));
@@ -178,15 +182,48 @@ Papamamap.prototype.addNurseryFacilitiesLayer = function(facilitiesData)
             style: ninkagaiStyleFunction
         })
     );
-    // 認可
+    // 私立認可
     this.map.addLayer(
         new ol.layer.Vector({
             source: new ol.source.GeoJSON({
                 projection: 'EPSG:3857',
                 object: facilitiesData
             }),
-            name: 'layerNinka',
-            style: ninkaStyleFunction
+            name: 'layerPriNinka',
+            style: priNinkaStyleFunction
+        })
+    );
+    // 公立認可
+    this.map.addLayer(
+        new ol.layer.Vector({
+            source: new ol.source.GeoJSON({
+                projection: 'EPSG:3857',
+                object: facilitiesData
+            }),
+            name: 'layerPubNinka',
+            style: pubNinkaStyleFunction
+        })
+    );
+    // 横浜保育室
+    this.map.addLayer(
+        new ol.layer.Vector({
+            source: new ol.source.GeoJSON({
+                projection: 'EPSG:3857',
+                object: facilitiesData
+            }),
+            name: 'layerYhoiku',
+            style: yhoikuStyleFunction
+        })
+    );
+    // 小規模・事業所内保育事業
+    this.map.addLayer(
+        new ol.layer.Vector({
+            source: new ol.source.GeoJSON({
+                projection: 'EPSG:3857',
+                object: facilitiesData
+            }),
+            name: 'layerJigyosho',
+            style: jigyoshoStyleFunction
         })
     );
 };
@@ -321,13 +358,13 @@ Papamamap.prototype.getPopupTitle = function(feature)
     var type = feature.get('種別') ? feature.get('種別') : feature.get('Type');
     title  = '[' + type + '] ';
     var owner = feature.get('設置') ? feature.get('設置') : feature.get('Ownership');
-    if(owner !== undefined && owner !== null && owner !== "") {
+    if(!isUndefined(owner)) {
         title += ' [' + owner +']';
     }
     var name = feature.get('名称') ? feature.get('名称') : feature.get('Name');
     title += name;
     url = feature.get('url');
-    if(url !== null && url !='') {
+    if(!isUndefined(url)) {
         title = '<a href="' +url+ '" target="_blank">' + title + '</a>';
     }
     return title;
@@ -344,7 +381,7 @@ Papamamap.prototype.getPopupContent = function(feature)
     content = '<table><tbody>';
     var open  = feature.get('開園時間') ? feature.get('開園時間') : feature.get('Open');
     var close = feature.get('終園時間') ? feature.get('終園時間') : feature.get('Close');
-    if (open != undefined && open !== null && open !== "" && close !== undefined && close !== null && close !== "") {
+    if (!isUndefined(open) && !isUndefined(close)) {
         content += '<tr>';
         content += '<th>時間</th>';
         content += '<td>';
@@ -353,31 +390,31 @@ Papamamap.prototype.getPopupContent = function(feature)
         content += '</tr>';
     }
     var memo = feature.get('備考') ? feature.get('備考') : feature.get('Memo');
-    if (memo !== undefined && memo !== null) {
+    if (!isUndefined(memo)) {
         content += '<tr>';
         content += '<th></th>';
         content += '<td>' + memo + '</td>';
         content += '</tr>';
     }
     var temp    = feature.get('一時') ? feature.get('一時') : feature.get('Temp');
-    var holiday = feature.get('休日') ? feature.get('休日') : feature.get('holiday');
+    var holiday = feature.get('休日') ? feature.get('休日') : feature.get('Holiday');
     var night   = feature.get('夜間') ? feature.get('夜間') : feature.get('Night');
     var h24     = feature.get('H24') ? feature.get('H24') : feature.get('H24');
 
-    if( temp !== null || holiday !== null || night !== null || h24 !== null) {
+    if( !isUndefined(temp) || !isUndefined(holiday) || !isUndefined(night) || !isUndefined(h24)) {
         content += '<tr>';
         content += '<th></th>';
         content += '<td>';
-        if (temp !== undefined && temp !== null) {
+        if (formatNull(temp) !== null) {
             content += '一時保育 ';
         }
-        if (holiday !== undefined && holiday !== null) {
+        if (formatNull(holiday) !== null) {
             content += '休日保育 ';
         }
-        if (night !== undefined && night !== null) {
+        if (formatNull(night) !== null) {
             content += '夜間保育 ';
         }
-        if (h24 !== undefined && h24 !== null) {
+        if (formatNull(h24) !== null) {
             content += '24時間 ';
         }
         content += '</td>';
@@ -385,27 +422,16 @@ Papamamap.prototype.getPopupContent = function(feature)
     }
 
     var type = feature.get('種別') ? feature.get('種別') : feature.get('Type');
-    if(type == "認可外") {
-        content += '<tr>';
-        content += '<th>監督基準</th>';
-        content += '<td>';
-        var proof = feature.get('証明') ? feature.get('証明') : feature.get('Proof');
-        if (proof !== undefined && proof !== null) {
-            content += '証明書発行済<a href="http://www.city.sapporo.jp/kodomo/kosodate/ninkagai_shisetsu.html" target="_blank">(詳細)</a>';
-        }
-        content += '</td>';
-        content += '</tr>';
-    }
-    if(type == "認可保育所") {
+    if(type == "私立認可保育所") {
         content += '<tr>';
         content += '<th>欠員</th>';
         content += '<td>';
         var vacancy = feature.get('Vacancy') ? feature.get('Vacancy') : feature.get('Vacancy');
-        if (vacancy !== undefined && vacancy !== null) {
-            content += '<a href="http://www.city.sapporo.jp/kodomo/kosodate/l4_01.html" target="_blank">空きあり</a>';
+        if (!isUndefined(vacancy)) {
+            content += '<a href="http://www.city.yokohama.lg.jp/kohoku/sabisu/hoiku/" target="_blank">空き情報</a>';
         }
         var vacancyDate = feature.get('VacancyDate');
-        if (vacancyDate !== undefined && vacancyDate !== null) {
+        if (!isUndefined(vacancyDate)) {
             content += " (" + vacancyDate + ")";
         }
         content += '</td>';
@@ -413,21 +439,21 @@ Papamamap.prototype.getPopupContent = function(feature)
     }
     var ageS = feature.get('開始年齢') ? feature.get('開始年齢') : feature.get('AgeS');
     var ageE = feature.get('終了年齢') ? feature.get('終了年齢') : feature.get('AgeE');
-    if (ageS !== undefined && ageS !== null && ageE !== undefined && ageE !== null) {
+    if (!isUndefined(ageS) && !isUndefined(ageE)) {
         content += '<tr>';
         content += '<th>年齢</th>';
         content += '<td>' + ageS + '〜' + ageE + '</td>';
         content += '</tr>';
     }
     var full = feature.get('定員') ? feature.get('定員') : feature.get('Full');
-    if (full !== undefined && full !== null) {
+    if (!isUndefined(full)) {
         content += '<tr>';
         content += '<th>定員</th>';
         content += '<td>' + full + '人</td>';
         content += '</tr>';
     }
     var tel = feature.get('TEL') ? feature.get('TEL') : feature.get('TEL');
-    if (tel !== undefined && tel !== null) {
+    if (!isUndefined(tel)) {
         content += '<tr>';
         content += '<th>TEL</th>';
         content += '<td>' + tel + '</td>';
@@ -435,14 +461,14 @@ Papamamap.prototype.getPopupContent = function(feature)
     }
     var add1 = feature.get('住所１') ? feature.get('住所１') : feature.get('Add1');
     var add2 = feature.get('住所２') ? feature.get('住所２') : feature.get('Add2');
-    if (add1 !== undefined && add2 !== undefined) {
+    if (!isUndefined(add1) || !isUndefined(add2)) {
         content += '<tr>';
         content += '<th>住所</th>';
         content += '<td>' + add1 + add2 +'</td>';
         content += '</tr>';
     }
     var owner = feature.get('設置者') ? feature.get('設置者') : feature.get('Owner');
-    if (owner !== undefined && owner !== null) {
+    if (!isUndefined(owner)) {
         content += '<tr>';
         content += '<th>設置者</th>';
         content += '<td>' + owner + '</td>';
@@ -451,6 +477,35 @@ Papamamap.prototype.getPopupContent = function(feature)
     content += '</tbody></table>';
     return content;
 };
+
+/**
+* 空文字判定関数
+* 　引数が未定義、null、空文字いずれかの場合はnullを返却する
+* 　それ以外の時はparamを返却する
+* @param {[type]}
+* @return {[type]}
+**/
+function formatNull(param){
+  if(param == null || param == undefined || param ==""){
+    return null;
+  } else {
+    return param;
+  }
+}
+
+/**
+* 未定義カラム判定関数
+* 　引数が未定義、null、空文字いずれかの場合はtrueを返却する
+* @param {[type]}
+* @return {[type]}
+**/
+function isUndefined(param){
+  if(param == null || param == undefined || param ==""){
+    return true;
+  } else {
+    return false;
+  }
+}
 
 /**
  * 円を消す

@@ -1,8 +1,8 @@
 // 地図表示時の中心座標
-var init_center_coords = [141.347899, 43.063968];
+var init_center_coords = [139.61827, 35.51264];
 
 // Bing APIのキー
-var bing_api_key = 'AhGQykUKW2-u1PwVjLwQkSA_1rCTFESEC7bCZ0MBrnzVbVy7KBHsmLgwW_iRJg17';
+var bing_api_key = 'Ahs7qRRd1eAtwgE7igbe7DOnXYvq_Pg81foKgM727r3S1949_mj8hrsqIY4iAxW9';
 
 // map
 var map;
@@ -213,13 +213,28 @@ $('#mainPage').on('pageshow', function() {
 		papamamap.switchLayer(this.id, $(this).prop('checked'));
 	});
 
-	// 認可保育所チェックボックスのイベント設定
-	$('#cbNinka').click(function() {
+	// 私立認可保育所チェックボックスのイベント設定
+	$('#cbPriNinka').click(function() {
+		papamamap.switchLayer(this.id, $(this).prop('checked'));
+	});
+
+	// 公立認可保育所チェックボックスのイベント設定
+	$('#cbPubNinka').click(function() {
 		papamamap.switchLayer(this.id, $(this).prop('checked'));
 	});
 
 	// 認可外保育所チェックボックスのイベント設定
 	$('#cbNinkagai').click(function() {
+		papamamap.switchLayer(this.id, $(this).prop('checked'));
+	});
+
+	// 横浜保育室チェックボックスのイベント設定
+	$('#cbYhoiku').click(function() {
+		papamamap.switchLayer(this.id, $(this).prop('checked'));
+	});
+
+	// 小規模・事業所内保育事業チェックボックスのイベント設定
+	$('#cbJigyosho').click(function() {
 		papamamap.switchLayer(this.id, $(this).prop('checked'));
 	});
 
@@ -302,37 +317,74 @@ $('#mainPage').on('pageshow', function() {
 		evt.stopPropagation();
 	});
 
-	// 検索フィルターを有効にする
+	/*
+    $(function(){
+        $('a.disable').click(function(){
+            return false;
+        })
+    });
+	*/
+
+    // 検索フィルターを有効にする
 	$('#filterApply').click(function(evt){
 		// 条件作成処理
 		conditions = [];
-		ninka = ninkagai = kindergarten = false;
+		//ninka = ninkagai = yhoiku = kindergarten = jigyosho = false;		//2017-02 @kakiki upd
+		pubNinka = priNinka = ninkagai = yhoiku = kindergarten = jigyosho = false;
 
-		// 認可保育園
-		if($('#ninkaOpenTime option:selected').val() !== "") {
-			conditions['ninkaOpenTime'] = $('#ninkaOpenTime option:selected').val();
-			ninka = true;
+		/* 2017-02 @kakiki upd-st */
+		// 公立認可保育園
+		if($('#PubNinkaOpenTime option:selected').val() !== "") {
+			conditions['PubNinkaOpenTime'] = $('#PubNinkaOpenTime option:selected').val();
+			pubNinka = true;
 		}
-		if($('#ninkaCloseTime option:selected').val() !== "") {
-			conditions['ninkaCloseTime'] = $('#ninkaCloseTime option:selected').val();
-			ninka = true;
+		if($('#PubNinkaCloseTime option:selected').val() !== "") {
+			conditions['PubNinkaCloseTime'] = $('#PubNinkaCloseTime option:selected').val();
+			pubNinka = true;
 		}
-		if($('#ninkaIchijiHoiku').prop('checked')) {
-			conditions['ninkaIchijiHoiku'] = 1;
-			ninka = true;
+		if($('#PubNinkaIchijiHoiku').prop('checked')) {
+			conditions['PubNinkaIchijiHoiku'] = "Y"; //1;
+			pubNinka = true;
 		}
-		if($('#ninkaYakan').prop('checked')) {
-			conditions['ninkaYakan'] = 1;
-			ninka = true;
+		if($('#PubNinkaYakan').prop('checked')) {
+			conditions['PubNinkaYakan'] = "Y"; //1;
+			pubNinka = true;
 		}
-		if($('#ninkaKyujitu').prop('checked')) {
-			conditions['ninkaKyujitu'] = 1;
-			ninka = true;
+		if($('#PubNinkaKyujitu').prop('checked')) {
+			conditions['PubNinkaKyujitu'] = "Y"; //1;
+			pubNinka = true;
 		}
-		if($('#ninkaVacancy').prop('checked')) {
-			conditions['ninkaVacancy'] = 1;
-			ninka = true;
+		if($('#PubNinkaVacancy').prop('checked')) {
+			conditions['PubNinkaVacancy'] = "Y"; //1;
+			pubNinka = true;
 		}
+
+		// 私立認可保育園：
+		if($('#PriNinkaOpenTime option:selected').val() !== "") {
+			conditions['PriNinkaOpenTime'] = $('#PriNinkaOpenTime option:selected').val();
+			priNinka = true;
+		}
+		if($('#PriNinkaCloseTime option:selected').val() !== "") {
+			conditions['PriNinkaCloseTime'] = $('#PriNinkaCloseTime option:selected').val();
+			priNinka = true;
+		}
+		if($('#PriNinkaIchijiHoiku').prop('checked')) {
+			conditions['PriNinkaIchijiHoiku'] = "Y"; //1;
+			priNinka = true;
+		}
+		if($('#PriNinkaYakan').prop('checked')) {
+			conditions['PriNinkaYakan'] = "Y"; //1;
+			priNinka = true;
+		}
+		if($('#PriNinkaKyujitu').prop('checked')) {
+			conditions['PriNinkaKyujitu'] = "Y"; //1;
+			priNinka = true;
+		}
+		if($('#PriNinkaVacancy').prop('checked')) {
+			conditions['PriNinkaVacancy'] = "Y"; //1;
+			priNinka = true;
+		}
+		/* 2017-02 @kakiki upd-end */
 
 		// 認可外
 		if($('#ninkagaiOpenTime option:selected').val() !== "") {
@@ -344,13 +396,41 @@ $('#mainPage').on('pageshow', function() {
 			ninkagai = true;
 		}
 		if($('#ninkagai24H').prop('checked')) {
-			conditions['ninkagai24H'] = 1;
+			conditions['ninkagai24H'] = "Y"; //1;
 			ninkagai = true;
 		}
 		if($('#ninkagaiShomei').prop('checked')) {
-			conditions['ninkagaiShomei'] = 1;
+			conditions['ninkagaiShomei'] = "Y"; //1;
 			ninkagai = true;
 		}
+
+		// 横浜保育室：(2017-02 kakiki対応)
+		if($('#YhoikuOpenTime option:selected').val() !== "") {
+			conditions['YhoikuOpenTime'] = $('#YhoikuOpenTime option:selected').val();
+			yhoiku = true;
+		}
+		if($('#YhoikuCloseTime option:selected').val() !== "") {
+			conditions['YhoikuCloseTime'] = $('#YhoikuCloseTime option:selected').val();
+			yhoiku = true;
+		}
+		if($('#YhoikuIchijiHoiku').prop('checked')) {
+			conditions['YhoikuIchijiHoiku'] = "Y"; //1;
+			yhoiku = true;
+		}
+		if($('#YhoikuYakan').prop('checked')) {
+			conditions['YhoikuYakan'] = "Y"; //1;
+			yhoiku = true;
+		}
+		if($('#YhoikuKyujitu').prop('checked')) {
+			conditions['YhoikuKyujitu'] = "Y"; //1;
+			yhoiku = true;
+		}
+		if($('#YhoikuVacancy').prop('checked')) {
+			conditions['YhoikuVacancy'] = "Y"; //1;
+			yhoiku = true;
+		}
+
+		// 小規模・事業所内保育事業：未対応
 
 		// 幼稚園
 
@@ -363,11 +443,13 @@ $('#mainPage').on('pageshow', function() {
 		} else {
 			papamamap.addNurseryFacilitiesLayer(nurseryFacilities);
 			$('#btnFilter').css('background-color', '#f6f6f6');
-			ninka = ninkagai = kindergarten = true;
+			//ninka = ninkagai = yhoiku = kindergarten = jigyosho = true;  //2017-02 @kakiki upd
+			pubNinka = priNinka = ninkagai = yhoiku = kindergarten = jigyosho = true;
 		}
 
 		// レイヤー表示状態によって施設の表示を切り替える
-		updateLayerStatus({ninka: ninka, ninkagai: ninkagai, kindergarten: kindergarten});
+		//updateLayerStatus({ninka: ninka, ninkagai: ninkagai, yhoiku: yhoiku, kindergarten: kindergarten, jigyosho: jigyosho});  //2017-02 @kakiki upd
+		updateLayerStatus({pubNinka: pubNinka, priNinka: priNinka, ninkagai: ninkagai, yhoiku: yhoiku, kindergarten: kindergarten, jigyosho: jigyosho});
 	});
 
 	// 絞込条件のリセット
@@ -386,7 +468,8 @@ $('#mainPage').on('pageshow', function() {
 		$('#btnFilter').css('background-color', '#f6f6f6');
 
 		// レイヤー表示状態によって施設の表示を切り替える
-		updateLayerStatus({ninka: true, ninkagai: true, kindergarten: true});
+		//updateLayerStatus({ninka: true, ninkagai: true, yhoiku: true, kindergarten: true, jigyosho: true});  //2017-02 @kakiki upd
+		updateLayerStatus({pubNinka: true, priNinka: true, ninkagai: true, yhoiku: true, kindergarten: true, jigyosho: true});
 	});
 
 	/**
@@ -397,12 +480,18 @@ $('#mainPage').on('pageshow', function() {
 	 */
 	function updateLayerStatus(checkObj)
 	{
-		papamamap.switchLayer($('#cbNinka').prop('id'), checkObj.ninka);
+		papamamap.switchLayer($('#cbPriNinka').prop('id'), checkObj.priNinka);
+		papamamap.switchLayer($('#cbPubNinka').prop('id'), checkObj.pubNinka);
 		papamamap.switchLayer($('#cbNinkagai').prop('id'), checkObj.ninkagai);
+		papamamap.switchLayer($('#cbYhoiku').prop('id'), checkObj.yhoiku);
 		papamamap.switchLayer($('#cbKindergarten').prop('id'), checkObj.kindergarten);
-		$('#cbNinka').prop('checked', checkObj.ninka).checkboxradio('refresh');
-		$('#cbNinkagai').prop('checked', checkObj.ninkagai).checkboxradio('refresh');
+		papamamap.switchLayer($('#cbJigyosho').prop('id'), checkObj.jigyosho);
+		$('#cbPriNinka').prop('checked', checkObj.priNinka).checkboxradio('refresh');
+		$('#cbPubNinka').prop('checked', checkObj.pubNinka).checkboxradio('refresh');
+		$('#cbNinkagai').prop('checked', checkObj.ninkagai).checkboxradio('refresh'	);
+		$('#cbYhoiku').prop('checked', checkObj.yhoiku).checkboxradio('refresh');
 		$('#cbKindergarten').prop('checked', checkObj.kindergarten).checkboxradio('refresh');
+		$('#cbJigyosho').prop('checked', checkObj.jigyosho).checkboxradio('refresh');
 	}
 
 	/**
