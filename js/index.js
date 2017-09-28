@@ -16,7 +16,7 @@ var moveToList = [];
 // マップサーバ一覧
 var mapServerList = {
 	'mierune-normal': {
-		label: "MIERUNE Normal",
+		label: "MIERUNE",
 		source_type: "xyz",
 		source: new ol.source.XYZ({
 			attributions: [
