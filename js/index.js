@@ -24,7 +24,7 @@ var mapServerList = {
 					html: "Maptiles by <a href='http://mierune.co.jp/' target='_blank'>MIERUNE</a>, under CC BY. Data by <a href='http://osm.org/copyright' target='_blank'>OpenStreetMap</a> contributors, under ODbL."
 				})
 			],
-			url: "https://tile.cdn.mierune.co.jp/styles/normal/{z}/{x}/{y}.png?key=227f355691f809df23e32174058c8070a7e6dc5f80043562c3a0b460c521678e5a6f39f034069f7506ec70acec6ed9ece3ca5f",
+			url: "https://tile.cdn.mierune.co.jp/styles/normal/{z}/{x}/{y}.png?key=227f1c519c9d6cfb8105c8bdaff9db801ed528ced9cd6c7a903d7261acf2d36d5eec15da09eaff0f15af19414918068860d8fa81a01b6823248426883759c38445f40deb510627169e",
 			projection: "EPSG:3857"
 		})
 	},
