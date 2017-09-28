@@ -15,6 +15,19 @@ var moveToList = [];
 
 // マップサーバ一覧
 var mapServerList = {
+	'mierune-normal': {
+		label: "MIERUNE Normal",
+		source_type: "xyz",
+		source: new ol.source.XYZ({
+			attributions: [
+				new ol.Attribution({
+					html: "Maptiles by <a href='http://mierune.co.jp/' target='_blank'>MIERUNE</a>, under CC BY. Data by <a href='http://osm.org/copyright' target='_blank'>OpenStreetMap</a> contributors, under ODbL."
+				})
+			],
+			url: "https://tile.cdn.mierune.co.jp/styles/normal/{z}/{x}/{y}.png?key=227f355691f809df23e32174058c8070a7e6dc5f80043562c3a0b460c521678e5a6f39f034069f7506ec70acec6ed9ece3ca5f",
+			projection: "EPSG:3857"
+		})
+	},
 	'bing-road': {
 		label: "標準(Bing)",
 		source_type: "bing",
@@ -98,7 +111,8 @@ $('#mainPage').on('pageshow', function() {
 	// 地図レイヤー定義
 	var papamamap = new Papamamap();
 	papamamap.viewCenter = init_center_coords;
-	papamamap.generate(mapServerList['bing-road']);
+//	papamamap.generate(mapServerList['bing-road']);
+	papamamap.generate(mapServerList['mierune-normal']);
 	map = papamamap.map;
 
 	// 保育施設の読み込みとレイヤーの追加
